@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="CommonUtils" />
+        <module name="UserData" />
+        <module name="UMDataModels" />
+        <module name="DMSData" />
+        <module name="MISDataModels" />
+        <module name="Swagger" />
+        <module name="PortabullService" />
+        <module name="AuditLogs" />
+        <module name="DmsDataModels" />
+        <module name="GenericData" />
+        <module name="GenericUtils" />
+        <module name="CacheUtils" />
+        <module name="SPFData" />
+        <module name="SPFDataModels" />
+        <module name="MISReportsData" />
+        <module name="GenericDataModels" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="APIGateway" target="1.8" />
+      <module name="ElasticSearch" target="1.8" />
+      <module name="GenericService" target="1.8" />
+      <module name="MessagingQueue" target="1.8" />
+      <module name="MISReports" target="1.8" />
+      <module name="OAuth" target="1.8" />
+      <module name="ServiceAdmin" target="1.8" />
+      <module name="ServiceDiscovery" target="1.8" />
+      <module name="SPF" target="1.8" />
+      <module name="UserDataModels" target="8" />
+      <module name="UserManagement" target="1.8" />
+      <module name="UserManagementData" target="8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="APIGateway" options="-parameters" />
+      <module name="AuditLogs" options="-parameters" />
+      <module name="CacheUtils" options="-parameters" />
+      <module name="CommonUtils" options="-parameters" />
+      <module name="DMSData" options="-parameters" />
+      <module name="DmsDataModels" options="-parameters" />
+      <module name="ElasticSearch" options="-parameters" />
+      <module name="GenericData" options="-parameters" />
+      <module name="GenericDataModels" options="-parameters" />
+      <module name="GenericService" options="-parameters" />
+      <module name="GenericUtils" options="-parameters" />
+      <module name="MISDataModels" options="-parameters" />
+      <module name="MISReports" options="-parameters" />
+      <module name="MISReportsData" options="-parameters" />
+      <module name="MessagingQueue" options="-parameters" />
+      <module name="OAuth" options="-parameters" />
+      <module name="PortabullService" options="-parameters" />
+      <module name="SPF" options="-parameters" />
+      <module name="SPFData" options="-parameters" />
+      <module name="SPFDataModels" options="-parameters" />
+      <module name="ServiceAdmin" options="-parameters" />
+      <module name="ServiceDiscovery" options="-parameters" />
+      <module name="Swagger" options="-parameters" />
+      <module name="UMDataModels" options="-parameters" />
+      <module name="UserData" options="-parameters" />
+      <module name="UserDataModels" options="-parameters" />
+      <module name="UserManagement" options="-parameters" />
+      <module name="UserManagementData" options="-parameters" />
+    </option>
+  </component>
+</project>

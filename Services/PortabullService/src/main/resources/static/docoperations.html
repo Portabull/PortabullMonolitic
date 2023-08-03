@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="loginsuccessfull.css">
+    <script src="login.js"></script>
+    <script src="logout.js"></script>
+    <style>
+
+
+.logo {
+
+}
+
+.logo img {
+  width: 27px;
+  margin-right: 0.3rem;
+}
+
+.logo h4 {
+  font-size: 1.1rem;
+  margin-top: -9px;
+  letter-spacing: -0.5px;
+  color: #151111;
+}
+
+   .filesButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:160px;
+            width:150px;
+
+
+        }
+
+         .filesButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+ .documentEncryptionButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:160px;
+            width:150px;
+
+
+        }
+
+         .documentEncryptionButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+
+<div align="right">
+
+
+    <a href="#" onclick="logout()" class="btn btn-info btn-lg">        <span class="glyphicon glyphicon-log-out"></span> Log out    </a>
+
+</div>
+
+<br><br>
+
+<div align="center">
+
+    <div class="wrapper" >
+        <div class="search-input">
+            <a href="" target="_blank" hidden></a>
+            <input type="text" placeholder="Type to search...">
+            <div class="autocom-box">
+                <!-- here list are inserted from javascript -->
+            </div>
+            <div class="icon"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+</div>
+
+<div id="backButtonDiv" align="left">
+    <input data-toggle="tooltip" draggable="false"  onclick="redirectToDocumentsPage()" data-placement="top" title="Back" class="backButtonP" id="backButtonInput" type="image" src="images/back.jpg"/>
+</div>
+
+<br>
+
+<div id="showHoverOptionDiv" align="center">
+
+
+</div>
+
+<div align="center">
+
+
+
+    <input class="documentEncryptionButton" type="image" src="images/fileLock.webp"
+           onmouseover="showHoverOption('Files')" draggable="false" onmouseleave="clearshowHoverOption()" onclick="redirectToEncryption()" id="filesButton"/>
+
+    <input class="filesButton" type="image" src="images/pdflock.png"
+           onmouseover="showHoverOption('Gallery')" draggable="false"  onmouseleave="clearshowHoverOption()"  onclick="redirectToPdfEnc()"  id="galleryButton"/>
+
+
+</div>
+
+<br><br><br><br><br><br>
+
+<div class="logo" align="center">
+    <h4>Powered by : <span> <img src="./img/logo.png" alt="portabull" /> </span> </h4>
+</div>
+
+
+
+<script type="text/javascript">
+    document.getElementById("documentButton").onclick = function () {
+        location.href = "documents.html";
+    };
+</script>
+
+
+
+<script type="text/javascript">
+    document.getElementById("settingsButton").onclick = function () {
+        location.href = "userprofile.html";
+    };
+
+    function redirectToEncryption() {
+           window.location.href = "ende.html";
+    }
+
+     function redirectToPdfEnc() {
+           window.location.href = "endepdf.html";
+    }
+
+    function redirectToImageEditor(){
+           window.location.href = "imageEditorPortabull.html";
+    }
+
+    function redirectToDocumentsPage(){
+           window.location.href = "documents.html";
+    }
+
+</script>
+
+
+<script type="text/javascript">
+    document.getElementById("messageButton").onclick = function () {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", BASE_URL + "UM/get-user-name");
+
+        xhr.setRequestHeader("Accept", "application/json");
+
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+        var data = JSON.stringify({});
+
+        xhr.send(data);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+
+                const response = JSON.parse(xhr.responseText);
+
+                if (response.statusCode == 200) {
+                    location.href = "http://portabull.in:8087?aa="+response.data;
+                }else{
+                    alert("Please Login Again Session Expired");
+                }
+            }
+        };
+    };
+</script>
+
+
+
+
+<script type="text/javascript">
+    document.getElementById("emailButton").onclick = function () {
+        location.href = "emails.html";
+    };
+</script>
+
+
+
+
+<script type="text/javascript">
+    document.getElementById("spf").onclick = function () {
+        location.href = "spf.html";
+    };
+</script>
+
+
+<script type="text/javascript">
+    document.getElementById("notificationButton").onclick = function () {
+        location.href = "notificationButton.html";
+    };
+</script>
+
+
+
+<script type="text/javascript">
+    document.getElementById("misReportsButton").onclick = function () {
+        location.href = "adminmisreports.html";
+    };
+</script>
+
+<script src="js/suggestions.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+
+function clearshowHoverOption(){
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+
+
+}
+
+function showHoverOption(optionName){
+
+var showHoverOptionDivInner ='';
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    if(optionName == 'Files'){
+
+     showHoverOptionDivInner = '<input class="documentEncryptionButton" type="image" src="images/fileLock.webp" id="documentButton"/><p>Document Encryption</p>';
+
+    }else if(optionName == 'Gallery'){
+
+
+     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/pdflock.png" id="documentButton"/><p>Pdf Password Protection</p>';
+
+    } else{
+
+     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/operations.png" id="documentButton"/><p>Document Operations</p>';
+
+    }
+
+    showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
+
+}
+
+ initToken();
+    function initToken(){
+
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+    }
+</script>
+
+
+</body>
+</html>

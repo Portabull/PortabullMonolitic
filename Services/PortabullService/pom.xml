@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Services</artifactId>
+        <groupId>com.portabull</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>PortabullService</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-aws</artifactId>
+        </dependency>
+
+        <dependency>
+            <artifactId>DMSData</artifactId>
+            <groupId>com.portabull</groupId>
+            <version>${dms.data.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>GenericData</artifactId>
+            <groupId>com.portabull</groupId>
+            <version>${generic.data.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${spring-boot-starter-security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>MISReportsData</artifactId>
+            <groupId>com.portabull</groupId>
+            <version>${mis.reports.data.version}</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>SPFData</artifactId>
+            <groupId>com.portabull</groupId>
+            <version>${spf.data.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!--TO Build the DMS jar we have added this below code-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <configuration>
+                    <finalName>${project.name}</finalName>
+                    <outputDirectory>${appserver.home}/${project.name}</outputDirectory>
+                    <outputDirectory>${deployement.dir}</outputDirectory>
+                    <classifier>exec</classifier>
+                </configuration>
+
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

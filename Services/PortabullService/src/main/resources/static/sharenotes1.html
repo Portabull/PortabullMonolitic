@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="loginsuccessfull.css">
+    <link rel="stylesheet" href="css/sharenotes.css">
+    <script src="login.js"></script>
+    <script src="logout.js"></script>
+
+    <style>
+
+.hideAllNotesButton {
+  padding: 11px 11px;
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: #04AA6D;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.hideAllNotesButton:hover {background-color: #3e8e41}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #ccc;
+  border-radius: 16px;
+  width: 58px;
+  height: 32px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.toggle-checkbox:checked + .toggle-switch {
+  background: #56c080;
+}
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 30px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+.logo {
+
+}
+
+.logo img {
+  width: 27px;
+  margin-right: 0.3rem;
+}
+
+.logo h4 {
+  font-size: 1.1rem;
+  margin-top: -9px;
+  letter-spacing: -0.5px;
+  color: #151111;
+}
+
+   .filesButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:160px;
+            width:150px;
+
+        }
+
+         .filesButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+
+
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body style="background: #f1f1f1;">
+
+<div align="right">
+
+
+    <a href="#" onclick="logout()" class="btn btn-info btn-lg">        <span class="glyphicon glyphicon-log-out"></span> Log out    </a>
+
+</div>
+
+<div align="center">
+
+    <div class="wrapper" >
+        <div class="search-input">
+            <a href="" target="_blank" hidden></a>
+            <input type="text" placeholder="Type to search...">
+            <div class="autocom-box">
+                <!-- here list are inserted from javascript -->
+            </div>
+            <div class="icon"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+</div>
+
+<div id="backButtonDiv" align="left">
+    <input data-toggle="tooltip" draggable="false"  onclick="redirectToNotesPage()" data-placement="top" title="Back" class="backButtonP" id="backButtonInput" type="image" src="images/backShare.jpg"/>
+</div>
+
+
+
+
+
+<form  action="javaScript:donothing()" class="cf">
+    <div class="half left cf">
+        <input style="  border:0; outline:0;     padding: 1em;     @include border-radius(8px);     display: block;     width: 100%;     margin-top: 1em;    font-family: 'Merriweather', sans-serif;     @include box-shadow(0 1px 1px rgba(black, 0.1));     resize: none;        &:focus {       @include ox-shadow(0 0px 2px rgba($red, 1)!important);" type="text" id="input-name" placeholder="Name">
+
+    </div>
+    <div class="half right cf">
+        <textarea style="  border:0; outline:0;     padding: 1em;     @include border-radius(8px);     display: block;     width: 100%;     margin-top: 1em;    font-family: 'Merriweather', sans-serif;     @include box-shadow(0 1px 1px rgba(black, 0.1));     resize: none;        &:focus {       @include ox-shadow(0 0px 2px rgba($red, 1)!important);" class="inputjsdsj" name="message" type="text" id="input-message" placeholder="Message"></textarea>
+    </div>
+
+    <input style="border:0; outline:0;     padding: 1em;     @include border-radius(8px);     display: block;     width: 100%;     margin-top: 1em;     ont-family: 'Merriweather', sans-serif;     @include box-shadow(0 1px 1px rgba(black, 0.1));     resize: none;color: black;      background: #FDA61C;     cursor: pointer;        &:focus {       @include box-shadow(0 0px 2px rgba($red, 1)!important);    }         &:hover {       @include box-shadow(0 1px 1px 1px rgba(#aaa, 0.6));     }"  type="submit" onclick="addUserNameMessage()" value="ADD" id="input-submit">
+
+    <br><br>
+
+
+    <div align="center" hidden  id="checkBoxsPlace">
+
+        <label class="toggle" >
+            <span class="toggle-label">Edit &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp </span>
+            <input class="toggle-checkbox" onchange="changeSettings('deleteBut')" id="editButton" type="checkbox" >
+            <div class="toggle-switch"></div>
+        </label>
+        <label class="toggle" >
+            <span class="toggle-label">Share&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp </span>
+            <input class="toggle-checkbox" onchange="changeSettings('deleteBut')" id="shareButton" type="checkbox" >
+            <div class="toggle-switch"></div>
+        </label>
+        <label class="toggle" >
+            <span class="toggle-label">Delete&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  </span>
+            <input class="toggle-checkbox" onchange="changeSettings('deleteBut')" id="deleteButton" type="checkbox" >
+            <div class="toggle-switch"></div>
+        </label>
+
+        <label class="toggle" >
+            <span class="toggle-label">Download&nbsp&nbsp&nbsp&nbsp </span>
+            <input class="toggle-checkbox" onchange="changeSettings('deleteBut')" id="downloadButton" type="checkbox" checked>
+            <div class="toggle-switch"></div>
+        </label>
+        <br>  <br>
+
+
+        <input style="border:0; outline:0;     padding: 1em;     @include border-radius(8px);     display: block;     width: 100%;     margin-top: 1em;     ont-family: 'Merriweather', sans-serif;     @include box-shadow(0 1px 1px rgba(black, 0.1));     resize: none;color: black;      background: #FDA61C;     cursor: pointer;        &:focus {       @include box-shadow(0 0px 2px rgba($red, 1)!important);    }         &:hover {       @include box-shadow(0 1px 1px 1px rgba(#aaa, 0.6));     }"  type="submit" onclick="shareUserNotes()" value="SHARE" id="input-submit1">
+
+        <input style="border:0; outline:0;     padding: 1em;     @include border-radius(8px);     display: block;     width: 100%;     margin-top: 1em;     ont-family: 'Merriweather', sans-serif;     @include box-shadow(0 1px 1px rgba(black, 0.1));     resize: none;color: black;      background: #FDA61C;     cursor: pointer;        &:focus {       @include box-shadow(0 0px 2px rgba($red, 1)!important);    }         &:hover {       @include box-shadow(0 1px 1px 1px rgba(#aaa, 0.6));     }"  type="submit" onclick="removeUserNameMessage()" value="REMOVE" id="input-submit2">
+
+
+    </div>
+
+
+
+</form>
+
+
+
+<div id="emptySpaceDiv" ></div>
+
+
+<div id="sharableMembersSpace" align="center"></div>
+
+<br><br>
+
+<div class="logo" align="center">
+    <h4>Powered by : <span> <img src="./img/logo.png" alt="portabull" /> </span> </h4>
+</div>
+
+<script src="js/sharenotes.js"></script>
+</body>
+</html>

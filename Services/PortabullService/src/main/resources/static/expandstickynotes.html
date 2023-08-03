@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="js/portabullconfig.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.close-btn {
+  font-size: 79px;
+  font-weight: bold;
+  color: #FDA61C;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  font-size: 81px;
+  font-weight: bold;
+  color: #FDA61C;
+  cursor: pointer;
+}
+
+
+
+/* CSS */
+.button-71 {
+  background-color: #0078d0;
+  border: 0;
+  border-radius: 56px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: system-ui,-apple-system,system-ui,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  outline: 0;
+  padding: 16px 21px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-71:before {
+  background-color: initial;
+  background-image: linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%);
+  border-radius: 125px;
+  content: "";
+  height: 50%;
+  left: 4%;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  transition: all .3s;
+  width: 92%;
+}
+
+.button-71:hover {
+  box-shadow: rgba(255, 255, 255, .2) 0 3px 15px inset, rgba(0, 0, 0, .1) 0 3px 5px, rgba(0, 0, 0, .1) 0 10px 13px;
+  transform: scale(1.05);
+}
+
+@media (min-width: 768px) {
+  .button-71 {
+    padding: 13px 23px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+
+
+<div align="center">
+  <span onclick="redirectToNotesPage()" class="close-btn">&times;</span>
+<!--  <button onclick="redirectToNotesPage()" id='close'>close</button>-->
+</div>
+<br>
+
+<div class="container">
+  <form  action="javaScript:donothing()">
+    <label for="tittleId">Tittle</label>
+    <input type="text" id="tittleId" name="firstname" placeholder="Enter Tittle Here...">
+
+    <label for="notesTextAreaId">Notes</label>
+    <textarea id="notesTextAreaId" name="subject" placeholder="Enter Notes..." style="height:350px"></textarea>
+
+    <button id="createNewNotesButtonId" onclick="createNewNotes()" class="button-71" role="button">Create Notes</button>
+    <button id="updateNotesButtonId" onclick="updateNotes()" class="button-71" role="button">Save</button>
+  </form>
+</div>
+
+<br>
+<div align="center">
+
+<button id="updateNotesShareId" class="button-71" role="button" onclick="shareNotes()">Share</button>
+
+<button id="updateNotesDownloadId" class="button-71" role="button" onclick="downloadNotes()">Download</button>
+
+<button id="updateNotesDeleteId"  class="button-71" role="button" onclick="deleteNotes()">Delete</button>
+</div>
+<script>
+  document.addEventListener('keydown', function(event) {
+ const key = event.key;
+  if (key === "Escape" && !onHold) {
+        redirectToNotesPage();
+  }
+});
+
+</script>
+
+<script src="js/expandstickynotes.js"></script>
+</body>
+</html>

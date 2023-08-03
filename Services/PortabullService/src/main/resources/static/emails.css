@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.wrapper{
+  max-width: 450px;
+  margin: 150px auto;
+
+  position: absolute;
+  right: 800px;
+  width: 450px;
+   top: -70px;
+}
+
+.wrapper .search-input{
+  background: #fff;
+  width: 100%;
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+}
+
+.search-input input{
+  height: 55px;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 0 60px 0 20px;
+  font-size: 18px;
+  box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+}
+
+.search-input.active input{
+  border-radius: 5px 5px 0 0;
+}
+
+.search-input .autocom-box{
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.search-input.active .autocom-box{
+  padding: 10px 8px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body{
+  padding: 0 20px;
+}
+
+.autocom-box li{
+  list-style: none;
+  padding: 8px 12px;
+  display: none;
+  width: 100%;
+  cursor: default;
+  border-radius: 3px;
+}
+
+.search-input.active .autocom-box li{
+  display: block;
+}
+.autocom-box li:hover{
+  background: #efefef;
+}
+
+.search-input .icon{
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 55px;
+  width: 55px;
+  text-align: center;
+  line-height: 55px;
+  font-size: 20px;
+  color: #644bff;
+  cursor: pointer;
+}
+
+
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 800px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 0px 0 01px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+
+
+
+
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.button121212 {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+.button22323:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}

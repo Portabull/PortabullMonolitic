@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <script src="backpages.js"></script>
+    <style>
+    .previous {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+.next {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+
+.previous:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.next:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.previous {
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.next {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.round {
+  border-radius: 50%;
+}
+
+
+
+
+.buttonStatistics {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+position: absolute;
+right:    0;
+bottom:   0;
+}
+
+.button1Statistics {
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
+}
+
+.button1Statistics:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+    </style>
+    <title>Portabull</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="circle.css" media="all" rel="stylesheet"/>
+
+</head>
+<body>
+
+<h2>User Documents</h2>
+
+<div class="storage-response">
+    <div id="storageResponseId"></div>
+</div>
+<button class="button button2" onclick="gotodocuments()">Back</button>
+<div class="upload-response">
+    <a  href="#" onclick="viewDocsInClassicStyle()">View In Classic Mode</a>
+    <div id="singleFileUploadError"></div>
+    <div id="singleFileUploadSuccess"></div>
+
+
+    <button class="buttonStatistics button1Statistics" onclick="goToStatistics()">View Statistics</button>
+
+    <script>
+
+        var pageNo = 0;
+        mytable();
+
+        function mytable() {
+            try {
+                let data;
+
+                var xhrStorage = new XMLHttpRequest();
+                xhrStorage.open("POST", BASE_URL + "DMS/get-storage");
+
+                xhrStorage.setRequestHeader("Accept", "application/json");
+
+                xhrStorage.setRequestHeader("Content-Type", "application/json");
+                xhrStorage.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+                xhrStorage.send(JSON.stringify({}));
+
+                xhrStorage.onreadystatechange = function () {
+                    if (xhrStorage.readyState === 4) {
+                        console.log(xhrStorage.status);
+                        console.log(xhrStorage.responseText);
+                        let a1 = JSON.parse(xhrStorage.responseText);
+
+                        if (a1.message == "Unauthorized Access" || a1.message == "Session Expired") {
+                            window.location.href = "index.html";
+                        }
+
+                        var storageResponseId = document.querySelector('#storageResponseId');
+
+                        var storageValue = a1.storage > 50 ? "over50 p" + a1.storage : "p" + a1.storage;
+
+                        var tableHeader = "<div class=\"progress-circle " + storageValue + " \"> <span>" + a1.storage + "%</span><div class=\"left-half-clipper\"> <div class=\"first50-bar\"></div> <div class=\"value-bar\"></div> <div> </div>";
+
+                        storageResponseId.innerHTML = tableHeader;
+                    }
+                };
+
+                loadDocumentsData(pageNo);
+
+            } catch (err) {
+                alert("Failed");
+            }
+
+        }
+
+        function next(flag){
+
+            if(flag){
+                alert("No Furter Documents Available....");
+                return;
+            }
+
+
+            pageNo++;
+            loadDocumentsData(pageNo);
+        }
+
+        function prev(){
+            if(pageNo==0){
+                alert("You are in first page...")
+                return;
+            }
+            pageNo--;
+            loadDocumentsData(pageNo);
+        }
+
+        function loadDocumentsData(pageNos) {
+        var xhr = new XMLHttpRequest();
+                xhr.open("POST", BASE_URL + "DMS/view-documents?pageNo="+pageNos);
+
+                xhr.setRequestHeader("Accept", "application/json");
+
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+                xhr.send(JSON.stringify({}));
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+                        console.log(xhr.responseText);
+                        data = JSON.parse(xhr.responseText);
+
+                        var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+
+                        let tableHeader = " <section class=\"ftco-section\">   <div class=\"container\"> <div class=\"row justify-content-center\">      </div>       <div class=\"row\"> <div class=\"col-md-12\"> <div class=\"table-wrap\"> <table class=\"table table-striped\">  <thead>  <tr> <th>Sno</th>    <th>File Name</th>   <th>size</th>  <th>uploadedTime</th> <th>User Name</th> <th>ACTION</th> </tr> </thead>  <tbody>";
+
+                        data.forEach((item) => {
+
+                            tableHeader = tableHeader + "<tr><th scope=\"row\">" + item.sno + "</th><td>" + item.fileName + "</td><td>" + item.size + "</td><td>" + item.uploadedTime + "</td><td>" + item.userName + "</td><td>" + "<a href=\"#\" onclick=myfunction1(" +item.documentId +") id=\"" + item.sno + "\" class=\"btn btn-success\">Download</a>" + "</td></tr>";
+                        })
+
+                        var flag = false;
+
+                        if(data.length!=5){
+                            flag = true;
+                        }
+                        let tableFooter = " </tbody> </table> </div> </div> </div>\t</div> </section>" + "<p align=\"center\"> <a  href=\"#\" class=\"previous\" onclick=\"prev()\">&laquo; Previous</a>" + "<a  href=\"#\" class=\"next\" onclick=\"next("+ flag +")\">Next &raquo; &raquo;</a> </p>";
+
+                        singleFileUploadSuccess.innerHTML = tableHeader + tableFooter;
+                    }
+                };
+        }
+
+        function viewDocsInClassicStyle(){
+
+            var redirectUrl = BASE_URL + "viewDocumentsClassic.html";
+
+            window.location.href = redirectUrl;
+
+        }
+
+    </script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script src="js/viewDocs.js"></script>
+</div>
+</body>
+</html>
+

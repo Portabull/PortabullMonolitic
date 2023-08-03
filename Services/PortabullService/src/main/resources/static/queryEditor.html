@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="css/loaderportabull.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+
+	.button235635544235:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+.button23232345 {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+input[type=password], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<h2>Query Editor</h2>
+
+
+<div id="portabullloader"></div>
+
+<div class="container">
+    <form action="javaScript:queryIt1()">
+        <div class="row">
+            <div class="col-25">
+                <label for="fname">Url</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="urlId" name="firstname" placeholder="Enter DB Url...">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="lname">User Name</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="usernameId" name="lastname" placeholder="Enter DB User Name...">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="country">Password</label>
+            </div>
+            <div class="col-75">
+                <input type="password" id="passwordId" name="lastname">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="subject">Subject</label>
+            </div>
+            <div class="col-75">
+                <textarea id="queryId" name="subject" placeholder="Write Query here.." style="height:200px"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+
+
+</div>
+<div class="row121212"  style="text-align: center;">
+    <button class="button23232345 button235635544235" onclick="getDbDetails()">Display DB Details</button>
+</div>
+<input type="checkbox" id="Limit" name="vehicle1" onclick="disbaleLimit1()" value="Bike">
+<label for="vehicle1">Limit : 20 Records</label><br>
+<input type="checkbox" id="Limit1" name="vehicle11" onclick="disbaleLimit()" value="Bike">
+<label for="vehicle1">Limit : 10000 Records</label><br>
+
+<div id="dvTable"></div>
+
+
+
+<script>
+var flag = false;
+var pageNo = 0;
+
+document.getElementById('Limit').click();
+
+function disbaleLimit1(){
+pageNo = 0;
+if(document.getElementById('Limit').checked){
+document.getElementById('Limit1').disabled = true;
+
+
+}else{
+
+document.getElementById('Limit1').disabled = false;
+document.getElementById('Limit').disabled = true;
+
+document.getElementById('Limit1').click();
+}
+
+}
+
+function disbaleLimit(){
+pageNo = 0;
+if(document.getElementById('Limit1').checked){
+document.getElementById('Limit').disabled = true;
+
+
+}else{
+
+document.getElementById('Limit').disabled = false;
+document.getElementById('Limit1').disabled = true;
+
+document.getElementById('Limit').click();
+}
+
+}
+
+function queryIt1(){
+
+pageNo = 0;
+    queryIt(null);
+}
+
+function queryIt(displayDBDesign){
+
+var emptyHtml = document.querySelector('#dvTable');
+
+emptyHtml.innerHTML = '';
+
+  var singleFileUploadSuccess = document.querySelector('#portabullloader');
+
+ singleFileUploadSuccess.innerHTML = "<div id=\"loader\"></div>";
+
+var url =  document.getElementById("urlId").value;
+var userName = document.getElementById("usernameId").value;
+var pass = document.getElementById("passwordId").value;
+var query = document.getElementById("queryId").value;
+var limitVal;
+if(document.getElementById('Limit').checked){
+limitVal = 5;
+}else{
+limitVal = 10000;
+}
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST" , BASE_URL + "MIS/query-it");
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Authorization", window.localStorage.getItem("token"));
+            var data = JSON.stringify({"url": url,
+            "userName":userName,"pass":pass,
+            "query":query,"queryLimit":limitVal,"page":pageNo,"displayDBDesign":displayDBDesign});
+
+
+            xhr.send(data);
+
+                      var customers = new Array();
+
+
+
+   xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+                        console.log(xhr.responseText);
+                         document.getElementById("loader").style.display = "none";
+                        const response = JSON.parse(xhr.responseText);
+
+                        if(response.data == 'QUERY ERROR'){
+                             var errorMessageHtml = document.querySelector('#dvTable');
+
+                            var errorMessage = '<h1> Error : </h1> <br>' + '<p>' + response.message + '</p>';
+
+                             errorMessageHtml.innerHTML = errorMessage;
+
+                             return;
+
+                        }
+
+                        if(response.status == 'FAILED'){
+                            alert(response.message);
+                            window.location.href = "index.html";
+                        }
+
+                        if(response.length!=(limitVal+1)){
+                            flag = true;
+                        }
+
+                        for(i=0;i<response.length;i++){
+                            customers.push(response[i]);
+                        }
+
+
+        //Create a HTML Table element.
+        var table = document.createElement("TABLE");
+        table.border = "1";
+
+        //Get the count of columns.
+        var columnCount = customers[0].length;
+
+        //Add the header row.
+        var row = table.insertRow(-1);
+        for (var i = 0; i < columnCount; i++) {
+            var headerCell = document.createElement("TH");
+            headerCell.innerHTML = customers[0][i];
+            row.appendChild(headerCell);
+        }
+
+        //Add the data rows.
+        for (var i = 1; i < customers.length; i++) {
+            row = table.insertRow(-1);
+            for (var j = 0; j < columnCount; j++) {
+                var cell = row.insertCell(-1);
+                cell.innerHTML = customers[i][j];
+            }
+        }
+
+        var dvTable = document.getElementById("dvTable");
+        dvTable.innerHTML = "<button onclick=\"prevPage()\">Prev</button>  <button onclick=\"nextPage()\">Next</button>";
+
+        dvTable.appendChild(table);
+
+                    }
+                };
+}
+
+function prevPage(){
+if(pageNo==0){
+alert("You are in first page")
+return;
+}
+
+pageNo--;
+queryIt(null);
+}
+function nextPage(){
+if(flag){
+alert("You are in Last Page");
+return;
+}
+
+pageNo++;
+queryIt(null);
+}
+
+function getDbDetails(){
+queryIt('displayDBDesign');
+}
+</script>
+
+</body>
+</html>

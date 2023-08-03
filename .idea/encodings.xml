@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/AuditLogs/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/CacheUtils/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/CommonUtils/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/DMSData/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/GenericData/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/MISReportsData/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/SPFData/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/UserData/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Data/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/DmsDataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/GenericDataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/MISDataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/SPFDataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/UMDataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DataModels/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/GenericUtils/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Libraries/Swagger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Libraries/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Libraries/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/APIGateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/ElasticSearch/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/GenericService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/MISReports/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/MessagingQueue/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/OAuth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/PortabullService/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/SPF/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/ServiceAdmin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/ServiceDiscovery/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/UserManagement/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Services/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
