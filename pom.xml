@@ -100,6 +100,12 @@
 
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
 
+        <apache.common.utils.version>2.6</apache.common.utils.version>
+
+        <com.fasterxml.jackson.dataformat.version>2.12.4</com.fasterxml.jackson.dataformat.version>
+
+        <io.projectreactor.version>3.5.8</io.projectreactor.version>
+
         <!--  external jar version ends-->
 
         <!--  internal jar version starts-->
@@ -162,6 +168,9 @@
             <artifactId>threetenbp</artifactId>
             <version>${threetenbp.version}</version>
         </dependency>
+
+
+
 
         <dependency>
             <groupId>org.postgresql</groupId>

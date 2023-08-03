@@ -3,12 +3,10 @@ package com.portabull.um.services;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.dms.service.DocumentService;
-import com.portabull.payloads.MultiPartFileRequest;
 import com.portabull.response.DocumentResponse;
 import com.portabull.response.PortableResponse;
 import com.portabull.um.UserCredentials;
 import com.portabull.um.dao.UserCredentialsDao;
-import com.portabull.utils.HomePageUrl;
 import com.portabull.utils.commonutils.CommonUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -26,8 +24,6 @@ import java.util.Map;
 @Service
 public class UserProfileService {
 
-    @Autowired
-    HomePageUrl homePageUrl;
 
     @Autowired
     DocumentService documentService;

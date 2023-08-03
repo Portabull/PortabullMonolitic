@@ -20,7 +20,6 @@ import com.portabull.response.DocumentResponse;
 import com.portabull.response.EmailResponse;
 import com.portabull.response.FileResponse;
 import com.portabull.response.PortableResponse;
-import com.portabull.utils.HomePageUrl;
 import com.portabull.utils.MockMultipartFile;
 import com.portabull.utils.commonutils.CommonUtils;
 import com.portabull.utils.dateutils.DateUtils;
@@ -58,8 +57,6 @@ public class MISServiceImpl implements MISService {
     @Autowired
     MISHelperUtils misHelperUtils;
 
-    @Autowired
-    HomePageUrl homePageUrl;
 
     @Autowired
     DocumentService documentService;

@@ -1,6 +1,5 @@
 package com.portabull.dms.serviceimpl;
 
-import com.portabull.constants.HttpConstants;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.dms.service.DocumentNotesService;
@@ -17,15 +16,10 @@ import com.portabull.response.DocumentResponse;
 import com.portabull.response.FileResponse;
 import com.portabull.response.PortableResponse;
 import com.portabull.um.services.UserProfileService;
-import com.portabull.utils.HomePageUrl;
 import com.portabull.utils.commonutils.CommonUtils;
 import com.portabull.utils.dateutils.DateUtils;
 import com.portabull.utils.fileutils.FileHandling;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -47,8 +41,6 @@ public class DocumentNotesServiceImpl implements DocumentNotesService {
     @Autowired
     CommonDao commonDao;
 
-    @Autowired
-    HomePageUrl homePageUrl;
 
     @Autowired
     UserProfileService userProfileService;

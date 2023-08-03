@@ -2,11 +2,9 @@ package com.portabull.mis.service.impl;
 
 import com.portabull.dms.service.DocumentService;
 import com.portabull.mis.service.MISUploadService;
-import com.portabull.payloads.MultiPartFileRequest;
 import com.portabull.response.DocumentResponse;
 import com.portabull.response.FileResponse;
 import com.portabull.response.PortableResponse;
-import com.portabull.utils.HomePageUrl;
 import com.portabull.utils.MockMultipartFile;
 import com.portabull.utils.datautils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,6 @@ import java.io.IOException;
 @Service
 public class MISUploadServiceImpl implements MISUploadService {
 
-    @Autowired
-    HomePageUrl homePageUrl;
 
     @Autowired
     DocumentService documentService;

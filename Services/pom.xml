@@ -33,17 +33,6 @@
             <version>${spring-cloud-starter-netflix-zuul.version}</version>
         </dependency>
 
-        <!-- Cloud Eureka Dependencys -->
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
 
         <!-- It is for jwt token generation -->
 
