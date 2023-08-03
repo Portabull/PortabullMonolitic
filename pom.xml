@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.portabull</groupId>
+    <artifactId>Portable</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.5.RELEASE</version>
+        <relativePath/>
+        <!-- lookup parent from repository -->
+    </parent>
+    <modules>
+        <module>Services</module>
+        <module>CommonUtils</module>
+        <module>GenericUtils</module>
+        <module>Data</module>
+        <module>DataModels</module>
+        <module>AuditLogs</module>
+        <module>CacheUtils</module>
+        <module>Libraries</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <!--suppress UnresolvedMavenProperty -->
+        <appserver.home>${JAR_LOCATION}</appserver.home>
+        <deployement.dir>C://Users//91850//Documents//deployments//services_latest//</deployement.dir>
+
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+
+
+        <!--  external jar version starts-->
+
+        <!-- Database version starts -->
+        <threetenbp.version>0.7.2</threetenbp.version>
+        <!-- Database version ends -->
+
+        <!-- jwt version starts -->
+        <jjwt.version>0.9.1</jjwt.version>
+        <javax.xml.bind.version>2.3.0</javax.xml.bind.version>
+        <spring-boot-starter-security.version>2.3.5.RELEASE</spring-boot-starter-security.version>
+        <!-- jwt version ends -->
+
+        <!-- -->
+
+        <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
+
+        <mirror.version>1.6.1</mirror.version>
+
+        <commons-io.version>2.7</commons-io.version>
+
+        <esapi.version>2.4.0.0</esapi.version>
+
+        <mail.version>1.4</mail.version>
+
+        <spring-mobile-device.version>1.1.5.RELEASE</spring-mobile-device.version>
+
+        <uadetector-resources>2014.10</uadetector-resources>
+
+        <json-simple>1.1</json-simple>
+
+        <spring-security-web>5.5.0</spring-security-web>
+
+        <poi-ooxml.version>3.9</poi-ooxml.version>
+
+        <pdfbox.version>2.0.25</pdfbox.version>
+
+        <spring-boot-starter-mail.version>2.4.4</spring-boot-starter-mail.version>
+
+        <itextpdf.version>5.5.13.2</itextpdf.version>
+
+        <zuul-core.version>1.3.0</zuul-core.version>
+
+        <hazelcast-client.version>3.12.2</hazelcast-client.version>
+
+        <twilio.version>7.20.0</twilio.version>
+
+        <okhttp.version>2.7.5</okhttp.version>
+
+        <core.version>3.3.0</core.version>
+
+        <tika-core>1.24.1</tika-core>
+
+        <jsch.version>0.1.54</jsch.version>
+
+        <spring-boot-admin-starter-client.version>2.3.0</spring-boot-admin-starter-client.version>
+
+        <spring-cloud-starter-netflix-zuul.version>2.2.6.RELEASE</spring-cloud-starter-netflix-zuul.version>
+
+        <springfox-swagger-ui.version>2.9.2</springfox-swagger-ui.version>
+
+        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
+
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
+
+        <!--  external jar version ends-->
+
+        <!--  internal jar version starts-->
+
+        <generic.utils.version>0.0.1-SNAPSHOT</generic.utils.version>
+
+        <user.data.version>0.0.1-SNAPSHOT</user.data.version>
+
+        <generic.data.version>0.0.1-SNAPSHOT</generic.data.version>
+
+        <spf.data.version>0.0.1-SNAPSHOT</spf.data.version>
+
+        <swagger.version>0.0.1-SNAPSHOT</swagger.version>
+
+        <mis.reports.data.version>0.0.1-SNAPSHOT</mis.reports.data.version>
+
+        <dms.data.version>0.0.1-SNAPSHOT</dms.data.version>
+
+        <cache.utils.version>0.0.1-SNAPSHOT</cache.utils.version>
+
+        <um.data.models.version>0.0.1-SNAPSHOT</um.data.models.version>
+
+        <common.utils.version>0.0.1-SNAPSHOT</common.utils.version>
+
+        <spf.data.models.version>0.0.1-SNAPSHOT</spf.data.models.version>
+
+        <mis.data.models.version>0.0.1-SNAPSHOT</mis.data.models.version>
+
+        <generic.data.models.version>0.0.1-SNAPSHOT</generic.data.models.version>
+
+        <dms.data.models.version>0.0.1-SNAPSHOT</dms.data.models.version>
+
+        <audit.logs.version>0.0.1-SNAPSHOT</audit.logs.version>
+        <!--  internal jar version ends-->
+
+    </properties>
+
+    <dependencies>
+        <!--
+        Downloading Dependency Web related jar's (like @RestController,@SpringBootApplication
+                    etc.,)
+        -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+        </dependency>
+
+        <!--Downloading Dependency for Hibernate(JPA(ORM)) -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- For Connecting to database -->
+
+        <dependency>
+            <groupId>org.threeten</groupId>
+            <artifactId>threetenbp</artifactId>
+            <version>${threetenbp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- It is for test cases -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+</project>

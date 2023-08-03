@@ -1,0 +1,10 @@
+com\portabull\generic\daoimpl\GenericDaoImpl.class
+com\portabull\generic\dao\InternalEmailDao.class
+com\portabull\generic\daoimpl\CommonDaoImpl.class
+com\portabull\generic\dao\GenericDao.class
+com\portabull\generic\daoimpl\InternalEmailDaoImpl.class
+com\portabull\generic\daoimpl\UserAccountDaoImpl.class
+com\portabull\generic\daoimpl\OTPDaoImpl.class
+com\portabull\generic\dao\OTPDao.class
+com\portabull\generic\dao\UserAccountDao.class
+com\portabull\generic\dao\CommonDao.class

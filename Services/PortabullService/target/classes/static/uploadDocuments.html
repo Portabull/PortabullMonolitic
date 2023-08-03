@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="css/loaderportabull.css">
+    <style>
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Portabull</title>
+    <link rel="stylesheet" href="uploadDocuments.css" />
+</head>
+<body>
+
+<div id="portabullloader"></div>
+<noscript>
+    <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+<div class="upload-container">
+    <div class="upload-header">
+        <h2>Documents Upload</h2>
+    </div>
+    <div class="upload-content">
+        <div class="single-upload">
+            <h3>Upload Single File</h3>
+            <form id="singleUploadForm" name="singleUploadForm">
+                <input id="singleFileUploadInput" type="file" name="file" class="file-input" required />
+                <button type="submit" class="primary submit-btn">Submit</button>
+            </form>
+            <div class="upload-response">
+                <div id="singleFileUploadError"></div>
+                <div id="singleFileUploadSuccess"></div>
+            </div>
+        </div>
+        <div class="multiple-upload">
+            <h3>Upload Multiple Files</h3>
+            <form id="multipleUploadForm" name="multipleUploadForm">
+                <input id="multipleFileUploadInput" type="file" name="files" class="file-input" multiple required />
+                <button type="submit" class="primary submit-btn">Submit</button>
+            </form>
+            <div class="upload-response">
+                <div id="multipleFileUploadError"></div>
+                <div id="multipleFileUploadSuccess"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div style="text-align: center;">
+    <button class="button button2" onclick="gotodocuments() ">Back</button>
+</div>
+<script src="uploadDocuments.js" ></script>
+<script src="backpages.js"></script>
+</body>
+</html>

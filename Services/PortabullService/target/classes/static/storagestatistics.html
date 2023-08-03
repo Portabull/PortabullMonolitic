@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<script src="js/portabullconfig.js"></script>
+<style>
+
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: absolute;
+
+  top: 75%;
+  left: 50%;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+
+h1
+{
+  font-size: 48px;
+  text-shadow: -1px -1px #f00, 1px 1px #a00, -3px 0 4px #000;
+  font-family:"Segoe print", Arial, Helvetica, sans-serif;
+  color: #dd0000;
+  padding:64px 0 0 0;
+  margin:16px auto;
+  font-weight:lighter;
+  -moz-box-shadow:none;  
+  -webkit-box-shadow: none;  
+  box-shadow:none;  
+  text-align:center;
+  display:block;
+  min-height:172px;
+  min-width:800;
+  max-height:172px;
+  max-width:800px;  
+  background-image:url(images/background-h1-tesla.jpg);
+}
+</style>
+<body>
+<button class="button button2" onclick="goToViewDocsPage()">Back</button>
+<h1>Storage Statistics</h1>
+
+
+<div id="charts" style="text-align:center;width: 300px;margin: 0 auto;"></div>
+
+
+
+
+<div class="dropdown"/>  <button class="dropbtn" >Different View</button>  <div class="dropdown-content">
+
+<a onmouseover="drawPieChart()" onclick="drawPieChart()"  >PieChart</a>
+<a onmouseover="drawScatterChart()" onclick="drawScatterChart()" >ScatterChart</a>
+<a onmouseover="drawColumnChart()" onclick="drawColumnChart()" >ColumnChart</a>
+<a  onmouseover="drawHistogram()" onclick="drawHistogram()">Histogram</a>
+
+<a  onmouseover="drawBarChart()" onclick="drawBarChart()">BarChart</a>
+
+<a  onmouseover="drawComboChart()" onclick="drawComboChart()">ComboChart</a>
+<a  onmouseover="drawAreaChart()" onclick="drawAreaChart()">AreaChart</a>
+<a  onmouseover="drawSteppedAreaChart()" onclick="drawSteppedAreaChart()">SteppedAreaChart</a>
+<a  onmouseover="drawLineChart()" onclick="drawLineChart()">LineChart</a>
+
+
+</div>
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+
+const  stats = [['Task', 'Storage in MB']];
+
+
+init();
+
+function init() {
+
+    loadStatistics();
+
+}
+
+
+function drawPieChart() {
+
+	
+ var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.PieChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+  
+}
+
+function drawScatterChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.ScatterChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawColumnChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.ColumnChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawHistogram(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.Histogram(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawBarChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.BarChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawComboChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.ComboChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawAreaChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.AreaChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function drawSteppedAreaChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.SteppedAreaChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+
+function drawLineChart(){
+
+var data = google.visualization.arrayToDataTable(stats);
+
+  var options = {'title':'Storage Statistics', 'width':550, 'height':400};
+ 
+  var chart = new google.visualization.LineChart(document.getElementById('charts'));
+  
+  chart.draw(data, options);
+
+}
+
+function goToViewDocsPage() {
+	  window.location.href = "viewDocuments.html";
+}
+
+function loadStatistics(){
+
+ 	     var xhr = new XMLHttpRequest();
+
+           xhr.open("GET",BASE_URL + "DMS/get-statistics");
+
+           xhr.setRequestHeader("Accept", "application/json");
+
+           xhr.setRequestHeader("Content-Type", "application/json");
+
+           xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+           var data = JSON.stringify({});
+
+           xhr.send(data);
+
+             xhr.onreadystatechange = function () {
+
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+
+                        console.log(xhr.responseText);
+
+                        const response = JSON.parse(xhr.responseText);
+
+                        if(response.statusCode == 200){
+                            var totalSize = 0;
+                            for(i=0;i<response.data.fileStatistics.length;i++){
+                                stats[i+1] = response.data.fileStatistics[i];
+                                var size = response.data.fileStatistics[i][1];
+                                totalSize = totalSize + size;
+                            }
+
+                            var freeSize = response.data.storageSize - totalSize;
+
+                            stats[response.data.fileStatistics.length+1] = ["Free Space",freeSize];
+
+
+                            google.charts.load('current', {'packages':['corechart']});
+
+                            google.charts.setOnLoadCallback(drawPieChart);
+
+                        }else{
+                            alert("Session Expired");
+                             window.location.href = "index.html";
+                        }
+  			          }
+                };
+}
+
+</script>
+
+</body>
+</html>

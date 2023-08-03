@@ -1,0 +1,8 @@
+com\portabull\entitys\UserDocumentDirectoryMapping.class
+com\portabull\entitys\DocumentNotes.class
+com\portabull\entitys\DefaultDocumentSecurity.class
+com\portabull\entitys\Document.class
+com\portabull\entitys\DefaultDocumentSecurity$1.class
+com\portabull\entitys\UserDirectory.class
+com\portabull\entitys\DynamicDocumentSecurity$1.class
+com\portabull\entitys\DynamicDocumentSecurity.class

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="js/portabullconfig.js"></script>
+
+<style>
+
+
+</style>
+</head>
+<body>
+
+<h1>Development is in progress</h1>
+
+<div id="dummy">
+
+
+</div>
+
+<script>
+
+init();
+
+  function init(){
+
+    var accId = new URL(window.location.href).searchParams.get("accId");
+
+    document.getElementById("dummy").innerHTML = accId;
+
+  }
+
+</script>
+
+</body>
+</html>
+
+

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="js/portabullconfig.js"></script>
+	<link rel="stylesheet" href="login.css">
+	<script src="login.js"></script>
+	<link rel="stylesheet" href="css/adminstyle.css">
+	<link rel="stylesheet" href="css/loaderportabull.css">
+</head>
+<body>
+<script>
+			isAlreadyLoggedIn();
+			function isAlreadyLoggedIn(){
+				if(window.localStorage.getItem("token") !=null){
+					healthCheck();
+				}
+			}
+			</script>
+
+<div class="form-popup" id="myForm">
+	<form  class="form-container">
+		<h1>Unlock Request</h1>
+		<h6>Please write a reason why too many wrong attempts are done..</h6>
+
+		<label id="notifyEmailAddres"><b>Email</b></label>
+		<input type="text" placeholder="Enter Email" id="notifyEmailAddress" name="email" required>
+
+		<label id="notifyReaso"><b>Enter Reason</b></label>
+		<input type="text" placeholder="Enter Reason" id="notifyReason" name="psw" required>
+
+		<button type="submit" class="btn" onclick="givealert()">Request Access</button>
+	</form>
+</div>
+
+
+<script>
+loadAdminLockPageIfany();
+
+function loadAdminLockPageIfany(){
+  var isAccountLocked = new URL(window.location.href).searchParams.get("isAccountLocked");
+
+  var displayError = new URL(window.location.href).searchParams.get("displayError");
+
+  if(displayError != null && (displayError == "true" || displayError)) {
+	alert(new URL(window.location.href).searchParams.get("displayErrorMessage"));
+	return;
+  }
+
+  if(isAccountLocked !=null && (isAccountLocked == "true" || isAccountLocked)){
+	document.getElementById("myForm").style.display = "block";
+	document.getElementById("notifyEmailAddress").value = new URL(window.location.href).searchParams.get("notifyEmailAddress");
+  	alert(new URL(window.location.href).searchParams.get("message"));
+  }
+}
+</script>
+
+
+<div id="portabullloader"></div>
+
+
+<div class="login-wrap">
+	<div class="login-html">
+
+		<script>
+
+			loadLatLong();
+			function loadLatLong() {
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(showPosition);
+				}
+			}
+
+			function showPosition(position) {
+				window.localStorage.setItem("location", position.coords.latitude +
+						";" + position.coords.longitude);
+
+			}
+		</script>
+
+		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+		<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+		<div class="login-form">
+			<div class="sign-in-htm">
+				<div class="group">
+					<label for="user" class="label">Username</label>
+					<input id="user" type="text" class="input">
+				</div>
+				<div class="group">
+					<label for="pass" class="label">Password</label>
+					<input id="pass" type="password" class="input" data-type="password">
+				</div>
+				<div class="group">
+					<input id="check" type="checkbox" class="check" checked>
+					<label for="check"><span class="icon"></span> Keep me Signed in</label>
+				</div>
+				<div class="group">
+					<input onclick="login()" type="submit" class="button" value="Sign In" id="12345">
+
+					<div class="social d-flex text-center">
+						<a href="#" onclick="redirectToGmailLogin()" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span>Login With Gmail</a>
+					</div>
+				</div>
+
+				<div class="hr"></div>
+				<div class="foot-lnk">
+					<a href="forgetPassword.html">Forgot Password?</a>
+				</div>
+			</div>
+			<div class="sign-up-htm">
+				<div class="group">
+					<label for="user" class="label">Username</label>
+					<input id="userName" type="text" class="input">
+				</div>
+				<div class="group">
+					<label for="pass" class="label">Password</label>
+					<input id="password" type="password" class="input" data-type="password">
+				</div>
+				<div class="group">
+					<label for="pass" class="label">Repeat Password</label>
+					<input id="repeatPassword" type="password" class="input" data-type="password">
+				</div>
+				<div class="group">
+					<label for="pass" class="label">Email Address</label>
+					<input id="emailAddress" type="text" class="input">
+				</div>
+				<div class="group">
+					<input onclick="registration()"  type="submit" class="button" value="Sign Up" id="registrationButtonId">
+				</div>
+
+				<br>
+				<br>
+				<br>
+				<br>
+
+
+				<div class="foot-lnk">
+					<label for="tab-1">Already Member?</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</body>
+</html>

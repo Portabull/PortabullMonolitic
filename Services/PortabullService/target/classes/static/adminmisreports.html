@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <script src="backpages.js"></script>
+    <style>
+
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+    </style>
+    <title>Portabull</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link href="circle.css" media="all" rel="stylesheet"/>
+    <script src="js/downloadfiles.js"></script>
+</head>
+<body>
+
+<h2>MIS REPORTS</h2>
+
+<div class="storage-response">
+    <div id="storageResponseId"></div>
+</div>
+<button class="button button2" onclick="goToLandingPage()">Back</button>
+<br>
+<a  href="#" onclick="openTheQueryEditor()">Open Query Editor</a>
+
+<div class="upload-response">
+
+    <div id="singleFileUploadError"></div>
+    <div id="singleFileUploadSuccess"></div>
+
+    <script>
+        mytable();
+
+        function mytable() {
+            try {
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", BASE_URL + "MIS/get-mis-reports");
+
+                xhr.setRequestHeader("Accept", "application/json");
+
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+                xhr.send(JSON.stringify({}));
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+                        console.log(xhr.responseText);
+                        var data = JSON.parse(xhr.responseText);
+
+                        var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+
+                        let tableHeader =   "<table> <tr> <th>SNO</th>    <th>Report Name</th>    <th>Document Tittle</th>  <th>ACTION</th>  </tr>";
+
+                        data.data.forEach((item) => {
+
+                             var button = "<div class=\"dropdown\">  <button class=\"dropbtn\">Download</button>  <div class=\"dropdown-content\"> \t    <a onclick=\"downloadMISFile('PDF'," +  item.reportID + ")\">PDF</a>    <a onclick=\"downloadMISFile('XLSX',"+  item.reportID + ")\">Excel</a>    <a onclick=\"downloadMISFile('txt',"+  item.reportID + ")\">Text</a>    <a onclick=\"downloadMISFile('json',"+  item.reportID + ")\">Json</a>  </div></div>";
+
+                            tableHeader = tableHeader + "<tr><td>" + item.sno + "</td><td>" + item.reportName + "</td><td>" + item.documentTittle + "</td><td>" + button + "</td></tr>" ;
+                        })
+
+                        tableHeader = tableHeader + '</table>';
+                        console.log(tableHeader);
+                        singleFileUploadSuccess.innerHTML = tableHeader;
+                    }
+                };
+
+
+            } catch (err) {
+                alert("Failed");
+            }
+
+        }
+
+        function goToLandingPage(){
+            window.location.href = "loginsuccessfull.html";
+        }
+
+    </script>
+    <script>
+
+   function myfunction1(documentId){
+
+
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET",BASE_URL + "DMS/download-documents" + "?documentId="+documentId);
+
+           xhr.setRequestHeader("Accept", "application/json");
+
+
+           xhr.setRequestHeader("Content-Type", "application/json");
+           xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+           var data = JSON.stringify({});
+
+           xhr.send(data);
+
+
+             xhr.onreadystatechange = function () {
+
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+
+                         const fileResponse = JSON.parse(xhr.responseText);
+
+                if (fileResponse.statusCode == 200) {
+
+
+
+                     var a = document.createElement("a");
+                       a.href =fileResponse.data.file;
+                          a.download = fileResponse.data.fileName; //File name Here
+                        a.click();
+
+                } else {
+                           alert(fileResponse.message);
+                    }
+                }
+
+                    }
+                };
+
+
+
+function downloadMISFile(documentFormat,reportID){
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET",BASE_URL + "MIS/generate-reports?downloadFormat="+documentFormat + "&reportID="+reportID);
+
+           xhr.setRequestHeader("Accept", "application/json");
+
+
+           xhr.setRequestHeader("Content-Type", "application/json");
+           xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+           var data = JSON.stringify({});
+
+           xhr.send(data);
+
+
+             xhr.onreadystatechange = function () {
+
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+
+                         const fileResponse = JSON.parse(xhr.responseText);
+
+                if (fileResponse.statusCode == 200) {
+
+
+
+                     var a = document.createElement("a");
+                       a.href =fileResponse.data.file;
+                          a.download = fileResponse.data.fileName; //File name Here
+                        a.click();
+
+                } else {
+                           alert(fileResponse.message);
+                    }
+                }
+
+                    }
+}
+
+function saveBlob(blob1, fileName) {
+      var blob = new Blob([blob1], {type: 'application/pdf'});
+          //Create a link element, hide it, direct
+          //it towards the blob, and then 'click' it programatically
+          let a = document.createElement("a");
+          a.style = "display: none";
+          document.body.appendChild(a);
+          //Create a DOMString representing the blob
+          //and point the link element towards it
+          let url = window.URL.createObjectURL(blob);
+          a.href = url;
+          a.download = fileName;
+          //programatically click the link to trigger the download
+          a.click();
+          //release the reference to the file by revoking the Object URL
+          window.URL.revokeObjectURL(url);
+}
+
+function getFileName(xhr){
+       var filename = "";
+    var disposition = xhr.getResponseHeader('Content-Disposition');
+    if (disposition && disposition.indexOf('attachment') !== -1) {
+        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        var matches = filenameRegex.exec(disposition);
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '');
+        }
+    }
+    return filename;
+}
+
+
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
+function openTheQueryEditor(){
+    window.location.href = "queryEditor.html";
+}
+
+    </script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script src="js/viewDocs.js"></script>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,5 @@
+com\portabull\um\daoimpl\UserDaoImpl.class
+com\portabull\um\utils\JwtUtil.class
+com\portabull\um\dao\UserCredentialsDao.class
+com\portabull\um\dao\UserDao.class
+com\portabull\um\daoimpl\UserCredentialsDaoImpl.class

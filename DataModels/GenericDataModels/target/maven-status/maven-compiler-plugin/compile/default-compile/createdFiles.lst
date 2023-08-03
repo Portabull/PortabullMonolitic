@@ -1,0 +1,11 @@
+com\portabull\generic\models\ImageURI.class
+com\portabull\generic\models\UserDocumentStorage.class
+com\portabull\generic\models\InternalEmails.class
+com\portabull\generic\models\CustomerEnquiry.class
+com\portabull\generic\models\UserAccountCalculationDetails.class
+com\portabull\generic\models\UserNoteSettings.class
+com\portabull\generic\models\MasterImageURI.class
+com\portabull\generic\models\SharedNotesSettings.class
+com\portabull\generic\models\OneTimePassword.class
+com\portabull\generic\converters\OtpConverter.class
+com\portabull\generic\models\HtmlTemplates.class

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Approval</title>
+<style>
+body {
+  margin: 0;
+  background: #666;
+}
+a{
+  text-decoration: none;
+}
+.accept {
+  color: #FFF;
+  background: #44CC44;
+  padding: 15px 20px;
+  box-shadow: 0 4px 0 0 #2EA62E;
+}
+.accept:hover {
+  background: #6FE76F;
+  box-shadow: 0 4px 0 0 #7ED37E;
+}
+.deny {
+  color: #FFF;
+  background: tomato;
+  padding: 15px 20px;
+  box-shadow: 0 4px 0 0 #CB4949;
+}
+.deny:hover {
+  background: rgb(255, 147, 128);
+  box-shadow: 0 4px 0 0 #EF8282;
+}
+
+</style>
+</head>
+<body>
+<p>Hi,<p>
+<p>Greeting from portabull you have logged on following device and location please check<p>
+{DEVICE_DETAILS}
+<p>If you are trying to sign in please approve<p>
+<center>
+  <br>
+  <a href="{PORTABULL_VERIFY_URL_APPROVE}" class="accept">APPROVE<span class="fa fa-check"></span></a>
+  <a href="{PORTABULL_VERIFY_URL_DECLINE}" class="deny">DECLINE <span class="fa fa-close"></span></a>
+</center>
+
+<p style="text-align: right">Regards,<p>
+<p style="text-align: right">Portabull.<p>
+
+</body>
+</html>
+
+

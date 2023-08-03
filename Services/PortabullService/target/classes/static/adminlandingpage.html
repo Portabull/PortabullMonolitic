@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="loginsuccessfull.css">
+    <script src="logout.js"></script>
+    <style>
+
+
+        .lockUnlock{
+             position: absolute;
+            left: 330px;
+            top: 190px;
+        }
+
+        .email{
+             position: absolute;
+            left: 695px;
+            top: 190px;
+        }
+
+          .misReports{
+            position: absolute;
+            left: 1020px;
+            top: 190px;
+        }
+
+             .lockButton{
+            position: absolute;
+            left: 315px;
+            top: 270px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+        .lockButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+        .emailButton{
+            position: absolute;
+            left: 655px;
+            top: 270px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+        .emailButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+  .misReportsButton{
+             position: absolute;
+            left: 995px;
+            top: 270px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+        .misReportsButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+
+
+<div style="text-align: right;">
+    <a href="#" onclick="logout()" class="btn btn-info btn-lg">
+        <span class="glyphicon glyphicon-log-out"></span> Log out
+    </a>
+</div>
+
+<div class="wrapper">
+    <div class="search-input">
+        <a href="" target="_blank" hidden></a>
+        <input type="text" placeholder="Type to search..">
+        <div class="autocom-box">
+            <!-- here list are inserted from javascript -->
+        </div>
+        <div class="icon"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+
+
+<h1 class="email">Email</h1>
+<h1 class="lockUnlock">Lock/Unlock</h1>
+<h1 class="misReports">MIS Reports</h1>
+
+<input class="emailButton" type="image"
+       src="images/email.jpg" id="emailButton"/>
+
+
+<script type="text/javascript">
+    document.getElementById("emailButton").onclick = function () {
+        location.href = "adminemails.html";
+    };
+</script>
+
+
+<input class="lockButton" type="image"
+       src="images/lock.jpg" id="lockButton"/>
+
+
+<script type="text/javascript">
+    document.getElementById("lockButton").onclick = function () {
+        location.href = "adminlockpage.html";
+    };
+</script>
+
+
+
+<input class="misReportsButton" type="image"
+       src="images/reports.jpg" id="misReportsButton"/>
+
+
+<script type="text/javascript">
+    document.getElementById("misReportsButton").onclick = function () {
+        location.href = "displayviews.html";
+    };
+</script>
+
+
+<script src="js/adminscript.js"></script>
+
+
+</body>
+</html>

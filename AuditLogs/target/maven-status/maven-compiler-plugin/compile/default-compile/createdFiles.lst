@@ -1,0 +1,3 @@
+com\portabull\audit\models\AuditDetails.class
+com\portabull\audit\utils\HibernateInterceptorConfig.class
+com\portabull\audit\utils\HibernateAuditHelper.class

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script src="js/portabullconfig.js"></script>
+    <script src="login.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="login.css">
+    <script src="login.js"></script>
+    <link rel="stylesheet" href="css/adminstyle.css">
+    <link rel="stylesheet" href="css/loaderportabull.css">
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portabull Login</title>
+    <link rel="stylesheet" href="loginstyle.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+  </head>
+  <body>
+  <div id="portabullloader"></div>
+
+
+  <main>
+      <div class="box">
+        <div class="inner-box">
+          <div class="forms-wrap">
+            <form  action="javaScript:validateOtp()"  autocomplete="off" class="sign-in-form">
+              <div class="logo">
+                <img src="./img/logo.png" alt="portabull" />
+                <h4>portabull</h4>
+              </div>
+
+              <div class="actual-form">
+                <div class="input-wrap">
+                  <input
+                   id="pass"
+                   type="number"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
+                  />
+                  <label>Otp</label>
+                </div>
+
+                <input type="submit" value="Verify"  class="sign-btn" />
+
+                  <div id="myDIV">
+                  </div>
+
+                <div class="sign-btn-custom" align="center" >
+                  <a class="sign-btn" href="javaScript:goToHomePage()" >Go To Home</a>
+                </div>
+
+              </div>
+            </form>
+
+            <form action="javaScript:registration()" autocomplete="off" class="sign-up-form">
+              <div class="logo">
+                <img src="./img/logo.png" alt="portabull" />
+                <h4>portabull</h4>
+              </div>
+
+              <div class="heading">
+                <h2>Get Started</h2>
+                <h6>Already have an account?</h6>
+                <a href="#" class="toggle">Sign in</a>
+              </div>
+
+              <div class="actual-form">
+                <div class="input-wrap">
+                  <input
+                    id="userName"
+                    type="text"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>User Name</label>
+                </div>
+
+               <div class="input-wrap">
+                  <input
+                    id="password"
+                    type="password"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Password</label>
+                </div>
+
+                 <div class="input-wrap">
+                  <input
+                   id="repeatPassword"
+                   type="password"
+                    minlength="4"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Repeat Password</label>
+                </div>
+
+                <div class="input-wrap">
+                  <input
+                    id="emailAddress"
+                    type="email"
+                    class="input-field"
+                    autocomplete="off"
+                    required
+                  />
+                  <label>Email Address</label>
+                </div>
+
+                <input type="submit" value="Sign Up" class="sign-btn" />
+
+                <p class="text">
+                  By signing up, I agree to the
+                  <a href="#">Terms of Services</a> and
+                  <a href="#">Privacy Policy</a>
+                </p>
+              </div>
+            </form>
+          </div>
+
+          <div class="carousel">
+            <div class="images-wrapper">
+              <img src="./img/image1.jpg" class="image img-1 show" alt="" />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+
+
+
+  <!-- Javascript file -->
+
+    <script>
+
+            var singleFileUploadSuccess = document.querySelector('#myDIV');
+
+            setInterval(populateResendButton, 30000);
+
+            singleFileUploadSuccess.innerHTML = "<p> Resend OTP in <span id=\"countdowntimer\">30 </span> Seconds</p>";
+
+var timeleft = 30;
+    var downloadTimer = setInterval(function(){
+    timeleft--;
+    document.getElementById("countdowntimer").textContent = timeleft;
+    if(timeleft <= 0)
+        clearInterval(downloadTimer);
+    },1000);
+
+
+function populateResendButton(){
+
+     var singleFileUploadSuccess = document.querySelector('#myDIV');
+                singleFileUploadSuccess.innerHTML = "<div class=\"sign-btn-custom\" align=\"center\" >   <a class=\"sign-btn\" href=\"javaScript:resendOtp()\"   >Resend</a>";
+
+}
+
+	</script>
+
+    <script src="app.js"></script>
+  </body>
+</html>

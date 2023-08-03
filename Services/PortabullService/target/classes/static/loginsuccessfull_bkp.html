@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="loginsuccessfull.css">
+    <script src="login.js"></script>
+    <script src="logout.js"></script>
+    <style>
+
+        .documents{
+            position: absolute;
+            left: 325px;
+            top: 190px;
+        }
+        .messages{
+            position: absolute;
+            left: 690px;
+            top: 190px;
+        }
+        .settings{
+            position: absolute;
+            left: 1040px;
+            top: 190px;
+        }
+        .email{
+             position: absolute;
+            left: 1400px;
+            top: 190px;
+        }
+        .applicationLoggers{
+            position: absolute;
+            left: 355px;
+            top: 520px;
+        }
+        .spfTag {
+            position: absolute;
+           left: 710px;
+            top: 520px;
+        }
+
+        .misReports {
+            position: absolute;
+           left: 1010px;
+            top: 520px;
+        }
+
+        .notification{
+        position: absolute;
+            left: 320px;
+            top: 850px;
+        }
+
+
+        .documentButton {
+            position: absolute;
+            left: 315px;
+            top: 270px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:200px;
+        }
+
+        .applicationLogger{
+           position: absolute;
+            left: 315px;
+            top: 600px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:200px;
+        }
+
+        .spf{
+           position: absolute;
+            left: 655px;
+            top: 600px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:200px;
+        }
+
+
+             .misReportsButton{
+           position: absolute;
+            left: 995px;
+            top: 600px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:200px;
+        }
+
+        .notificationButton{
+          position: absolute;
+            left: 315px;
+            top: 930px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:200px;
+        }
+
+        .settingsButton {
+            position: absolute;
+            left: 995px;
+            top: 270px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+
+
+        .messageButton {
+            position: absolute;
+            left: 655px;
+            top: 270px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+
+        .emailButton{
+            position: absolute;
+            left: 1335px;
+            top: 270px;
+
+
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+
+            height:200px;
+            width:230px;
+        }
+
+
+        .documentButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+         .applicationLogger:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+        .spf:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+         .notificationButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+        .settingsButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+        .messageButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+        .emailButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+     .misReportsButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+
+
+<div id="LoggedTimeAndLogout" class="tabcontent" style="text-align: right;">
+
+</div>
+
+
+
+<div class="wrapper">
+    <div class="search-input">
+        <a href="" target="_blank" hidden></a>
+        <input type="text" placeholder="Type to search..">
+        <div class="autocom-box">
+            <!-- here list are inserted from javascript -->
+        </div>
+        <div class="icon"><i class="fas fa-search"></i></div>
+    </div>
+</div>
+
+<h1 class="documents">Documents</h1>
+<h1 class="messages">Message</h1>
+<h1 class="settings">Settings</h1>
+<h1 class="email">Email</h1>
+<h1 class="applicationLoggers">Logger</h1>
+<h1 class="spfTag">SPF</h1>
+<h1 class="misReports">MIS Reports</h1>
+<h1 class="notification">Notifications</h1>
+<input class="documentButton" type="image"
+       src="images/source-documents-1024x682.jpeg" id="documentButton"/>
+
+<script type="text/javascript">
+    document.getElementById("documentButton").onclick = function () {
+        location.href = "documents.html";
+    };
+
+
+
+
+</script>
+
+
+<input class="settingsButton" type="image" src="images/settings_icon.png"
+       id="settingsButton"/>
+
+<script type="text/javascript">
+    document.getElementById("settingsButton").onclick = function () {
+        location.href = "userprofile.html";
+    };
+</script>
+
+
+<input class="messageButton" type="image"
+       src="images/message.webp"
+       id="messageButton"/>
+
+
+<script type="text/javascript">
+    document.getElementById("messageButton").onclick = function () {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open("POST", BASE_URL + "UM/get-user-name");
+
+        xhr.setRequestHeader("Accept", "application/json");
+
+
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+        var data = JSON.stringify({});
+
+        xhr.send(data);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+
+                const response = JSON.parse(xhr.responseText);
+
+                if (response.statusCode == 200) {
+                    location.href = "http://portabull.in:8087?aa="+response.data;
+                }else{
+                    alert("Please Login Again Session Expired");
+                }
+            }
+        };
+    };
+</script>
+
+
+<input class="emailButton" type="image"
+       src="images/email.jpg" id="emailButton"/>
+
+
+<script type="text/javascript">
+    document.getElementById("emailButton").onclick = function () {
+        location.href = "emails.html";
+    };
+</script>
+
+<input class="applicationLogger" type="image"
+       src="images/logger.jpg" id="applicationLogger"/>
+
+
+<script type="text/javascript">
+    document.getElementById("applicationLogger").onclick = function () {
+        location.href = "applicationLogger.html";
+    };
+</script>
+
+
+<input class="spf" type="image"
+       src="images/portabull.png" id="spf">
+
+<script type="text/javascript">
+    document.getElementById("spf").onclick = function () {
+        location.href = "spf.html";
+    };
+</script>
+
+<input class="notificationButton" type="image"
+        src="images/notifications.webp" id="notificationButton">
+
+<script type="text/javascript">
+    document.getElementById("notificationButton").onclick = function () {
+        location.href = "notificationButton.html";
+    };
+</script>
+
+
+
+<input class="misReportsButton" type="image"
+       src="images/reports.jpg" id="misReportsButton">
+
+<script type="text/javascript">
+    document.getElementById("misReportsButton").onclick = function () {
+        location.href = "adminmisreports.html";
+    };
+</script>
+
+<script src="js/suggestions.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+
+    initToken();
+    function initToken(){
+
+     var jwtToken = new URL(window.location.href).searchParams.get("jwt");
+     var userName = new URL(window.location.href).searchParams.get("userName");
+     var twoStepVer = new URL(window.location.href).searchParams.get("twoStepVer");
+
+     if(jwtToken!=null){
+        window.localStorage.setItem('isUserLoggedViaOAuth',true);
+        window.localStorage.setItem('token', 'Bearer ' + jwtToken);
+        if(twoStepVer!=null && "true"==twoStepVer){
+         sendOtp(userName);
+         window.location.href = "otp.html";
+         return;
+        }
+     }
+     if(window.localStorage.getItem('registrationCheck') == null || !window.localStorage.getItem('registrationCheck')){
+     loadLoggedInPages();
+     }
+
+    }
+  loadTimeAndLogout();
+</script>
+
+
+</body>
+</html>

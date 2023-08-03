@@ -1,0 +1,5 @@
+com\portabull\dms\daoimpl\DocumentDaoImpl.class
+com\portabull\dms\daoimpl\DocumentStatisticsDaoImpl.class
+com\portabull\dms\dao\DocumentDao.class
+com\portabull\dms\dao\DocumentStatisticsDao.class
+com\portabull\dms\utils\StorageResponseGenerator.class

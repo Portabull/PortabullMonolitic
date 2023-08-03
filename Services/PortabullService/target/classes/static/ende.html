@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <link rel="stylesheet" href="loginsuccessfull.css">
+    <link rel="stylesheet" href="css/loaderportabull.css">
+    <script src="login.js"></script>
+    <script src="logout.js"></script>
+ <script src="js/ende.js"></script>
+    <style>
+
+    #toast {
+    visibility: hidden;
+    max-width: 50px;
+    height: 50px;
+    /*margin-left: -125px;*/
+    margin: auto;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+
+    position: fixed;
+    z-index: 1;
+    left: 0;right:0;
+    bottom: 30px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#toast #img{
+	width: 50px;
+	height: 50px;
+
+    float: left;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    box-sizing: border-box;
+
+
+    background-color: #111;
+    color: #fff;
+}
+#toast #desc{
+
+
+    color: #fff;
+
+    padding: 16px;
+
+    overflow: hidden;
+	white-space: nowrap;
+}
+#toast #desc1{
+
+
+    color: #fff;
+
+    padding: 16px;
+
+    overflow: hidden;
+	white-space: nowrap;
+}
+#toast.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+    from {min-width: 50px}
+    to {min-width: 350px}
+}
+
+@keyframes expand {
+    from {min-width: 50px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes stay {
+    from {min-width: 350px}
+    to {min-width: 350px}
+}
+
+@keyframes stay {
+    from {min-width: 350px}
+    to {min-width: 350px}
+}
+@-webkit-keyframes shrink {
+    from {min-width: 350px;}
+    to {min-width: 50px;}
+}
+
+@keyframes shrink {
+    from {min-width: 350px;}
+    to {min-width: 50px;}
+}
+
+@-webkit-keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 60px; opacity: 0;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 60px; opacity: 0;}
+}
+
+
+
+
+
+
+
+.indeterminate-progress-bar {
+    /* Color */
+    background-color: #d1d5db;
+
+    /* Rounded border */
+    border-radius: 9999px;
+
+    /* Size */
+    height: 0.5rem;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.indeterminate-progress-bar__progress {
+    /* Color */
+    background-color: #3b82f6;
+
+    /* Rounded border */
+    border-radius: 9999px;
+
+    /* Absolute position */
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    width: 50%;
+
+    /* Move the bar infinitely */
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-name: indeterminate-progress-bar;
+}
+
+@keyframes indeterminate-progress-bar {
+    from {
+        left: -50%;
+    }
+    to {
+        left: 100%;
+    }
+}
+
+
+.logo {
+
+}
+
+.logo img {
+  width: 27px;
+  margin-right: 0.3rem;
+}
+
+.logo h4 {
+  font-size: 1.1rem;
+  margin-top: -9px;
+  letter-spacing: -0.5px;
+  color: #151111;
+}
+
+   .filesButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:160px;
+            width:150px;
+
+        }
+
+         .filesButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+
+
+
+    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+
+<div id="toast">
+</div>
+
+<div id="portabullloader"></div>
+
+<div align="right">
+
+
+<a href="#" onclick="logout()" class="btn btn-info btn-lg">        <span class="glyphicon glyphicon-log-out"></span> Log out    </a>
+
+</div>
+
+
+
+<form hidden id="multipleUploadForm" name="multipleUploadForm">
+    <input id="file-input" type="file" name="files" class="file-input"  required />
+    <button type="submit" id="submitIddsdsd" class="primary submit-btn">Submit</button>
+</form>
+
+<br><br>
+
+<div align="center">
+
+    <div class="wrapper" >
+        <div class="search-input">
+            <a href="" target="_blank" hidden></a>
+            <input type="text" placeholder="Type to search...">
+            <div class="autocom-box">
+                <!-- here list are inserted from javascript -->
+            </div>
+            <div class="icon"><i class="fas fa-search"></i></div>
+        </div>
+    </div>
+</div>
+
+<div id="backButtonDiv" align="left">
+    <input data-toggle="tooltip" draggable="false"  onclick="goToDocOperation()" data-placement="top" title="Back" class="backButtonP" id="backButtonInput" type="image" src="images/back.jpg"/>
+</div>
+
+<br>
+
+<div id="showHoverOptionDiv" align="center">
+
+
+</div>
+
+<div align="center">
+
+
+
+    <input class="filesButton" type="image" src="images/encryption.webp"
+           onmouseover="showHoverOption('Files')" draggable="false" onmouseleave="clearshowHoverOption()" onclick="uploadFileToDMSToEncrypt()" id="filesButton"/>
+
+    <input class="filesButton" type="image" src="images/decryption.webp"
+           onmouseover="showHoverOption('Gallery')" draggable="false"  onmouseleave="clearshowHoverOption()"  onclick="uploadFileToDMSToDecrypt()"  id="galleryButton"/>
+
+
+</div>
+
+<br><br><br><br><br><br>
+
+    <div class="logo" align="center">
+        <h4>Powered by : <span> <img src="./img/logo.png" alt="portabull" /> </span> </h4>
+    </div>
+
+
+
+
+<script src="js/suggestions.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+
+function clearshowHoverOption(){
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+
+
+}
+
+function showHoverOption(optionName){
+
+var showHoverOptionDivInner ='';
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    if(optionName == 'Files'){
+
+     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/encryption.webp" id="documentButton"/><p>Encryption</p>';
+
+    }else if(optionName == 'Gallery'){
+
+
+     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/decryption.webp" id="documentButton"/><p>Decryption</p>';
+
+    } 
+    showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
+
+}
+
+    initToken();
+
+
+
+function goToDocOperation(){
+        location.href = "docoperations.html";
+  }
+
+    function initToken(){
+
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+
+  
+    }
+  loadTimeAndLogout();
+</script>
+
+
+<script type="text/javascript">
+
+
+window.onload = function()
+        {
+        document.getElementById('file-input').onchange =
+          function(e) {
+                var fileInput = document.querySelector('#file-input');
+              var files = fileInput.files;
+
+		if(isDecrpt){
+			invokeDecryption(files[0]);
+		}else{
+			invokeEncryption(files[0]);
+		}
+
+            }
+        }
+
+
+function uploadFileToDMSToDecrypt(){
+isDecrpt = true;
+   document.getElementById("file-input").click();
+}
+
+
+function uploadFileToDMSToEncrypt(){
+isDecrpt = false;
+   document.getElementById("file-input").click();
+}
+</script>
+
+
+</body>
+</html>

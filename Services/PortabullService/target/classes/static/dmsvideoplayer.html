@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+  <title>DMS Basic Video Player</title>
+  <link rel="stylesheet" href="dmsvideoplayer.css">
+</head>
+
+<body>
+<img src=             "images/portabull.png"
+     width="160" height="145" align="right">
+
+
+<div class="container mt-5">
+  <div id="singleFileUploadSuccess"></div>
+</div>
+
+<div class="waviy">
+  <span style="--i:1">P</span>
+  <span style="--i:2">O</span>
+  <span style="--i:3">R</span>
+  <span style="--i:4">T</span>
+  <span style="--i:5">A</span>
+  <span style="--i:6">B</span>
+  <span style="--i:7">U</span>
+  <span style="--i:8">L</span>
+  <span style="--i:9">L</span>
+
+</div>
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+        crossorigin="anonymous"></script>
+
+
+<script>
+getSrc();
+    function getSrc(){
+    var a = window.location.href;
+    var url = new URL(a);
+    var srctag = "DMS/play?request=" + url.searchParams.get("aa");
+
+
+var singleFileUploadSuccess = document.querySelector('#singleFileUploadSuccess');
+singleFileUploadSuccess.innerHTML = "<video src='"+ srctag+"'  width=\"720px\" height=\"480px\" controls preload=\"none\">"+"</video>";
+
+    }
+</script>
+</body>
+</html>

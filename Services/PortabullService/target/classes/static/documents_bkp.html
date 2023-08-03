@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/portabullconfig.js"></script>
+    <script src="backpages.js"></script>
+    <script src="logout.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+
+
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+
+
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.viewDocuments{
+  position: absolute;
+  left: 830px;
+  top: 130px;
+}
+.uploadButton:hover {
+	-webkit-transform: translateY(-5px);
+	transform: translateY(-10px);
+}
+
+.documentButton:hover {
+	-webkit-transform: translateY(-5px);
+	transform: translateY(-10px);
+}
+
+.uploadDocument{
+  position: absolute;
+  left: 400px;
+  top: 130px;
+}
+
+.documentsOperations{
+  position: absolute;
+  left: 1265px;
+  top: 130px;
+}
+
+.viewButton {
+  position: absolute;
+  left: 840px;
+  top: 200px;
+
+
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+height:200px;
+    width:230px;
+}
+
+
+.uploadButton {
+  position: absolute;
+  left: 400px;
+  top: 200px;
+
+
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+height:200px;
+    width:230px;
+}
+
+.documentButton {
+  position: absolute;
+  left: 1265px;
+  top: 200px;
+
+
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  margin: 4px 2px;
+  cursor: pointer;
+
+height:200px;
+    width:230px;
+}
+
+.viewButton:hover {
+	-webkit-transform: translateY(-5px);
+	transform: translateY(-10px);
+}
+</style>
+
+
+</head>
+<body>
+        <script>
+			healthCheck();
+			function healthCheck() {
+				     var xhr = new XMLHttpRequest();
+                     xhr.open("GET", BASE_URL + "DMS/portabull-health-check");
+                    xhr.setRequestHeader("Accept", "application/json");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    var data = JSON.stringify({});
+                    xhr.setRequestHeader("Authorization", window.localStorage.getItem(tokenKey));
+                    xhr.send(data);
+
+                    xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        console.log(xhr.status);
+                        console.log(xhr.responseText);
+
+                        const response = JSON.parse(xhr.responseText);
+                        if (xhr.status == 503 || xhr.status == 500) {
+                            window.location.href = "dmsserverdown.html";
+                        }else if(xhr.status == 401){
+                            window.location.href = "index.html";
+                        }
+                    }
+                };
+			}
+		</script>
+
+<div style="text-align: right;">
+    <a href="#" onclick="logout()" class="btn btn-info btn-lg">
+        <span class="glyphicon glyphicon-log-out"></span> Log out
+    </a>
+</div>
+<button class="button button2" onclick="gotomainpage()">Back</button>
+
+<h1 class ="viewDocuments">View Documents</h1>
+
+
+<input  class="viewButton" type="image" src="https://www.computerhope.com/jargon/s/search-icon.gif" id="viewButton"/>
+
+<script type="text/javascript">
+    document.getElementById("viewButton").onclick = function () {
+        location.href = "viewDocumentsClassic.html";
+    };
+</script>
+
+
+
+
+
+<h1 class ="uploadDocument">Upload Document</h1>
+
+
+
+<input  class="uploadButton" type="image" src="https://www.lifewire.com/thmb/P856-0hi4lmA2xinYWyaEpRIckw=/1920x1326/filters:no_upscale():max_bytes(150000):strip_icc()/cloud-upload-a30f385a928e44e199a62210d578375a.jpg" id="uploadButton"/>
+
+<script type="text/javascript">
+    document.getElementById("uploadButton").onclick = function () {
+        location.href = "uploadDocuments.html";
+    };
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1 class ="documentsOperations">Documents Operations</h1>
+<input  class="documentButton" type="image" src="https://www.datacenterinc.com/images/operationsBanner.jpg" id="documentButton"/>
+
+<script type="text/javascript">
+    document.getElementById("documentButton").onclick = function () {
+        location.href = "documentoperations.html";
+    };
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>
+

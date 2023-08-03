@@ -1,0 +1,6 @@
+com\portabull\um\UserLoggedInDetails.class
+com\portabull\um\LoggedInOTP.class
+com\portabull\um\UserProfile.class
+com\portabull\um\UserCredentials.class
+com\portabull\um\NotificationUserJWTToken.class
+com\portabull\um\RegistrationOtps.class

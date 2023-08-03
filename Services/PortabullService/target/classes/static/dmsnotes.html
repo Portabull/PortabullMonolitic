@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en" dir="ltr">
+  <head>
+    <script src="js/portabullconfig.js"></script>
+    <script src="logout.js"></script>
+    <meta charset="utf-8">  
+    <title>My Notes</title>
+    <link rel="stylesheet" href="css/dmsnotes.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Button Notification Badge</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Iconscout Link For Icons -->
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  </head>
+  <body>
+
+  <audio id="notificationTone">
+    <!-- provide the address of the sound to be played -->
+    <source src="mp3/mixkit-double-beep-tone-alert-2868.mp3">
+    Your browser does not support the audio element.
+  </audio>
+
+  <form hidden id="multipleUploadForm" name="multipleUploadForm">
+    <input id="file-input" type="file" name="files" class="file-input"  accept="text/plain" />
+    <button type="submit" id="submitIddsdsd" class="primary submit-btn">Submit</button>
+  </form>
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+    <div id="notificationsSpace">
+
+
+
+    </div>
+
+
+    <br>
+  </div>
+
+
+
+  <div id="logoutButtonDiv" align="right">
+    <button class="logoutbutton logoutbutton1" onclick="logout()">LOGOUT</button>
+    <br><br>
+    <div id="notificationIconSpace" align="center">
+
+
+
+    </div>
+
+  </div>
+
+
+  <div id="backButtonDiv" align="left">
+    <input data-toggle="tooltip" draggable="false"  onclick="redirectToDocsPage()" data-placement="top" title="Back" class="backButtonP" id="backButtonInput" type="image" src="images/d_back.jpg"/>
+    <i class="material-icons" id="settingsIconButton" onmouseleave="clearshowHoverOption()"  onmouseover="showHoverOption()" onclick="sadadfadfdafa()" style="font-size:59px;color:white;">settings</i>
+    &nbsp;&nbsp;
+    <i class="material-icons" id="UploadIconButton" onmouseleave="clearshowHoverOption()"  onmouseover="showHoverOption()" onclick="uploadFileToDMS()" style="font-size:59px;color:white;">upload</i>
+
+
+
+
+
+
+  </div>
+
+
+
+  <div class="popup-box">
+      <div class="popup">
+        <div class="content">
+          <header>
+            <p></p>
+            <i class="uil uil-times"></i>
+          </header>
+          <form action="#">
+            <div class="row title">
+              <div align="right">
+                <i style="cursor: pointer;" onclick="expandNotesPage()" class="uil uil-expand-arrows-alt"></i>
+              </div>
+              <label>Title</label>
+              <input type="text" spellcheck="false">
+            </div>
+            <div class="row description">
+              <label>Note</label>
+              <textarea spellcheck="false"></textarea>
+            </div>
+
+            <div id="errorMessageDiv4999">
+
+
+            </div>
+
+            <button></button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="wrapper">
+      <li class="add-box">
+        <div class="icon"><i class="uil uil-plus"></i></div>
+        <p>Add new note</p>
+      </li>
+    </div>
+
+    <script src="js/dmsnotes.js"></script>
+
+
+  </body>
+</html>
