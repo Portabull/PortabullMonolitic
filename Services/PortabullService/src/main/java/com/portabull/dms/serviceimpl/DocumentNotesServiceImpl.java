@@ -309,7 +309,7 @@ public class DocumentNotesServiceImpl implements DocumentNotesService {
 
             noteSettings.put("dw", settings.getNotesDownloadable());
 
-            noteSettings.put("su", userNames.get(settings.getSharedTO().toString()));
+            noteSettings.put("su", userNames.get(settings.getSharedTO()));
 
             noteSettings.put("m", settings.getMessage());
 
@@ -512,7 +512,7 @@ public class DocumentNotesServiceImpl implements DocumentNotesService {
 
             if (!stickyNote.getUserId().equals(loggedInUserId)) {
                 //note belongs to someone
-                note.put("sharedBy", userNames.get(stickyNote.getSharedBy().toString()));
+                note.put("sharedBy", userNames.get(stickyNote.getSharedBy()));
 
                 note.put("message", stickyNote.getMessage());
 
@@ -576,7 +576,7 @@ public class DocumentNotesServiceImpl implements DocumentNotesService {
             //note belongs to someone
             Map<Long, String> userNames = getUserNames(Arrays.asList(stickyNotes.get(0).getUserId()));
 
-            note.put("sharedBy", userNames.get(stickyNotes.get(0).getSharedBy().toString()));
+            note.put("sharedBy", userNames.get(stickyNotes.get(0).getSharedBy()));
 
             note.put("message", stickyNotes.get(0).getMessage());
 
@@ -630,7 +630,7 @@ public class DocumentNotesServiceImpl implements DocumentNotesService {
             Map<String, Object> note = prepareDocumentNotes(stickyNote, loggedInUserId);
 
             //note belongs to someone
-            note.put("sharedBy", userNames.get(stickyNote.getSharedBy().toString()));
+            note.put("sharedBy", userNames.get(stickyNote.getSharedBy()));
 
             note.put("message", stickyNote.getMessage());
 
