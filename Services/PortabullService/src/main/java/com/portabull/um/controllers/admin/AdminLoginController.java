@@ -1,6 +1,6 @@
 package com.portabull.um.controllers.admin;
 
-import com.portabull.cache.CacheUtils;
+import com.portabull.cache.DBCacheUtils;
 import com.portabull.constants.LoggerErrorConstants;
 import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
@@ -59,7 +59,7 @@ public class AdminLoginController {
 
             userDetailsService.updateWrongPasswordCount(userCredentials, true);
 
-            final String jwt = jwtTokenUtil.generateToken(userCredentials, true);
+            final String jwt = jwtTokenUtil.generateToken(userCredentials, true, false);
 
 
             if (userCredentials.getMfaLoginType() != null && userCredentials.getMfaLoginType() == 1) {
@@ -122,7 +122,7 @@ public class AdminLoginController {
     @PostMapping("/block-log-in-users")
     public ResponseEntity<?> blockLoginUsers() {
 
-        CacheUtils.store(PortableConstants.BLOCK_LOG_INS, true);
+        DBCacheUtils.storeApplicationLevelCache(PortableConstants.BLOCK_LOG_INS, true);
 
         return new ResponseEntity<>(new PortableResponse(), HttpStatus.OK);
 
@@ -131,7 +131,7 @@ public class AdminLoginController {
     @PostMapping("/un-block-log-in-users")
     public ResponseEntity<?> unBlockLoginUsers() {
 
-        CacheUtils.store(PortableConstants.BLOCK_LOG_INS, false);
+        DBCacheUtils.storeApplicationLevelCache(PortableConstants.BLOCK_LOG_INS, false);
 
         return new ResponseEntity<>(new PortableResponse(), HttpStatus.OK);
 

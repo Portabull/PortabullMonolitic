@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("oauth")
 public class LoginController {
 
 
@@ -71,13 +70,13 @@ public class LoginController {
 
         userOAuthServices.updateWrongPasswordCount(userCredentials, true);
 
-        final String jwt = jwtTokenUtil.generateToken(userCredentials, false);
+        final String jwt = jwtTokenUtil.generateToken(userCredentials, false, true);
 
         model.addAttribute("token", jwt);
 
         model.addAttribute("userName", userCredentials.getLoginUserName());
 
-        model.addAttribute("twoStepVer", BooleanUtils.isTrue(userCredentials.getTwoStepVerificationEnabled()));
+        model.addAttribute("twoStepVer", false);
 
         return "loginrouter";
     }

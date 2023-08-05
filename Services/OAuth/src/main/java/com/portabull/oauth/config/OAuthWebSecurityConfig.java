@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-//@EnableWebSecurity
+@EnableWebSecurity
 public class OAuthWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired

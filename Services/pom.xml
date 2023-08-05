@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>PortabullService</module>
+        <module>OAuth</module>
     </modules>
 
     <dependencies>

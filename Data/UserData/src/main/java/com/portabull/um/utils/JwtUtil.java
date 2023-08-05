@@ -1,6 +1,6 @@
 package com.portabull.um.utils;
 
-import com.portabull.cache.CacheUtils;
+import com.portabull.cache.DBCacheUtils;
 import com.portabull.cache.LoginUtils;
 import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
@@ -56,15 +56,13 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserCredentials userCredentials, boolean isAdminLogin) {
+    public String generateToken(UserCredentials userCredentials, boolean isAdminLogin, boolean skipMFA) {
 
-        String logIns = String.valueOf(CacheUtils.get(PortableConstants.BLOCK_LOG_INS));
-
-        if (!isAdminLogin && "true".equalsIgnoreCase(logIns)) {
+        if (!isAdminLogin && BooleanUtils.isTrue(DBCacheUtils.getApplicationLevelCache(PortableConstants.BLOCK_LOG_INS, Boolean.class))) {
             throw new ServerException("Server is under maintenance");
         }
 
-        if (BooleanUtils.isTrue(userCredentials.getSingleSignIn()) && loginUtils.isAlreadyLoggedIn(userCredentials.getUserID())) {
+        if (BooleanUtils.isTrue(userCredentials.getSingleSignIn()) && DBCacheUtils.isAlreadyLoggedIn(userCredentials.getUserID())) {
             throw new SingleSignInEnabledException(MessageConstants.SIGLE_SIGN_IN_ERR);
         }
 
@@ -72,17 +70,18 @@ public class JwtUtil {
 
         String jwtToken = createToken(claims, userCredentials.getLoginUserName());
 
-        loginUtils.addTokenToCache(jwtToken, userCredentials.getLoggedInSessionTime().intValue(), getTokenData(userCredentials));
+        loginUtils.addTokenToCache(jwtToken, userCredentials.getLoggedInSessionTime().intValue(), getTokenData(userCredentials, skipMFA));
 
         return jwtToken;
     }
 
-    private TokenData getTokenData(UserCredentials userCredentials) {
+    private TokenData getTokenData(UserCredentials userCredentials, boolean skipMFA) {
         TokenData tokenData = new TokenData();
         tokenData.setUserName(userCredentials.getUserName());
         tokenData.setEmail(userCredentials.getLoginUserName());
         tokenData.setUserID(userCredentials.getUserID());
-        tokenData.setTwoStepVerificationEnabled(userCredentials.getTwoStepVerificationEnabled());
+        if (!skipMFA)
+            tokenData.setTwoStepVerificationEnabled(userCredentials.getTwoStepVerificationEnabled());
         tokenData.setSingleSignOn(BooleanUtils.isTrue(userCredentials.getSingleSignIn()));
         return tokenData;
     }

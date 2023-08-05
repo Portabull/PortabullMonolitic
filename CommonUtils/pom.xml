@@ -123,13 +123,6 @@
             <version>${com.fasterxml.jackson.dataformat.version}</version>
         </dependency>
 
-
-        <dependency>
-            <artifactId>CacheUtils</artifactId>
-            <groupId>com.portabull</groupId>
-            <version>${cache.utils.version}</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 
         <dependency>

@@ -1,7 +1,7 @@
 package com.portabull.utils.commonutils;
 
-import com.hazelcast.core.IMap;
 import com.portabull.cache.CacheData;
+import com.portabull.cache.DBCacheUtils;
 import com.portabull.execption.TokenNotFoundException;
 import com.portabull.payloads.TokenData;
 import com.portabull.utils.RequestHelper;
@@ -29,10 +29,6 @@ public class CommonUtils {
         cache = cacheData.getData();
     }
 
-    public static Map<String, Object> getCache() {
-        return cache;
-    }
-
     public static <T> ResponseEntity<T> returnResponse(T response, HttpStatus status) {
         return new ResponseEntity<>(response, status);
     }
@@ -43,11 +39,12 @@ public class CommonUtils {
         if (StringUtils.isEmpty(token))
             throw new TokenNotFoundException("Token Not Found");
 
-        if (cache.get(token) == null) {
+        TokenData tokenData = DBCacheUtils.get(token);
+        if (tokenData == null) {
             throw new TokenNotFoundException("Token Expired Or No User Found for this token");
         }
 
-        return ((TokenData) cache.get(token)).getUserID();
+        return tokenData.getUserID();
     }
 
     public static String getLoggedInUserName() {
@@ -56,11 +53,12 @@ public class CommonUtils {
         if (StringUtils.isEmpty(token))
             throw new TokenNotFoundException("Token Not Found");
 
-        if (cache.get(token) == null) {
+        TokenData tokenData = DBCacheUtils.get(token);
+        if (tokenData == null) {
             throw new TokenNotFoundException("Token Expired Or No User Found for this token");
         }
 
-        return ((TokenData) cache.get(token)).getUserName();
+        return tokenData.getUserName();
     }
 
     public static String getAuthorizationToken() {

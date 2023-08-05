@@ -1,5 +1,6 @@
 package com.portabull.um.jobs;
 
+import com.portabull.cache.TokenCache;
 import com.portabull.dbutils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,6 +42,17 @@ public class UserManagementJobs {
 
                 session.createQuery("DELETE NotificationUserJWTToken t WHERE t.expiryDate < :currentDate").
                         setParameter("currentDate", new Date().getTime()).executeUpdate();
+
+                transaction.commit();
+
+            }
+
+            try (Session session = hibernateUtils.getSession()) {
+
+                Transaction transaction = session.beginTransaction();
+
+                session.createQuery("DELETE TokenCache t WHERE t.endTime <= :currentDateTime").
+                        setParameter("currentDateTime", Calendar.getInstance().getTimeInMillis()).executeUpdate();
 
                 transaction.commit();
 

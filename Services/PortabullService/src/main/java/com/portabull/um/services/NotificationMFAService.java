@@ -1,6 +1,7 @@
 package com.portabull.um.services;
 
 import com.portabull.cache.CacheUtils;
+import com.portabull.cache.DBCacheUtils;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.generic.dao.CommonDao;
@@ -65,15 +66,15 @@ public class NotificationMFAService {
         }
 
         if (status == 1) {
-            TokenData tokenData = (TokenData) CacheUtils.get(randomTokenDetails.getJwtToken());
+            TokenData tokenData = DBCacheUtils.get(randomTokenDetails.getJwtToken());
             tokenData.setValidatedTwoStepAuth(true);
-            CacheUtils.store(randomTokenDetails.getJwtToken(), tokenData);
+            DBCacheUtils.put(randomTokenDetails.getJwtToken(), tokenData);
         }
 
         if (status == 2) {
-            TokenData tokenData = (TokenData) CacheUtils.get(randomTokenDetails.getJwtToken());
+            TokenData tokenData = DBCacheUtils.get(randomTokenDetails.getJwtToken());
             tokenData.setValidatedTwoStepAuth(false);
-            CacheUtils.store(randomTokenDetails.getJwtToken(), tokenData);
+            DBCacheUtils.put(randomTokenDetails.getJwtToken(), tokenData);
         }
 
         randomTokenDetails.setApproval(status);

@@ -184,4 +184,14 @@ public class HibernateUtils {
             return (T) dataObject;
         }
     }
+
+    public <T> T findEntityByCriteria(Class<T> entityClass, String primaryPropertyName, Serializable primaryId,String primaryPropertyName1, Serializable primaryId1) {
+        try (Session session = getSession()) {
+            Object dataObject = session.createCriteria(entityClass)
+                    .add(Restrictions.eq(primaryPropertyName, primaryId))
+                    .add(Restrictions.eq(primaryPropertyName1, primaryId1))
+                    .uniqueResult();
+            return (T) dataObject;
+        }
+    }
 }

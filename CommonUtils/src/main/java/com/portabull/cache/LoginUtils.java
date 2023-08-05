@@ -14,9 +14,7 @@ import java.util.Calendar;
 public class LoginUtils {
 
     public PortableResponse isValidToken(String token, String originalRequestPath) {
-        TokenData tokenData = null;
-        if (CacheUtils.get(token) instanceof TokenData)
-            tokenData = (TokenData) CacheUtils.get(token);
+        TokenData tokenData = DBCacheUtils.get(token);
 
         if (tokenData != null) {
 
@@ -28,14 +26,14 @@ public class LoginUtils {
                         return new PortableResponse("Two step auth is required", 401L, PortableConstants.SUCCESS, null);
                     }
                 } else {
-                    if (isAlreadyLoggedIn(((TokenData) CacheUtils.get(token)).getUserID())) {
+                    if (DBCacheUtils.isAlreadyLoggedIn(token)) {
                         return new PortableResponse(MessageConstants.SIGLE_SIGN_IN_ERR, 401L, PortableConstants.SUCCESS, null);
                     }
                 }
                 addTokenToCache(token, tokenData.getExpirationTime(), tokenData);
                 return new PortableResponse("Successfully LoggedIn", 200L, PortableConstants.SUCCESS, null);
             } else {
-                CacheUtils.remove(token);
+                DBCacheUtils.remove(token);
                 return new PortableResponse("Session Expired", 401L, PortableConstants.SUCCESS, null);
             }
         }
@@ -48,13 +46,11 @@ public class LoginUtils {
         calendar.add(Calendar.MINUTE, validTimeUntilInMins);
         tokenData.setEndTime(calendar.getTimeInMillis());
         tokenData.setExpirationTime(validTimeUntilInMins);
-        CacheUtils.store(jwtToken, tokenData);
+        DBCacheUtils.put(jwtToken, tokenData);
     }
 
     public static String getUserNameByToken(String token) {
-        TokenData tokenData = null;
-        if (CacheUtils.get(token) instanceof TokenData)
-            tokenData = (TokenData) CacheUtils.get(token);
+        TokenData tokenData = DBCacheUtils.get(token);
         if (tokenData != null) {
             return tokenData.getUserName();
         }
@@ -62,19 +58,19 @@ public class LoginUtils {
     }
 
     public static void logout(String token) {
-        CacheUtils.remove(token);
+        DBCacheUtils.remove(token);
     }
 
     public static void validatedTwoStepAuth() {
         String token = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
                 .getRequest().getHeader("Authorization").replace("Bearer ", "");
-        TokenData tokenData = (TokenData) CacheUtils.get(token);
+        TokenData tokenData = DBCacheUtils.get(token);
         tokenData.setValidatedTwoStepAuth(true);
-        CacheUtils.store(token, tokenData);
+        DBCacheUtils.put(token, tokenData);
     }
 
-    public boolean isAlreadyLoggedIn(Long userID) {
-        return CacheUtils.isAlreadyLoggedIn(userID);
-    }
+//    public boolean isAlreadyLoggedIn(Long userID) {
+//        return CacheUtils.isAlreadyLoggedIn(userID);
+//    }
 
 }

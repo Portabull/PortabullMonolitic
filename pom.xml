@@ -22,7 +22,6 @@
         <module>Data</module>
         <module>DataModels</module>
         <module>AuditLogs</module>
-        <module>CacheUtils</module>
         <module>Libraries</module>
     </modules>
 

@@ -78,7 +78,7 @@ public class LogInController {
 
             userDetailsService.updateWrongPasswordCount(userCredentials, true);
 
-            String jwt = jwtTokenUtil.generateToken(userCredentials, false);
+            String jwt = jwtTokenUtil.generateToken(userCredentials, false, false);
 
             if (BooleanUtils.isTrue(userCredentials.getTwoStepVerificationEnabled()) && userCredentials.getMfaLoginType() != null
                     && userCredentials.getMfaLoginType() == 1) {
