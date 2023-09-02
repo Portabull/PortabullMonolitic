@@ -1,5 +1,6 @@
 package com.portabull.dms.service;
 
+import com.portabull.generic.models.UserDocumentStorage;
 import com.portabull.payloads.DocumentPayload;
 import com.portabull.payloads.EmailPayload;
 import com.portabull.response.DocumentResponse;
@@ -54,4 +55,6 @@ public interface DocumentService {
     DocumentResponse editFileName(Long fileId, String fileName);
 
     DocumentResponse deleteFile(Long fileId);
+
+    DocumentResponse uploadDocumentInternally(MultipartFile file, UserDocumentStorage userDocumentStorage) throws NoSuchAlgorithmException, IOException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, InvalidKeyException;
 }

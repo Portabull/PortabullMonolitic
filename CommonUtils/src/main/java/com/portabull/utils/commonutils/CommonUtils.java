@@ -65,6 +65,8 @@ public class CommonUtils {
         String authorization = RequestHelper.getCurrentRequest().getHeader("Authorization");
         if (!StringUtils.isEmpty(authorization)) {
             return authorization.replace("Bearer", "").trim();
+        } else if (!StringUtils.isEmpty(RequestHelper.getCurrentRequest().getAttribute("Authorization"))) {
+            return RequestHelper.getCurrentRequest().getAttribute("Authorization").toString().replace("Bearer", "").trim();
         }
         return null;
     }
@@ -151,6 +153,10 @@ public class CommonUtils {
         randomBuilder.append(RandomStringUtils.random(3, false, true));
 
         return randomBuilder.toString();
+    }
+
+    public static void setAuthorizationToken(String token) {
+        RequestHelper.getCurrentRequest().setAttribute("Authorization", "Bearer " + token);
     }
 
 

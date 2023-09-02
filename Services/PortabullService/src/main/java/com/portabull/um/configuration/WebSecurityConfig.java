@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -35,9 +36,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable().authorizeRequests().antMatchers("/**").permitAll().anyRequest()
-                .authenticated().and().exceptionHandling().and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//        httpSecurity.csrf().disable().authorizeRequests().antMatchers("/**").permitAll().anyRequest()
+//                .authenticated().and().exceptionHandling().and().sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+
+        httpSecurity.authorizeRequests()
+                .mvcMatchers("/sign-in-with-gmail").authenticated()
+                .and().logout().invalidateHttpSession(true)
+                .clearAuthentication(true).logoutSuccessUrl("/plogout").deleteCookies("JSESSIONID")
+                .permitAll().and().csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+
+        httpSecurity.oauth2Login();
+
+        httpSecurity.csrf().disable().authorizeRequests().antMatchers("/**").permitAll();
+
     }
 
 }

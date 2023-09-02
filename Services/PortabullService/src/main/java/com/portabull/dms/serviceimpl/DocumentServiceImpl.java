@@ -100,22 +100,29 @@ public class DocumentServiceImpl implements DocumentService {
                 return validationResponse;
             }
 
-            Document document = dmsUtils.generateDocument(file);
-
-            DocumentResponse documentResponse = documentStorageModule.uploadDocument(dmsUtils.invokeEncryption(file, document), document.geteLocation());
-
-            document = documentDao.createDocument(document);
-
-            documentResponse.setDocumentID(document.getId());
-
-            double megabytes = (document.getSize() / 1024.0) / 1024.0;
-
-            userDocumentStorage.setUserStorageSize(userDocumentStorage.getUserStorageSize() + megabytes);
-
-            commonDao.saveOrUpdateEntity(userDocumentStorage);
-
-            return documentResponse;
+            return uploadDocumentInternally(file, userDocumentStorage);
         }
+    }
+
+    @Override
+    public DocumentResponse uploadDocumentInternally(MultipartFile file, UserDocumentStorage userDocumentStorage) throws NoSuchAlgorithmException, IOException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, InvalidKeyException {
+
+        Document document = dmsUtils.generateDocument(file);
+
+        DocumentResponse documentResponse = documentStorageModule.uploadDocument(dmsUtils.invokeEncryption(file, document), document.geteLocation());
+
+        document = documentDao.createDocument(document);
+
+        documentResponse.setDocumentID(document.getId());
+
+        double megabytes = (document.getSize() / 1024.0) / 1024.0;
+
+        userDocumentStorage.setUserStorageSize(userDocumentStorage.getUserStorageSize() + megabytes);
+
+        commonDao.saveOrUpdateEntity(userDocumentStorage);
+
+        return documentResponse;
+
     }
 
     private synchronized Long getLoggedInUserId() {
