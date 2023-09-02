@@ -78,6 +78,28 @@ a {
 </div>
 
 <script>
+
+
+init();
+
+function init(){
+if(isUrlValid(window.location.href)){
+var a = window.location.href;
+a = a.replace(/(?<!:)\/+/gm, '/');
+if(window.location.href != a) {
+    window.location.href = a;
+}
+}
+}
+
+function isUrlValid(userInput) {
+    var res = userInput.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    if(res == null)
+        return false;
+    else
+        return true;
+}
+
     function login(){
   window.location.href = "https://portabull.in/APIGateway";
 }
