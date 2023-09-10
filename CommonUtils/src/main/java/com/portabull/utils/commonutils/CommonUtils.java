@@ -2,6 +2,7 @@ package com.portabull.utils.commonutils;
 
 import com.portabull.cache.CacheData;
 import com.portabull.cache.DBCacheUtils;
+import com.portabull.cache.TokenCache;
 import com.portabull.execption.TokenNotFoundException;
 import com.portabull.payloads.TokenData;
 import com.portabull.utils.RequestHelper;
@@ -40,11 +41,27 @@ public class CommonUtils {
             throw new TokenNotFoundException("Token Not Found");
 
         TokenData tokenData = DBCacheUtils.get(token);
-        if (tokenData == null) {
+        if (tokenData == null || DBCacheUtils.isTokenExpired(getTokenCache(tokenData))) {
             throw new TokenNotFoundException("Token Expired Or No User Found for this token");
         }
 
+
+
         return tokenData.getUserID();
+    }
+
+    private static TokenCache getTokenCache(TokenData tokenData) {
+        TokenCache tokenCache = new TokenCache();
+        tokenCache.setEmail(tokenData.getEmail());
+        tokenCache.setEndTime(tokenData.getEndTime());
+        tokenCache.setExpirationTime(tokenData.getExpirationTime());
+        tokenCache.setStartTime(tokenData.getStartTime());
+        tokenCache.setSingleSignOn(tokenData.isSingleSignOn());
+        tokenCache.setUserID(tokenData.getUserID());
+        tokenCache.setUserName(tokenData.getUserName());
+        tokenCache.setTwoStepVerificationEnabled(tokenData.isTwoStepVerificationEnabled());
+        tokenCache.setValidatedTwoStepAuth(tokenData.isValidatedTwoStepAuth());
+        return tokenCache;
     }
 
     public static String getLoggedInUserName() {
