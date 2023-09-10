@@ -10,7 +10,7 @@ var tokenKey = 'token'
 
 var registrationUrl = BASE_URL + 'UM/registration';
 
-var healthCheckUrl = BASE_URL + 'UM/portabull-health-check';
+var healthCheckUrl = BASE_URL + 'portabull-health-check';
 
 var notifyUrl = BASE_URL + 'UM/notify-administrator';
 
