@@ -2,6 +2,16 @@ var getDirFiles = BASE_URL + 'DMS/get-dms-files';
 var createDMSDir = BASE_URL + 'DMS/create-dms-dir';
 var modifyDMSFileDir = BASE_URL + 'DMS/modify-dms-file-dir';
 var uploadFileToDMSServer = BASE_URL + 'DMS/upload-multiple-files-to-dir';
+var loginstaticimages;
+loadStaticAssets(createStaticImages);
+
+
+function createStaticImages() {
+     var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
+
+    loginstaticimages  = new Map(Object.entries(JSON.parse(loginstaticimages1)));
+
+}
 
 var dirLevel = 0;
 
@@ -28,15 +38,15 @@ var deleteIcon = "<a href=\"#\" id=\"aDeleteIconId\" onclick=\"deleteDir()\"><i 
 
 var downloadIcon = "<a href=\"#\" id=\"aDownloadIconId\" onclick=\"myfunction1()\"><i  class=\"fa fa-download\" style='font-size:36px' ></i></a>";
 
-var uploadFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\"  onclick=\"uploadFileToDMS()\" data-placement=\"top\" title=\"Upload\" class=\"createFolderButton\" id=\"uploadFolderButton\" type=\"image\" src=\"images/upload.webp\"/>";
+var uploadFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\"  onclick=\"uploadFileToDMS()\" data-placement=\"top\" title=\"Upload\" class=\"createFolderButton\" id=\"uploadFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/upload.webp') + "\"/>";
 
-var createFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"createDMSDirectory()\" data-placement=\"top\" title=\"Create Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"images/createFolder.png\"/>";
+var createFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"createDMSDirectory()\" data-placement=\"top\" title=\"Create Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/createFolder.png') + "\"/>";
 
-var openFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"openFolder()\" data-placement=\"top\" title=\"Open Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"images/openFolder.jpg\"/>";
+var openFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"openFolder()\" data-placement=\"top\" title=\"Open Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/openFolder.jpg') + "\"/>";
 
-var backButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"goToPrevFolder()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"images/back.jpg\"/>";
+var backButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"goToPrevFolder()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
 
-var backButtonIconToMyfiles = "<input draggable=\"false\" data-toggle=\"tooltip\" onclick=\"redirectToDocumentsPage()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"images/back.jpg\"/>";
+var backButtonIconToMyfiles = "<input draggable=\"false\" data-toggle=\"tooltip\" onclick=\"redirectToDocumentsPage()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
 
 var myfilesIcons = document.querySelector('#myfilesIcons');
 
@@ -283,7 +293,7 @@ function handleErrors(resp,status) {
 
            directoryFullName = getFormattedDirName(directoryFullName);
 
-        var m1 =    "<label class=\"not-bold\"> <input draggable=\"false\"  ondblclick=goToNextFolder('" + directoryFullName + "'," +  resp.data + ")  onclick=enableIcons('" + directoryFullName + "'," +  resp.data + ")" + "  data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + directoryFullNameFormatted + "\" class=\"filesButton\" type=\"image\" src=\"images/folder.jpg\" id=\"filesButton1\"/><br>";
+        var m1 =    "<label class=\"not-bold\"> <input draggable=\"false\"  ondblclick=goToNextFolder('" + directoryFullName + "'," +  resp.data + ")  onclick=enableIcons('" + directoryFullName + "'," +  resp.data + ")" + "  data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + directoryFullNameFormatted + "\" class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/folder.jpg') + "\" id=\"filesButton1\"/><br>";
 
         var m2='</label>'
 
@@ -454,7 +464,7 @@ function populateDirectories(dirs,directorySpaceDiv) {
 
             directoryFullNameFormatted = getOrginalDirName(directoryFullName);
 
-            innerHtmlDirSpace = innerHtmlDirSpace + "<label class=\"not-bold\"> <input draggable=\"false\"  ondblclick=goToNextFolder('" + directoryFullName + "'," + dirId + ") onclick=enableIcons('" + directoryFullName + "'," + dirId + ")" + " data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + directoryFullNameFormatted + "\" class=\"filesButton\" type=\"image\" src=\"images/folder.jpg\" id=\"filesButton1\"/><br>" + directoryName + "</label>";
+            innerHtmlDirSpace = innerHtmlDirSpace + "<label class=\"not-bold\"> <input draggable=\"false\"  ondblclick=goToNextFolder('" + directoryFullName + "'," + dirId + ") onclick=enableIcons('" + directoryFullName + "'," + dirId + ")" + " data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + directoryFullNameFormatted + "\" class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/folder.jpg') + "\" id=\"filesButton1\"/><br>" + directoryName + "</label>";
 
      }
 
@@ -508,15 +518,15 @@ function populateFiles(files,directorySpaceDiv) {
             var fileNameFormat = '';
 
             if(fileFullName.endsWith(".png") || fileFullName.endsWith(".jpg") || fileFullName.endsWith(".jpeg") || fileFullName.endsWith(".webp") || fileFullName.endsWith(".tiff")) {
-                fileNameFormat = 'images/imageIcon.png';
+                fileNameFormat = loginstaticimages.get('static/images/imageIcon.png');
             }else if(fileFullName.endsWith(".pdf")) {
-                 fileNameFormat = 'images/pdfIcon.webp';
+                 fileNameFormat = loginstaticimages.get('static/images/pdfIcon.webp');
             }else if(fileFullName.endsWith(".mp3")) {
-                fileNameFormat = 'images/mp3Icon.webp';
+                fileNameFormat = loginstaticimages.get('static/images/mp3Icon.webp');
             }else if(fileFullName.endsWith(".mp4")) {
-                fileNameFormat = "images/mp4Icon.png";
+                fileNameFormat = loginstaticimages.get('static/images/mp4Icon.png');
             } else{
-              fileNameFormat = 'images/fileIcon.jpg';
+              fileNameFormat = loginstaticimages.get('static/images/fileIcon.jpg');;
             }
 
             innerHtmlDirSpace = innerHtmlDirSpace + "<label class=\"not-bold\"> <input draggable=\"false\"  ondblclick=downloadFile('" + fileFullName + "'," + dirId + ") onclick=enableDownloadFile('" + fileFullName + "'," + dirId + ")" + " data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + fileFullNameFormatted + "\" class=\"filesButton\" type=\"image\" src=\"" + fileNameFormat + "\" id=\"filesButton1\"/><br>" + fileName + "</label>";
