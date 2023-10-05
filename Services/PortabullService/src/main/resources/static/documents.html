@@ -6,7 +6,7 @@
     <script src="login.js"></script>
     <script src="logout.js"></script>
     <style>
-
+.uploadLoading:after { content: ' .'; animation: dots 1s steps(5, end) infinite;} @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: #4CAF50; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 #4CAF50;}}
 
 .logo {
 
@@ -79,7 +79,7 @@
 </div>
 
 <div id="backButtonDiv" align="left">
-    <input data-toggle="tooltip" draggable="false"  onclick="redirectToHomePage()" data-placement="top" title="Back" class="backButtonP" id="backButtonInput" type="image" src="images/back.jpg"/>
+
 </div>
 
 <br>
@@ -89,31 +89,103 @@
 
 </div>
 
-<div align="center">
-
-
-
-    <input class="filesButton" type="image" src="images/myfiles.png"
-           onmouseover="showHoverOption('Files')" draggable="false" onmouseleave="clearshowHoverOption()" onclick="redirectToMyFiles()" id="filesButton"/>
-
-    <input class="filesButton" type="image" src="images/gallery.jpg"
-           onmouseover="showHoverOption('Gallery')" draggable="false"  onmouseleave="clearshowHoverOption()"  onclick="redirectToImageEditor()"  id="galleryButton"/>
-
-    <input class="filesButton" type="image" src="images/operations.png"
-           onmouseover="showHoverOption('Operations')" draggable="false"  onmouseleave="clearshowHoverOption()" onclick="redirectToDocOperationsPage()" id="operationsButton"/>
-
-    <input class="filesButton" type="image" src="images/sticky-notes-6292787-5175966.webp"
-           onmouseover="showHoverOption('stickyNotes')" draggable="false"  onmouseleave="clearshowHoverOption()" onclick="redirectToStickyNotesPage()" id="stickyNotesButton"/>
-
-
+<div id="buttonsTagDivStatic" align="center">
 
 </div>
 
 <br><br><br><br><br><br>
 
-    <div class="logo" align="center">
-        <h4>Powered by : <span> <img src="./img/logo.png" alt="portabull" /> </span> </h4>
-    </div>
+
+<h4 id="uploadLoading1" class="uploadLoading" style="text-align: center; color: #4CAF50;">Loading</h4>
+
+<div id="logoID" class="logo" align="center"></div>
+
+
+
+
+<script src="js/suggestions.js"></script>
+<script src="js/script.js"></script>
+
+<script>
+
+function clearshowHoverOption(){
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+
+
+}
+
+function showHoverOption(optionName){
+
+ var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
+
+        var loginstaticimages = new Map(Object.entries(JSON.parse(loginstaticimages1)))
+
+var showHoverOptionDivInner ='';
+
+var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    if(optionName == 'Files'){
+
+     showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\""+  loginstaticimages.get('static/images/myfiles.png')  +"\" id=\"documentButton\"/><p>My Files</p>";;
+
+    }else if(optionName == 'Gallery'){
+
+
+     showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/gallery.jpg') + "\" id=\"documentButton\"/><p>Gallery</p>";
+
+    } else if(optionName == 'Operations'){
+
+     showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/operations.png') + "\" id=\"documentButton\"/><p>Document Operations</p>";
+
+    } else if(optionName == "stickyNotes"){
+
+ showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/sticky-notes-6292787-5175966.webp') + "\" id=\"documentButton\"/><p>Sticky Notes</p>";
+
+    }
+
+    showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
+
+}
+
+    initToken();
+    function initToken() {
+
+      loadStaticAssets(createStaticButtons);
+
+       var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
+
+    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
+
+
+    }
+
+    function createStaticButtons(){
+    var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
+
+        var loginstaticimages = new Map(Object.entries(JSON.parse(loginstaticimages1)));
+
+    var myfilesButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/myfiles.png') + "\" onmouseover=\"showHoverOption('Files')\" draggable=\"false\" onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToMyFiles()\" id=\"filesButton\"/>";
+
+        var mygalleryButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/gallery.jpg') + "\" onmouseover=\"showHoverOption('Gallery')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\"  onclick=\"redirectToImageEditor()\"  id=\"galleryButton\"/>";
+
+        var myoperationsButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/operations.png') + "\" onmouseover=\"showHoverOption('Operations')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToDocOperationsPage()\" id=\"operationsButton\"/>";
+
+        var mystickyNotesButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/sticky-notes-6292787-5175966.webp') + "\" onmouseover=\"showHoverOption('stickyNotes')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToStickyNotesPage()\" id=\"stickyNotesButton\"/>";
+
+document.getElementById("buttonsTagDivStatic").innerHTML = myfilesButton + mygalleryButton + myoperationsButton + mystickyNotesButton;
+
+            document.getElementById("backButtonDiv").innerHTML  = "<input data-toggle=\"tooltip\" draggable=\"false\"  onclick=\"redirectToHomePage()\" data-placement=\"top\" title=\"Back\" class=\"backButtonP\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
+
+document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\"" + loginstaticimages.get('static/img/logo.png') + "\" alt=\"portabull\"/></span></h4>";
+
+ document.getElementById("uploadLoading1").hidden = true;
+
+    }
+
+</script>
 
 
 
@@ -218,78 +290,6 @@
     document.getElementById("misReportsButton").onclick = function () {
         location.href = "adminmisreports.html";
     };
-</script>
-
-<script src="js/suggestions.js"></script>
-<script src="js/script.js"></script>
-
-<script>
-
-function clearshowHoverOption(){
-
-var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
-
-    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
-
-
-}
-
-function showHoverOption(optionName){
-
-var showHoverOptionDivInner ='';
-
-var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
-
-    if(optionName == 'Files'){
-
-     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/myfiles.png" id="documentButton"/><p>My Files</p>';
-
-    }else if(optionName == 'Gallery'){
-
-
-     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/gallery.jpg" id="documentButton"/><p>Gallery</p>';
-
-    } else if(optionName == 'Operations'){
-
-     showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/operations.png" id="documentButton"/><p>Document Operations</p>';
-
-    } else if(optionName == "stickyNotes"){
-
- showHoverOptionDivInner = '<input class="filesButton" type="image" src="images/sticky-notes-6292787-5175966.webp" id="documentButton"/><p>Sticky Notes</p>';
-
-    }
-
-    showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
-
-}
-
-    initToken();
-    function initToken(){
-
-
-var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
-
-    showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
-
-     var jwtToken = new URL(window.location.href).searchParams.get("jwt");
-     var userName = new URL(window.location.href).searchParams.get("userName");
-     var twoStepVer = new URL(window.location.href).searchParams.get("twoStepVer");
-
-     if(jwtToken!=null){
-        window.localStorage.setItem('isUserLoggedViaOAuth',true);
-        window.localStorage.setItem('token', 'Bearer ' + jwtToken);
-        if(twoStepVer!=null && "true"==twoStepVer){
-         sendOtp(userName);
-         window.location.href = "otp.html";
-         return;
-        }
-     }
-     if(window.localStorage.getItem('registrationCheck') == null || !window.localStorage.getItem('registrationCheck')){
-     loadLoggedInPages();
-     }
-
-    }
-  loadTimeAndLogout();
 </script>
 
 

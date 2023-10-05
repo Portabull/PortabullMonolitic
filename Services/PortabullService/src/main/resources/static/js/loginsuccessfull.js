@@ -92,52 +92,8 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
   init();
 
   function init() {
-
-        var staticImages = window.localStorage.getItem('loginstaticimages');
-
-        if(staticImages != undefined
-        || staticImages != null) {
-         createStaticButtons();
-            return;
+loadStaticAssets(createStaticButtons);
         }
-
-       var xhr = new XMLHttpRequest();
-
-        xhr.open("POST", "https://localhost:4433/APIGateway/get-image-via-gateway");
-
-        xhr.setRequestHeader("Accept", "application/json");
-
-        xhr.setRequestHeader("Content-Type", "application/json");
-
-        var data = JSON.stringify([
-    "static/images/source-documents-1024x682.jpeg",
-    "static/images/setting-2872383-2389560.jpg",
-    "static/images/message.webp",
-    "static/images/notifications.webp",
-    "static/images/portabull.png",
-    "static/images/email.jpg",
-    "static/images/reports.jpg",
-    "static/img/logo.png"
-]);
-
-        xhr.send(data);
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-
-                console.log(xhr.status);
-                console.log(xhr.responseText);
-
-                window.localStorage.setItem('loginstaticimages', xhr.responseText);
-
-                createStaticButtons();
-        };
-
-
-
-
-  }
-}
   function getStaticImage() {
 
   }
@@ -150,13 +106,13 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
     var aaaaaa = loginstaticimages.get('static/images/source-documents-1024x682.jpeg');
 
-    var documentsButton =  "<input class=\"documentButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/source-documents-1024x682.jpeg') + "\" draggable=\"false\"  onmouseover=\"showHoverOption('Documents')\"  onmouseleave=\"clearshowHoverOption()\" id=\"documentButton\"/>";
-    var settingsButton = "<input class=\"settingsButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/setting-2872383-2389560.jpg') + "\" onmouseover=\"showHoverOption('Settings')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"settingsButton\"/>";
-    var messageButton = "<input class=\"messageButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/message.webp') + "\" onmouseover=\"showHoverOption('Message')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"messageButton\"/>";
-    var notificationButton = "<input class=\"notificationButton\" type=\"image\" onmouseover=\"showHoverOption('Notifications')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\"  src=\"" + loginstaticimages.get('static/images/notifications.webp') + "\" id=\"notificationButton\">";
-    var spfButton = "<input class=\"spf\" type=\"image\" src=\"" + loginstaticimages.get('static/images/portabull.png') + "\" draggable=\"false\"   onmouseover=\"showHoverOption('SPF')\" onmouseleave=\"clearshowHoverOption()\" id=\"spf\">";
-    var emailButton = "<input class=\"emailButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/email.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Email')\" onmouseleave = \"clearshowHoverOption()\" id = \"emailButton\"/>";
-    var misReportsButton = "<input class=\"misReportsButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/reports.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Mis Reports')\" onmouseleave = \"clearshowHoverOption()\" id=\"misReportsButton\">";
+    var documentsButton =  "<input class=\"documentButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/source-documents-1024x682.jpeg') + "\" draggable=\"false\"  onmouseover=\"showHoverOption('Documents')\" onclick=\"redirectToDocsPage()\"  onmouseleave=\"clearshowHoverOption()\" id=\"documentButton\"/>";
+    var settingsButton = "<input class=\"settingsButton\" onclick=\"redirectTosettingsPage()\" type=\"image\" src=\"" + loginstaticimages.get('static/images/setting-2872383-2389560.jpg') + "\" onmouseover=\"showHoverOption('Settings')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"settingsButton\"/>";
+    var messageButton = "<input class=\"messageButton\" onclick=\"redirectToMessagePage()\" type=\"image\" src=\"" + loginstaticimages.get('static/images/message.webp') + "\" onmouseover=\"showHoverOption('Message')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"messageButton\"/>";
+    var notificationButton = "<input onclick=\"redirectToemailPage()\" class=\"notificationButton\" type=\"image\" onmouseover=\"showHoverOption('Notifications')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\"  src=\"" + loginstaticimages.get('static/images/notifications.webp') + "\" id=\"notificationButton\">";
+    var spfButton = "<input onclick=\"redirectToSPFPage()\" class=\"spf\" type=\"image\" src=\"" + loginstaticimages.get('static/images/portabull.png') + "\" draggable=\"false\"   onmouseover=\"showHoverOption('SPF')\" onmouseleave=\"clearshowHoverOption()\" id=\"spf\">";
+    var emailButton = "<input onclick=\"redirectToNotificationPage()\" class=\"emailButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/email.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Email')\" onmouseleave = \"clearshowHoverOption()\" id = \"emailButton\"/>";
+    var misReportsButton = "<input onclick=\"redirectToMISReportsPage()\" class=\"misReportsButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/reports.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Mis Reports')\" onmouseleave = \"clearshowHoverOption()\" id=\"misReportsButton\">";
 
         document.getElementById("buttonsTagDivStatic").innerHTML = documentsButton + settingsButton + messageButton + notificationButton+ spfButton + emailButton +misReportsButton;
 
@@ -168,15 +124,18 @@ document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\
    }
 
 
-    document.getElementById("documentButton").onclick = function () {
+
+     function redirectToDocsPage() {
         location.href = "documents.html";
-    };
+    }
 
-     document.getElementById("settingsButton").onclick = function () {
+
+
+    function redirectTosettingsPage() {
             location.href = "userprofile.html";
-        };
+        }
 
-         document.getElementById("messageButton").onclick = function () {
+         function redirectToMessagePage() {
 
                 var xhr = new XMLHttpRequest();
 
@@ -209,16 +168,19 @@ document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\
                 };
             };
 
-document.getElementById("emailButton").onclick = function () {
+
+function redirectToemailPage() {
         location.href = "emails.html";
     };
-    document.getElementById("spf").onclick = function () {
+
+    function redirectToSPFPage() {
         location.href = "callistpage1.html";
     };
-    document.getElementById("notificationButton").onclick = function () {
+
+    function redirectToNotificationPage() {
         location.href = "notificationButton.html";
     };
-    document.getElementById("misReportsButton").onclick = function () {
+     function redirectToMISReportsPage() {
         location.href = "adminmisreports.html";
     };
 

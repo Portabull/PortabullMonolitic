@@ -1,10 +1,8 @@
-
 var windowLocationHref_B = window.location.href;
 var urlHref_B94857 = new URL(windowLocationHref_B);
-
 const BASE_URL = urlHref_B94857.protocol + "//" + urlHref_B94857.hostname  + ":" + urlHref_B94857.port + "/APIGateway/";
 const gmailUrl =urlHref_B94857.protocol + "//" + urlHref_B94857.hostname  + ":" + urlHref_B94857.port +  "/APIGateway/sign-in-with-gmail";
-
-
 const pageRedirectionPort = "pageRedirectionPort";
 const loginstaticimagesConstKey = "loginstaticimages";
+var staticAssetsUrl = BASE_URL +  "get-image-via-gateway";
+function loadStaticAssets(loadcallback) { var staticImages = window.localStorage.getItem(loginstaticimagesConstKey); if(staticImages != undefined || staticImages != null) { loadcallback(); return; } var xhr = new XMLHttpRequest(); xhr.open("POST", staticAssetsUrl); xhr.setRequestHeader("Accept", "application/json"); xhr.setRequestHeader("Content-Type", "application/json"); var data = JSON.stringify([ "static/images/source-documents-1024x682.jpeg", "static/images/setting-2872383-2389560.jpg", "static/images/message.webp", "static/images/notifications.webp", "static/images/portabull.png", "static/images/email.jpg", "static/images/reports.jpg", "static/img/logo.png", "static/images/myfiles.png", "static/images/gallery.jpg", "static/images/operations.png", "static/images/sticky-notes-6292787-5175966.webp", "static/images/back.jpg" ]); xhr.send(data); xhr.onreadystatechange = function () { if (xhr.readyState === 4) { console.log(xhr.status); console.log(xhr.responseText); window.localStorage.setItem(loginstaticimagesConstKey, xhr.responseText); loadcallback(); }; } }
