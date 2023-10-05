@@ -7,3 +7,4 @@ const gmailUrl =urlHref_B94857.protocol + "//" + urlHref_B94857.hostname  + ":" 
 
 
 const pageRedirectionPort = "pageRedirectionPort";
+const loginstaticimagesConstKey = "loginstaticimages";

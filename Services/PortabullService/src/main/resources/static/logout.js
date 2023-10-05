@@ -39,8 +39,11 @@ function logout() {
                                                 console.log(xhr.status);
                                                 console.log(xhr.responseText);
                                                 var redirectionUrl = window.localStorage.getItem(pageRedirectionPort);
+                                                var staticAssets = window.localStorage.getItem(loginstaticimagesConstKey);
                                                 window.localStorage.clear();
                                                  window.localStorage.setItem(pageRedirectionPort,redirectionUrl);
+                                                   if(staticAssets != null && staticAssets != "null" && staticAssets != undefined && staticAssets != "undefined")
+                                                        window.localStorage.setItem(loginstaticimagesConstKey,staticAssets);
                                                 let a1 = JSON.parse(xhr.responseText);
                                                window.location.href = "index.html";
                                             }else{

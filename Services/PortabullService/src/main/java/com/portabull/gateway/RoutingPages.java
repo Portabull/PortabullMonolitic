@@ -1,9 +1,15 @@
 package com.portabull.gateway;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.portabull.utils.fileutils.FileHandling;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class RoutingPages {
@@ -28,6 +34,29 @@ public class RoutingPages {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("notifyapproval.html?token=" + token + "&approval=" + approval);
         return modelAndView;
+    }
+
+    @PostMapping("get-image-via-gateway")
+    public ResponseEntity<?> getImageViaGateway(@RequestBody List<String> fileNames) {
+
+        Map<String, String> response = new HashMap<>();
+
+        fileNames.forEach(fileName -> {
+
+            try {
+
+                byte[] staticFileAsBytes = FileHandling.getStaticFileAsBytes(fileName);
+
+                response.put(fileName, "data:" + ";base64," + Base64.getEncoder().encodeToString(staticFileAsBytes));
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }

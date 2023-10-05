@@ -98,8 +98,6 @@ function loadLoggedInPages(){
 				window.localStorage.setItem('registrationCheck', true);
 				if (response.data ==null || !response.data) {
                      window.location.href = "registrationData.html";
-				}else {
-				 window.location.href = "loginsuccessfull.html";
 				}
 			}
 		};

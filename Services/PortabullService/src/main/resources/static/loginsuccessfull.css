@@ -101,3 +101,149 @@ body{
             -webkit-transform: translateY(-5px);
             transform: translateY(-10px);
 }
+
+
+
+
+.logo {
+
+}
+
+.logo img {
+  width: 27px;
+  margin-right: 0.3rem;
+}
+
+.logo h4 {
+  font-size: 1.1rem;
+  margin-top: -9px;
+  letter-spacing: -0.5px;
+  color: #151111;
+}
+
+   .settingsButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:160px;
+            width:150px;
+
+        }
+
+         .settingsButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+  .documentButton {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+
+       .documentButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+
+  .messageButton {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+ .messageButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+  .notificationButton {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+
+ .notificationButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+        .spf {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+
+ .spf:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+        .emailButton {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+
+ .emailButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+            .misReportsButton {
+
+            border: none;
+            color: white;
+            padding: 15px 32px;
+
+            height:160px;
+            width:150px;
+
+        }
+
+
+ .misReportsButton:hover {
+            -webkit-transform: translateY(-5px);
+            transform: translateY(-10px);
+        }
+
+
+
+.uploadLoading:after { content: ' .'; animation: dots 1s steps(5, end) infinite;} @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: #4CAF50; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 #4CAF50;}}

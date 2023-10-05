@@ -69,9 +69,11 @@ function login() {
         xhr.setRequestHeader("location", latLong);
 
         redirectionUrl = window.localStorage.getItem(pageRedirectionPort);
+         var staticAssets = window.localStorage.getItem(loginstaticimagesConstKey);
         window.localStorage.clear();
            window.localStorage.setItem("location",latLong);
-
+           if(staticAssets != null && staticAssets != "null" && staticAssets != undefined && staticAssets != "undefined")
+        window.localStorage.setItem(loginstaticimagesConstKey,staticAssets);
 
         xhr.send(data);
 
