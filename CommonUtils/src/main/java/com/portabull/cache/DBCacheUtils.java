@@ -68,7 +68,7 @@ public class DBCacheUtils {
         return false;
     }
 
-    private static boolean isTokenExpired(TokenCache tokenData) {
+    public static boolean isTokenExpired(TokenCache tokenData) {
         Calendar calendar = Calendar.getInstance();
         if (tokenData.getEndTime() >= calendar.getTimeInMillis()) {
             return false;
