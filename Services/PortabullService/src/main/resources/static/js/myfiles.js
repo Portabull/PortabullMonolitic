@@ -774,16 +774,24 @@ function clearUploadErrorMessage(){
 }
 
 
-
 function invokeLoader(){
- portabullloaderQ = document.querySelector('#portabullloader');
-      portabullloaderQ.style.display = "";
-        portabullloaderQ.innerHTML = "<div id=\"loader\"></div>";
+     document.getElementById("uploadLoading123").hidden = false;
 }
 
 function stopLoader(){
-            portabullloaderQ.style.display = "none";
+ document.getElementById("uploadLoading123").hidden = true;
 }
+
+
+//function invokeLoader(){
+// portabullloaderQ = document.querySelector('#portabullloader');
+//      portabullloaderQ.style.display = "";
+//        portabullloaderQ.innerHTML = "<div id=\"loader\"></div>";
+//}
+//
+//function stopLoader(){
+//            portabullloaderQ.style.display = "none";
+//}
 
 function editFileDirectory(mType) {
 
