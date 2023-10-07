@@ -29,7 +29,7 @@
         <java.version>1.8</java.version>
         <!--suppress UnresolvedMavenProperty -->
         <appserver.home>${JAR_LOCATION}</appserver.home>
-        <deployement.dir>C://Users//91850//Documents//deployments//services_latest//</deployement.dir>
+        <deployement.dir>${appserver.home}/${project.name}</deployement.dir>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
