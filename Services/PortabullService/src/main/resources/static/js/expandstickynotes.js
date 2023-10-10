@@ -263,6 +263,11 @@ modifyNotes(false,true);
 return;
 }
 
+  if(notesCache == undefined){
+    applyCreateButton();
+  return;
+ }
+
 
 var notesTextAreaId= formatTextReplacer(document.getElementById("notesTextAreaId").value);
 var tittleId =  formatTextReplacer(document.getElementById("tittleId").value);
