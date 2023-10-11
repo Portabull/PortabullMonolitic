@@ -41,11 +41,25 @@ public class CommonUtils {
             throw new TokenNotFoundException("Token Not Found");
 
         TokenData tokenData = DBCacheUtils.get(token);
-        if (tokenData == null || DBCacheUtils.isTokenExpired(getTokenCache(tokenData)) || (tokenData.isTwoStepVerificationEnabled() && !tokenData.isValidatedTwoStepAuth())) {
+        if (tokenData == null || DBCacheUtils.isTokenExpired(getTokenCache(tokenData))) {
             throw new TokenNotFoundException("Token Expired Or No User Found for this token");
         }
 
         return tokenData.getUserID();
+    }
+
+    public static void validateToken() {
+        String token = CommonUtils.getAuthorizationToken();
+
+        if (StringUtils.isEmpty(token))
+            throw new TokenNotFoundException("Token Not Found");
+
+        TokenData tokenData = DBCacheUtils.get(token);
+
+        if (tokenData == null || DBCacheUtils.isTokenExpired(getTokenCache(tokenData)) || (tokenData.isTwoStepVerificationEnabled() && !tokenData.isValidatedTwoStepAuth())) {
+            throw new TokenNotFoundException("Token Expired Or No User Found for this token");
+        }
+
     }
 
     private static TokenCache getTokenCache(TokenData tokenData) {

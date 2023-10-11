@@ -15,7 +15,7 @@ public class GenericRoute {
 
     @GetMapping("/portabull-health-check")
     public ResponseEntity<PortableResponse> healthCheck() {
-        CommonUtils.getLoggedInUserId();
+        CommonUtils.validateToken();
         return new ResponseEntity<>(new PortableResponse(
                 "Successfully Logged In", StatusCodes.C_200, PortableConstants.SUCCESS,
                 null), HttpStatus.OK);
