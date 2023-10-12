@@ -95,10 +95,10 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
   init();
 
   function init() {
-    healthCheckBasePort2653(loadStaticAssets1);
+    healthCheckBasePort2653(loadStaticAssets1121122);
         }
 
-        function loadStaticAssets1(){
+        function loadStaticAssets1121122(){
              loadStaticAssets(createStaticButtons);
         }
 
