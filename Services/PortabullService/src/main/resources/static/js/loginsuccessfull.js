@@ -80,6 +80,9 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
          return;
         }
      }
+
+
+
      if(window.localStorage.getItem('registrationCheck') == null || !window.localStorage.getItem('registrationCheck')){
      loadLoggedInPages();
      }
@@ -92,8 +95,13 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
   init();
 
   function init() {
-loadStaticAssets(createStaticButtons);
+    healthCheckBasePort2653(loadStaticAssets1);
         }
+
+        function loadStaticAssets1(){
+             loadStaticAssets(createStaticButtons);
+        }
+
   function getStaticImage() {
 
   }

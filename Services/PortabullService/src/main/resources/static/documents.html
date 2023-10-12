@@ -153,12 +153,17 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
     initToken();
     function initToken() {
 
-      loadStaticAssets(createStaticButtons);
+     healthCheckBasePort2653(loadDocumentPageAssets);
+
+    }
+
+    function loadDocumentPageAssets(){
+
+         loadStaticAssets(createStaticButtons);
 
        var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
     showHoverOptionDiv.innerHTML = '<br><br><br><br><br><br><br><br><br><br>';
-
 
     }
 
