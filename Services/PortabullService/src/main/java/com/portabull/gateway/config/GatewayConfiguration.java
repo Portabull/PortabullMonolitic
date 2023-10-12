@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 public class GatewayConfiguration {
 
-    static String BASE_URL = "https://portabull.in/APIGateway/";
+    static String BASE_URL = "https://portabull.in/APIGateway";
 
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> handleErrorPagesOnTomcat() {

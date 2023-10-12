@@ -255,10 +255,8 @@ public class ErrorPageHandler extends ValveBase {
         sb.append("{");
 
         if (request.getRequestURL() == null || !request.getRequestURL().toString().contains("APIGateway")) {
-            sb.append("window.location.href = \"https://portabull.in:443/APIGateway/portabull\";");
             sb.append("window.location.href = \"" + GatewayConfiguration.getBaseUrl() + "/portabull\";");
         } else {
-            sb.append("window.location.href = \"https://portabull.in:443/APIGateway/pagenotfound.html\";");
             sb.append("window.location.href = \"" + GatewayConfiguration.getBaseUrl() + "/pagenotfound.html\";");
         }
 
