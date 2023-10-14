@@ -322,7 +322,7 @@ window.location.href = "index.html";
 
     function init() {
 
-            executeRestCall("https://localhost/APIGateway/UM/profile/get-user-profile-info",null,"GET",loadProfilePic);
+            executeRestCall( BASE_URL +  "UM/profile/get-user-profile-info",null,"GET",loadProfilePic);
 
 
     }
@@ -371,7 +371,7 @@ window.location.href = "index.html";
     "zip":document.getElementById("inputZip").value
     });
 
-      executeRestCall("https://localhost/APIGateway/UM/profile/save-user-profile-info",data,"POST",doNothing);
+      executeRestCall(BASE_URL + "UM/profile/save-user-profile-info",data,"POST",doNothing);
 
     }
 
