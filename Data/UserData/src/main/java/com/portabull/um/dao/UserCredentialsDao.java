@@ -31,4 +31,6 @@ public interface UserCredentialsDao {
     PortableResponse getUserNames(List<Object> userIds);
 
     PortableResponse getUserIds(List<String> userNames);
+
+    UserProfile saveOrUpdateUserProfile(UserProfile userProfile);
 }

@@ -27,6 +27,25 @@ public class UserProfileController {
 
     }
 
+    @GetMapping("/get-user-profile-info")
+    public ResponseEntity<?> getUserProfileInfo() throws Exception {
+
+        PortableResponse response = userProfileService.getUserProfileInfo();
+
+        return new ResponseEntity<>(response, PortableResponse.getHttpCode(response.getStatusCode()));
+
+    }
+
+    @PostMapping("/save-user-profile-info")
+    public ResponseEntity<?> saveUserProfileInfo(@RequestBody Map<String, Object> payload) throws Exception {
+
+        PortableResponse response = userProfileService.saveUserProfileInfo(payload);
+
+        return new ResponseEntity<>(response, PortableResponse.getHttpCode(response.getStatusCode()));
+
+    }
+
+
     @PostMapping("/upload-profile-picture")
     public ResponseEntity<?> uploadProfilePicture(@RequestParam(value = "file") MultipartFile file) throws IOException {
 

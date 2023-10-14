@@ -140,7 +140,7 @@ document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\
 
 
     function redirectTosettingsPage() {
-            location.href = "userprofile.html";
+            location.href = "wdw-snippet.html";
         }
 
          function redirectToMessagePage() {

@@ -10,3 +10,36 @@ function loadStaticAssets(loadcallback) { var staticImages = window.localStorage
 
 
 function healthCheckBasePort2653(loadcallback){var bearerToken = window.localStorage.getItem('token');if(bearerToken == null || bearerToken == "null" || bearerToken == undefined){ window.location.href = "index.html";return; }var xhr=new XMLHttpRequest();xhr.open("GET",healthCheckUrl_B87356475);xhr.setRequestHeader("Accept","application/json");xhr.setRequestHeader("Content-Type","application/json");var data=JSON.stringify({});xhr.setRequestHeader("Authorization",window.localStorage.getItem('token'));xhr.send(data);xhr.onreadystatechange=function(){if(xhr.readyState===4){console.log(xhr.status);console.log(xhr.responseText);const response=JSON.parse(xhr.responseText);if(xhr.status==503||xhr.status==500){window.location.href="portabullcompleteserverdown.html"}else if(xhr.status==401){window.localStorage.removeItem(tokenKey);window.location.href="index.html"}else{ loadcallback();}}}}
+
+
+
+function executeRestCall(url,data,method,callbackMethod) {
+var bearerToken = window.localStorage.getItem('token');
+
+if(bearerToken == null || bearerToken == "null" || bearerToken == undefined){
+window.location.href = "index.html";return;
+}
+
+var xhr=new XMLHttpRequest();
+xhr.open(method,url);
+xhr.setRequestHeader("Accept","application/json");
+xhr.setRequestHeader("Content-Type","application/json");
+xhr.setRequestHeader("Authorization",window.localStorage.getItem('token'));
+xhr.send(data);
+xhr.onreadystatechange=function(){
+if(xhr.readyState===4){
+console.log(xhr.status);
+console.log(xhr.responseText);
+const response=JSON.parse(xhr.responseText);
+
+if(xhr.status==503||xhr.status==500){
+window.location.href="portabullcompleteserverdown.html"
+}else if(xhr.status==401){
+window.localStorage.removeItem('token');
+window.location.href="index.html"
+}else{
+ callbackMethod(xhr,response);
+ }
+ }
+ }
+ }

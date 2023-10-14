@@ -267,7 +267,10 @@ public class UserCredentialsDaoImpl implements UserCredentialsDao {
 
     }
 
-
+    @Override
+    public UserProfile saveOrUpdateUserProfile(UserProfile userProfile) {
+        return hibernateUtils.saveOrUpdateEntity(userProfile);
+    }
 
 
 }

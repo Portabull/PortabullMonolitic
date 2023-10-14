@@ -90,6 +90,20 @@ public class CommonUtils {
         return tokenData.getUserName();
     }
 
+    public static String getLoggedInEmail() {
+        String token = CommonUtils.getAuthorizationToken();
+
+        if (StringUtils.isEmpty(token))
+            throw new TokenNotFoundException("Token Not Found");
+
+        TokenData tokenData = DBCacheUtils.get(token);
+        if (tokenData == null) {
+            throw new TokenNotFoundException("Token Expired Or No User Found for this token");
+        }
+
+        return tokenData.getEmail();
+    }
+
     public static String getAuthorizationToken() {
         String authorization = RequestHelper.getCurrentRequest().getHeader("Authorization");
         if (!StringUtils.isEmpty(authorization)) {
@@ -188,5 +202,8 @@ public class CommonUtils {
         RequestHelper.getCurrentRequest().setAttribute("Authorization", "Bearer " + token);
     }
 
+    public static String getString(Object data) {
+        return data == null ? null : data.toString();
+    }
 
 }
