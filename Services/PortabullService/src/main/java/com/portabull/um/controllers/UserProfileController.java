@@ -58,9 +58,10 @@ public class UserProfileController {
     @PostMapping("/update-twostep-verification")
     public ResponseEntity<?> updateTwoStepVerification(@RequestParam(required = false) Boolean twoStep,
                                                        @RequestParam(required = false) Boolean singleSignIn,
-                                                       @RequestParam(required = false) Integer mfa) throws IOException {
+                                                       @RequestParam(required = false) Integer mfa,
+                                                       @RequestParam(required = false) Integer sessionExpiredTime) throws IOException {
 
-        PortableResponse response = userProfileService.updateTwoStepVerification(twoStep, singleSignIn, mfa);
+        PortableResponse response = userProfileService.updateTwoStepVerification(twoStep, singleSignIn, mfa, sessionExpiredTime);
 
         return new ResponseEntity<>(response, PortableResponse.getHttpCode(response.getStatusCode()));
 

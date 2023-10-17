@@ -43,7 +43,7 @@ public class UserProfile implements Serializable {
     @Column(name = "reporting_to")
     private Long reportingTO;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "reporting_to")
     private List<UserProfile> reporters;
 

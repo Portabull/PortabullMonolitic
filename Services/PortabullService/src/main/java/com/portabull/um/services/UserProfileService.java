@@ -100,7 +100,7 @@ public class UserProfileService {
         return new PortableResponse(documentResponse.getMessage(), documentResponse.getStatusCode(), documentResponse.getStatus(), documentResponse.getData());
     }
 
-    public PortableResponse updateTwoStepVerification(Boolean twoStep, Boolean singleSignIn, Integer mfa) {
+    public PortableResponse updateTwoStepVerification(Boolean twoStep, Boolean singleSignIn, Integer mfa, Integer sessionExpiredTime) {
 
         UserCredentials userCredentials = userCredentialsDao.getUserCredential();
 
@@ -112,6 +112,9 @@ public class UserProfileService {
 
         if (mfa != null)
             userCredentials.setMfaLoginType(mfa);
+
+        if (sessionExpiredTime != null)
+            userCredentials.setLoggedInSessionTime(sessionExpiredTime.longValue());
 
         userCredentialsDao.saveOrUpdateUserCredentials(userCredentials);
 
@@ -171,6 +174,7 @@ public class UserProfileService {
         fileResponse.put("singleSignInChecked", BooleanUtils.isTrue(userCredential.getSingleSignIn()) ? "checked" : "unchecked");
         fileResponse.put("mfaLoginType", userCredential.getMfaLoginType());
         fileResponse.put("userLoginName", CommonUtils.getLoggedInEmail());
+        fileResponse.put("sessionTime", userCredential.getLoggedInSessionTime());
 
         if (userProfile != null) {
             fileResponse.put("mobileNumber", userProfile.getMobileNumber());
@@ -179,8 +183,6 @@ public class UserProfileService {
             fileResponse.put("city", userProfile.getCity());
             fileResponse.put("state", userProfile.getState());
             fileResponse.put("zip", userProfile.getPincode());
-
-
         }
 
         return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, fileResponse);

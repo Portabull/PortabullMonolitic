@@ -113,4 +113,12 @@ public class JwtUtil {
 
     }
 
+    public String decryptPassword(String password) {
+
+        Base64.Decoder decoder = Base64.getDecoder();
+
+        return new String(decoder.decode(new StringBuilder(new String(decoder.decode(password))).reverse().toString()));
+
+    }
+
 }

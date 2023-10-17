@@ -11,6 +11,7 @@ import com.portabull.um.UserCredentials;
 import com.portabull.um.UserProfile;
 import com.portabull.um.dao.UserCredentialsDao;
 import com.portabull.um.dao.UserDao;
+import com.portabull.um.utils.JwtUtil;
 import com.portabull.utils.HTMLTemplete;
 import com.portabull.utils.commonutils.CommonUtils;
 import com.portabull.utils.emailutils.EmailUtils;
@@ -49,6 +50,9 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
     HTMLTemplete htmlTemplete;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
     static Logger logger = LoggerFactory.getLogger(MyUserDetailsService.class);
 
@@ -118,30 +122,48 @@ public class MyUserDetailsService implements UserDetailsService {
 
     public PortableResponse updatePasswordDetails(Map<String, String> passwordDetails) {
         if (!passwordDetails.get("newPassword").equals(passwordDetails.get("confirmNewPassword"))) {
-            return new PortableResponse("Password and confrim password does not match", 400L, PortableConstants.FAILED, null);
+            return new PortableResponse("Password and confirm password does not match", 400L, PortableConstants.FAILED, null);
         }
 
         UserCredentials userCredentials = userCredentialsDao.getUserCredentials(passwordDetails.get("to"));
 
-        Map<String, Object> requestParams = new LinkedHashMap<>();
+        if (!StringUtils.isEmpty(passwordDetails.get("otp"))) {
 
-        requestParams.put("userId", userCredentials.getUserID());
+            Map<String, Object> requestParams = new LinkedHashMap<>();
 
-        requestParams.put("otp", passwordDetails.get("otp"));
+            requestParams.put("userId", userCredentials.getUserID());
 
-        List<Object> otps = commonDao.execueQuery(" FROM LoggedInOTP WHERE userId=:userId AND otp=:otp", requestParams);
+            requestParams.put("otp", passwordDetails.get("otp"));
 
-        if (!CollectionUtils.isEmpty(otps)) {
-            commonDao.deleteEntitys(otps);
+            List<Object> otps = commonDao.execueQuery(" FROM LoggedInOTP WHERE userId=:userId AND otp=:otp", requestParams);
 
-            userCredentials.setPassword(passwordDetails.get("newPassword"));
+            if (!CollectionUtils.isEmpty(otps)) {
+                commonDao.deleteEntitys(otps);
+
+                userCredentials.setPassword(jwtTokenUtil.decryptPassword(passwordDetails.get("newPassword")));
+
+                commonDao.saveOrUpdateEntity(userCredentials);
+
+                return new PortableResponse("Successfully updated password", 200L, PortableConstants.SUCCESS, null);
+            }
+
+            return new PortableResponse("Invalid Otp", 401L, PortableConstants.FAILED, null);
+
+        }
+
+        String currentPassword = jwtTokenUtil.decryptPassword(passwordDetails.get("currentPassword"));
+
+        if (userCredentials.getPassword().equals(currentPassword)) {
+
+            userCredentials.setPassword(jwtTokenUtil.decryptPassword(passwordDetails.get("newPassword")));
 
             commonDao.saveOrUpdateEntity(userCredentials);
 
             return new PortableResponse("Successfully updated password", 200L, PortableConstants.SUCCESS, null);
+
         }
 
-        return new PortableResponse("Invalid Otp", 401L, PortableConstants.FAILED, null);
+        return new PortableResponse("Invalid Password", 401L, PortableConstants.FAILED, null);
     }
 
     public PortableResponse notifyAdministrator(Map<String, String> notifyDetails) {

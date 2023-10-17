@@ -34,7 +34,7 @@ const response=JSON.parse(xhr.responseText);
 
 if(xhr.status==503||xhr.status==500){
 window.location.href="portabullcompleteserverdown.html"
-}else if(xhr.status==401){
+}else if(xhr.status==401 && response.message == "Unauthorized"){
 window.localStorage.removeItem('token');
 window.location.href="index.html"
 }else{
@@ -43,3 +43,11 @@ window.location.href="index.html"
  }
  }
  }
+
+
+ function checkIfStringObjIsEmpty(data){
+  if(data == null || data == "null" || data == undefined || data == ""){
+    return true;
+  }
+  return false;
+  }
