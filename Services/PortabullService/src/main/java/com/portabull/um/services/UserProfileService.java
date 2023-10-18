@@ -114,7 +114,7 @@ public class UserProfileService {
             userCredentials.setMfaLoginType(mfa);
 
         if (sessionExpiredTime != null)
-            userCredentials.setLoggedInSessionTime(sessionExpiredTime.longValue());
+            userCredentials.setLoggedInSessionTime(getSessionTimeinMins(sessionExpiredTime.longValue()));
 
         userCredentialsDao.saveOrUpdateUserCredentials(userCredentials);
 
@@ -174,7 +174,7 @@ public class UserProfileService {
         fileResponse.put("singleSignInChecked", BooleanUtils.isTrue(userCredential.getSingleSignIn()) ? "checked" : "unchecked");
         fileResponse.put("mfaLoginType", userCredential.getMfaLoginType());
         fileResponse.put("userLoginName", CommonUtils.getLoggedInEmail());
-        fileResponse.put("sessionTime", userCredential.getLoggedInSessionTime());
+        fileResponse.put("sessionTime", getSessionTimeinCode(userCredential.getLoggedInSessionTime()));
 
         if (userProfile != null) {
             fileResponse.put("mobileNumber", userProfile.getMobileNumber());
@@ -186,6 +186,53 @@ public class UserProfileService {
         }
 
         return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, fileResponse);
+    }
+
+    private Integer getSessionTimeinCode(Long loggedInSessionTime) {
+
+        if (loggedInSessionTime <= 59) {
+            return loggedInSessionTime.intValue();
+        } else if (loggedInSessionTime >= 60){
+
+            Long hours = loggedInSessionTime / 60;
+
+            if(hours==24){
+                return 83;
+            }
+
+
+            if(hours==48){
+                return 84;
+            }
+
+
+            if(hours==72){
+                return 85;
+            }
+
+            return 59 + hours.intValue();
+        }
+
+        return 0;
+    }
+
+    private Long getSessionTimeinMins(Long loggedInSessionTime) {
+
+        if (loggedInSessionTime <= 59) {
+            return loggedInSessionTime;
+        } else if (loggedInSessionTime >= 60 && loggedInSessionTime <= 82) {
+            Long hours = (loggedInSessionTime - 59);
+
+            return hours * 60;
+
+        } else if (loggedInSessionTime >= 83 && loggedInSessionTime <= 85) {
+
+            Long days = (loggedInSessionTime - 82);
+
+            return (days * 24) * 60;
+
+        }
+    return 0l;
     }
 
     public PortableResponse saveUserProfileInfo(Map<String, Object> payload) {
