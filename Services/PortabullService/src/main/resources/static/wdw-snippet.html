@@ -879,6 +879,30 @@ populateDeviceDetails();
                + deviceHeader6;
 
             }
+            else if(aa.osName == "ios" || aa.osName == "apple" || aa.osName == "macos" || aa.osName == "mac"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/apple.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
+            else if(aa.osName == "linux" || aa.osName == "ubuntu"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/linux.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
 
         }
     }
