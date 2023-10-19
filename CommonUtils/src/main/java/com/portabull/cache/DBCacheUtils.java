@@ -26,7 +26,6 @@ public class DBCacheUtils {
 
         List<TokenCache> tokenCaches = hibernateUtils.findEntitiesByCriteria(TokenCache.class, "userID", tokenData.getUserID());
 
-
         if (!CollectionUtils.isEmpty(tokenCaches)) {
             for (TokenCache tokenCach : tokenCaches) {
                 if (isTokenExpired(tokenCach)) {
@@ -96,7 +95,10 @@ public class DBCacheUtils {
         token.setExpirationTime(tokenData.getExpirationTime());
         token.setStartTime(tokenData.getStartTime());
         token.setUserName(tokenData.getUserName());
+        token.setDeviceDetails(tokenData.getDeviceDetails());
+        token.setLocationDetails(tokenData.getLocationDetails());
         token.setToken(key);
+
         hibernateUtils.saveOrUpdateEntity(token);
     }
 
@@ -113,6 +115,8 @@ public class DBCacheUtils {
             data.setExpirationTime(token.getExpirationTime());
             data.setStartTime(token.getStartTime());
             data.setUserName(token.getUserName());
+            data.setLocationDetails(token.getLocationDetails());
+            data.setDeviceDetails(token.getDeviceDetails());
             return data;
         }
 
@@ -203,6 +207,14 @@ public class DBCacheUtils {
             throw new DataParseException(e, "Unable to parse value");
         }
         return null;
+    }
+
+    public static List<TokenCache> getTokenCache(Long userID) {
+        return hibernateUtils.findEntitiesByCriteria(TokenCache.class, "userID", userID);
+    }
+
+    public static void removeTokenCache(Long sessionId) {
+        hibernateUtils.deleteEntity(TokenCache.class, sessionId);
     }
 
 

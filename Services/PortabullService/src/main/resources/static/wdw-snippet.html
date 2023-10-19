@@ -5,7 +5,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="logout.js"></script>
     <style>
+
+
+.filesButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:100px;
+            width:100px;
+
+        }
+
 
 #range1 {
   -webkit-appearance: none;
@@ -452,6 +466,9 @@ Delete account
 </form>
 </div>
 </div>
+
+
+
 <div class="card">
 <div class="card-header">
 <div class="card-actions float-right">
@@ -517,6 +534,9 @@ Delete account
 </form>
 </div>
 </div>
+
+
+
 </div>
 
 
@@ -627,12 +647,35 @@ Delete account
 
                     </div>
 
+                    <div id="deviceAndLocationDetailsId">
+
+
+                    </div>
+
 
                     <button type="submit" onclick="savePrivacyDetails()" class="btn btn-primary">Save changes</button>
 
                 </form>
             </div>
         </div>
+
+
+
+
+
+       <div id="deviceDetailsPlace">
+
+
+       </div>
+
+
+
+
+
+
+
+
+
     </div>
 
 
@@ -679,6 +722,17 @@ Delete account
 <script type="text/javascript"></script>
 
 <script>
+var onHold = false;
+var cacheGoogleUrl;
+var cachePlanData = [];
+var deviceHeader1 = "<div class=\"card\"><div class=\"card-header\"><div class=\"card-actions float-right\"><div class=\"dropdown show\"><a href=\"#\" data-toggle=\"dropdown\" data-display=\"static\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-more-horizontal align-middle\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></a><div class=\"dropdown-menu dropdown-menu-right\">";
+var deviceHeader2 = "<a onclick=\"logoutTheSelectedSession(";
+var deviceHeader3 =  ")\" class=\"dropdown-item\" href=\"#\">Logout</a>";
+var deviceHeader4 = "</div></div></div><h5 class=\"card-title mb-0\">Device Details " ;
+
+var deviceHeader4a = "</h5></div><div class=\"card-body\">";
+var deviceHeader5 = "<form action=\"javascript:void(0)\" >";
+var deviceHeader6  = "</form></div></div>";
 
 const sliderEl = document.querySelector("#range2")
 const sliderValue = document.querySelector(".value2")
@@ -699,7 +753,7 @@ window.location.href = "loginsuccessfull.html";
 
     function init() {
 
-            executeRestCall( BASE_URL +  "UM/profile/get-user-profile-info",null,"GET",loadProfilePic);
+            executeRestCall( BASE_URL +  "UM/profile/get-user-profile-info",null,"GET",loadProfilePic,null);
 
 
     }
@@ -784,6 +838,95 @@ document.getElementById("progressBarValue").innerHTML = '<p>'  + tempSliderValue
   sliderEl.style.background = `linear-gradient(to right, #4E4E4C ${progress}%, #ccc ${progress}%)`;
 
 
+
+
+cachePlanData = response.data;
+
+
+cacheGoogleUrl = response.data.googleUrl;
+     cachePlanData =    response.data.locationDeviceDetails;
+
+populateDeviceDetails();
+    }
+
+    function populateDeviceDetails(){
+    document.getElementById("deviceDetailsPlace").innerHTML  = '';
+    for(var i=0;i<cachePlanData.length;i++){
+            var aa =  cachePlanData[i];
+
+            if(aa.osName == "windows") {
+               var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4 + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/window.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+
+            }
+            else if(aa.osName == "android"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/android.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
+
+        }
+    }
+
+    function logoutTheSelectedSession(sessionId) {
+
+        if(onHold){
+            return;
+        }
+
+        onHold = true;
+
+
+        var tempcachePlanData = [];
+        var count = 0;
+        for(var i=0;i<cachePlanData.length;i++){
+
+              var aa =  cachePlanData[i];
+
+              if(aa.id == sessionId &&  aa.currentUser == true){
+                    logout();
+                    return;
+              }
+
+            if(aa.id != sessionId){
+                tempcachePlanData[count] = aa;
+                count++;
+            }
+
+        }
+
+      cachePlanData = tempcachePlanData;
+
+      executeRestCall(BASE_URL + "UM/logout-session?sessionId=" + sessionId ,null,"POST",changeLoggedDetails,null);
+
+    }
+
+    function changeLoggedDetails(xhr,response) {
+        populateDeviceDetails();
+        onHold = false;
+    }
+
+    function getUserStatus(aa){
+        if(aa.currentUser == true){
+            return "(You)"
+        }
+
+        return "";
     }
 
     function saveUserDetails(){
@@ -799,7 +942,7 @@ document.getElementById("progressBarValue").innerHTML = '<p>'  + tempSliderValue
     "zip":document.getElementById("inputZip").value
     });
 
-      executeRestCall(BASE_URL + "UM/profile/save-user-profile-info",data,"POST",doNothing);
+      executeRestCall(BASE_URL + "UM/profile/save-user-profile-info",data,"POST",doNothing,null);
 
     }
 
@@ -832,7 +975,7 @@ function changeNewPassword(){
     "to":userLoginName123
     });
 
-  executeRestCall(BASE_URL + 'UM/update-password',data,"POST",changeNewPasswordStatus);
+  executeRestCall(BASE_URL + 'UM/update-password',data,"POST",changeNewPasswordStatus,null);
 }
 
 function changeNewPasswordStatus(xhr,response){
@@ -882,7 +1025,7 @@ function savePrivacyDetails(){
 
         var url = BASE_URL + 'UM/profile/update-twostep-verification?twoStep=' + twostepverification + '&singleSignIn=' + singlesignon + '&mfa=' + mfaType + '&sessionExpiredTime='+currentSessionTiming;
 
-         executeRestCall(url,null,"POST",doNothing);
+         executeRestCall(url,null,"POST",doNothing,null);
 }
 
 function getMfaValue(){

@@ -73,6 +73,8 @@ public class CommonUtils {
         tokenCache.setUserName(tokenData.getUserName());
         tokenCache.setTwoStepVerificationEnabled(tokenData.isTwoStepVerificationEnabled());
         tokenCache.setValidatedTwoStepAuth(tokenData.isValidatedTwoStepAuth());
+        tokenCache.setDeviceDetails(tokenData.getDeviceDetails());
+        tokenCache.setLocationDetails(tokenData.getLocationDetails());
         return tokenCache;
     }
 

@@ -45,6 +45,12 @@ public class TokenCache {
     @Column(name = "single_sign_on")
     private boolean singleSignOn;
 
+    @Column(name = "location_details")
+    private String locationDetails;
+
+    @Column(name = "device_details")
+    private String deviceDetails;
+
     public Long getId() {
         return id;
     }
@@ -131,5 +137,21 @@ public class TokenCache {
 
     public void setSingleSignOn(boolean singleSignOn) {
         this.singleSignOn = singleSignOn;
+    }
+
+    public String getLocationDetails() {
+        return locationDetails;
+    }
+
+    public void setLocationDetails(String locationDetails) {
+        this.locationDetails = locationDetails;
+    }
+
+    public String getDeviceDetails() {
+        return deviceDetails;
+    }
+
+    public void setDeviceDetails(String deviceDetails) {
+        this.deviceDetails = deviceDetails;
     }
 }

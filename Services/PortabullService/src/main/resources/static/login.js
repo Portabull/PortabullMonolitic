@@ -65,13 +65,16 @@ function login() {
         var data = JSON.stringify({"username": userName, "password": password});
 
         let latLong = window.localStorage.getItem("location");
+        let devdtls = window.localStorage.getItem("devdtls");
         console.log("lattitude;longitude:" + latLong);
         xhr.setRequestHeader("location", latLong);
+        xhr.setRequestHeader("devdtls",devdtls );
 
         redirectionUrl = window.localStorage.getItem(pageRedirectionPort);
          var staticAssets = window.localStorage.getItem(loginstaticimagesConstKey);
         window.localStorage.clear();
            window.localStorage.setItem("location",latLong);
+           window.localStorage.setItem("devdtls",devdtls);
            if(staticAssets != null && staticAssets != "null" && staticAssets != undefined && staticAssets != "undefined")
         window.localStorage.setItem(loginstaticimagesConstKey,staticAssets);
 

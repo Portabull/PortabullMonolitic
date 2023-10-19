@@ -10,6 +10,7 @@ import com.portabull.payloads.AuthenticationRequest;
 import com.portabull.payloads.TokenData;
 import com.portabull.um.UserCredentials;
 import com.portabull.um.dao.UserCredentialsDao;
+import com.portabull.utils.RequestHelper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,6 +18,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Base64;
 import java.util.Date;
@@ -83,6 +85,17 @@ public class JwtUtil {
         if (!skipMFA)
             tokenData.setTwoStepVerificationEnabled(userCredentials.getTwoStepVerificationEnabled());
         tokenData.setSingleSignOn(BooleanUtils.isTrue(userCredentials.getSingleSignIn()));
+
+        String location = RequestHelper.getCurrentRequest().getHeader("location");
+        String latLong = "";
+        if (!StringUtils.isEmpty(location) && !"null".equalsIgnoreCase(location)) {
+            latLong = latLong + location.split(";")[0];
+            latLong = latLong + "," +  location.split(";")[1];
+        }
+
+        tokenData.setLocationDetails(latLong);
+        tokenData.setDeviceDetails(RequestHelper.getCurrentRequest().getHeader("devdtls"));
+
         return tokenData;
     }
 

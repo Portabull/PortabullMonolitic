@@ -1,8 +1,11 @@
 package com.portabull.um.services;
 
+import com.portabull.cache.DBCacheUtils;
+import com.portabull.cache.TokenCache;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.dms.service.DocumentService;
+import com.portabull.payloads.TokenData;
 import com.portabull.response.DocumentResponse;
 import com.portabull.response.PortableResponse;
 import com.portabull.um.UserCredentials;
@@ -14,6 +17,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.BadPaddingException;
@@ -22,10 +26,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UserProfileService {
@@ -113,8 +114,19 @@ public class UserProfileService {
         if (mfa != null)
             userCredentials.setMfaLoginType(mfa);
 
-        if (sessionExpiredTime != null)
-            userCredentials.setLoggedInSessionTime(getSessionTimeinMins(sessionExpiredTime.longValue()));
+        if (sessionExpiredTime != null) {
+
+            Long sessionTimeinMins = getSessionTimeinMins(sessionExpiredTime.longValue());
+
+            userCredentials.setLoggedInSessionTime(sessionTimeinMins);
+
+            TokenData tokenData = DBCacheUtils.get(CommonUtils.getAuthorizationToken());
+
+            tokenData.setExpirationTime(sessionTimeinMins.intValue());
+
+            DBCacheUtils.put(CommonUtils.getAuthorizationToken(), tokenData);
+
+        }
 
         userCredentialsDao.saveOrUpdateUserCredentials(userCredentials);
 
@@ -175,6 +187,30 @@ public class UserProfileService {
         fileResponse.put("mfaLoginType", userCredential.getMfaLoginType());
         fileResponse.put("userLoginName", CommonUtils.getLoggedInEmail());
         fileResponse.put("sessionTime", getSessionTimeinCode(userCredential.getLoggedInSessionTime()));
+        fileResponse.put("googleUrl", "https://www.google.com/maps/search/");
+
+        List<TokenCache> tokenCaches = DBCacheUtils.getTokenCache(CommonUtils.getLoggedInUserId());
+        List<Map<String, Object>> deviceLocationDetails = new ArrayList<>();
+        for (TokenCache tokenCache : tokenCaches) {
+            Map<String, Object> deviceLocationDetail = new HashMap<>();
+            if (tokenCache.getToken().equals(CommonUtils.getAuthorizationToken())) {
+                deviceLocationDetail.put("currentUser", true);
+            }
+
+            deviceLocationDetail.put("locationDetails", tokenCache.getLocationDetails());
+            if (!StringUtils.isEmpty(tokenCache.getDeviceDetails())) {
+                String[] deviceDetails = tokenCache.getDeviceDetails().split(",");
+                deviceLocationDetail.put("osName", deviceDetails[0].toLowerCase());
+                deviceLocationDetail.put("osVersion", deviceDetails[1]);
+                deviceLocationDetail.put("browserName", deviceDetails[2]);
+                deviceLocationDetail.put("browserVersion", deviceDetails[3]);
+            }
+            deviceLocationDetail.put("deviceDetails", tokenCache.getDeviceDetails());
+            deviceLocationDetail.put("id", tokenCache.getId());
+            deviceLocationDetails.add(deviceLocationDetail);
+        }
+
+        fileResponse.put("locationDeviceDetails", deviceLocationDetails);
 
         if (userProfile != null) {
             fileResponse.put("mobileNumber", userProfile.getMobileNumber());
@@ -192,21 +228,21 @@ public class UserProfileService {
 
         if (loggedInSessionTime <= 59) {
             return loggedInSessionTime.intValue();
-        } else if (loggedInSessionTime >= 60){
+        } else if (loggedInSessionTime >= 60) {
 
             Long hours = loggedInSessionTime / 60;
 
-            if(hours==24){
+            if (hours == 24) {
                 return 83;
             }
 
 
-            if(hours==48){
+            if (hours == 48) {
                 return 84;
             }
 
 
-            if(hours==72){
+            if (hours == 72) {
                 return 85;
             }
 
@@ -232,7 +268,7 @@ public class UserProfileService {
             return (days * 24) * 60;
 
         }
-    return 0l;
+        return 0l;
     }
 
     public PortableResponse saveUserProfileInfo(Map<String, Object> payload) {

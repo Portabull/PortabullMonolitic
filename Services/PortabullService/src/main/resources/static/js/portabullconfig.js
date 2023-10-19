@@ -13,7 +13,7 @@ function healthCheckBasePort2653(loadcallback){var bearerToken = window.localSto
 
 
 
-function executeRestCall(url,data,method,callbackMethod) {
+    function executeRestCall(url,data,method,callbackMethod,custHeaders) {
 var bearerToken = window.localStorage.getItem('token');
 
 if(bearerToken == null || bearerToken == "null" || bearerToken == undefined){
@@ -25,6 +25,11 @@ xhr.open(method,url);
 xhr.setRequestHeader("Accept","application/json");
 xhr.setRequestHeader("Content-Type","application/json");
 xhr.setRequestHeader("Authorization",window.localStorage.getItem('token'));
+if(custHeaders !=null && custHeaders !=undefined && custHeaders !="null"){
+for (let [key, value] of custHeaders) {
+xhr.setRequestHeader(key,value);
+}
+}
 xhr.send(data);
 xhr.onreadystatechange=function(){
 if(xhr.readyState===4){

@@ -24,6 +24,10 @@ public class TokenData implements Serializable {
 
     private boolean singleSignOn;
 
+    private String locationDetails;
+
+    private String deviceDetails;
+
     public String getUserName() {
         return userName;
     }
@@ -94,5 +98,21 @@ public class TokenData implements Serializable {
 
     public void setSingleSignOn(boolean singleSignOn) {
         this.singleSignOn = singleSignOn;
+    }
+
+    public String getLocationDetails() {
+        return locationDetails;
+    }
+
+    public void setLocationDetails(String locationDetails) {
+        this.locationDetails = locationDetails;
+    }
+
+    public String getDeviceDetails() {
+        return deviceDetails;
+    }
+
+    public void setDeviceDetails(String deviceDetails) {
+        this.deviceDetails = deviceDetails;
     }
 }

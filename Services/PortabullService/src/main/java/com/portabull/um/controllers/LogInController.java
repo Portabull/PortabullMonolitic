@@ -1,6 +1,7 @@
 package com.portabull.um.controllers;
 
 import com.netflix.zuul.context.RequestContext;
+import com.portabull.cache.DBCacheUtils;
 import com.portabull.cache.LoginUtils;
 import com.portabull.constants.LoggerErrorConstants;
 import com.portabull.constants.MessageConstants;
@@ -11,6 +12,7 @@ import com.portabull.execption.ServerException;
 import com.portabull.execption.SingleSignInEnabledException;
 import com.portabull.payloads.AuthenticationRequest;
 import com.portabull.payloads.EmailPayload;
+import com.portabull.payloads.TokenData;
 import com.portabull.response.AuthenticationResponse;
 import com.portabull.response.EmailResponse;
 import com.portabull.response.PortableResponse;
@@ -29,6 +31,7 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -129,6 +132,36 @@ public class LogInController {
         return new ResponseEntity<>(new PortableResponse()
                 .setMessage("Logout Successfully")
                 .setStatus(PortableConstants.SUCCESS).setStatusCode(200L), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/logout-session")
+    public ResponseEntity<?> logoutSession(@RequestParam String sessionId) {
+
+        DBCacheUtils.removeTokenCache(Long.valueOf(sessionId));
+
+        return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null), HttpStatus.OK);
+
+    }
+
+    @PostMapping(value = "/cache-logged-dev-dtls")
+    public ResponseEntity<?> cacheLoggedDevDtls() {
+
+        TokenData tokenData = DBCacheUtils.get(CommonUtils.getAuthorizationToken());
+
+        tokenData.setDeviceDetails(RequestHelper.getCurrentRequest().getHeader("devdtls"));
+
+        String location = RequestHelper.getCurrentRequest().getHeader("location");
+        String latLong = "";
+        if (!StringUtils.isEmpty(location) && !"null".equalsIgnoreCase(location)) {
+            latLong = latLong + location.split(";")[0];
+            latLong = latLong + "," + location.split(";")[1];
+        }
+
+        tokenData.setLocationDetails(latLong);
+
+        DBCacheUtils.put(CommonUtils.getAuthorizationToken(),tokenData);
+
+        return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null), HttpStatus.OK);
     }
 
 
