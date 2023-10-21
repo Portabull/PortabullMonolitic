@@ -512,6 +512,18 @@ function populateDirectories(dirs,directorySpaceDiv) {
 
 function downloadFile(fileName,fileId) {
 
+    if(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".tiff") ||
+     fileName.endsWith(".png") || fileName.endsWith(".gif") || fileName.endsWith(".bmp") || fileName.endsWith(".hif") ||
+     fileName.endsWith(".hcic") || fileName.endsWith(".webp"))
+     {
+            selectedFileId = fileId;
+            viewFileContent();
+
+             return;
+     }
+
+
+
     myfunction1(fileId);
 
 }
