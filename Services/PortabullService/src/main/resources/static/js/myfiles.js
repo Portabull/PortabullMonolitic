@@ -3,6 +3,8 @@ var createDMSDir = BASE_URL + 'DMS/create-dms-dir';
 var modifyDMSFileDir = BASE_URL + 'DMS/modify-dms-file-dir';
 var uploadFileToDMSServer = BASE_URL + 'DMS/upload-multiple-files-to-dir';
 var loginstaticimages;
+var tempCacheDirSpace;
+var tempmyfilesIcons;
 loadStaticAssets(createStaticImages);
 
 document.querySelector("#image-viewer .close").addEventListener("click", function () {
@@ -186,28 +188,20 @@ document.getElementById("fileEditFolderNameId").value = selectedFileName;
 
 }
 
-function viewFileContent(){
+function viewFileContent() {
 
-if(enableDirName=='' && selectedFileId==''){
+if(selectedFileName=='' && selectedFileId==''){
+
 return;
-}
-
-
-
-if(enableDirName!=''){
-    return;
-}else{
-
-
-executeRestCall( BASE_URL + "DMS/download-documents" + "?documentId=" + selectedFileId  ,null,"GET",viewDocumentData,null);
-
-
 
 }
 
+downloadFile(selectedFileName,selectedFileId);
+
 }
 
-function viewDocumentData(xhr,response){
+
+function viewImageData(xhr,response){
 
  if (response.statusCode == 200) {
 
@@ -517,15 +511,57 @@ function downloadFile(fileName,fileId) {
      fileName.endsWith(".hcic") || fileName.endsWith(".webp"))
      {
             selectedFileId = fileId;
-            viewFileContent();
+
+            selectedFileName = fileName;
+
+             populateFileContent(viewImageData);
 
              return;
+     } else if(fileName.endsWith(".pdf")) {
+
+        selectedFileId = fileId;
+
+        selectedFileName = fileName;
+
+        populateFileContent(viewPdfData);
+
+        return;
+
      }
 
 
 
     myfunction1(fileId);
 
+}
+
+function populateFileContent(callbackmethod) {
+
+ executeRestCall(BASE_URL + "DMS/download-documents" + "?documentId=" + selectedFileId,null,"GET",callbackmethod,null);
+
+}
+
+function viewPdfData(xhr,response) {
+
+ if (response.statusCode == 200) {
+
+        tempCacheDirSpace = document.querySelector('#directorySpaceDiv').innerHTML;
+
+        document.querySelector('#directorySpaceDiv').innerHTML = '';
+
+        tempmyfilesIcons = myfilesIcons.innerHTML;
+
+        myfilesIcons.innerHTML = '';
+
+       document.getElementById("pdfViewerId").innerHTML = "<div align=\"center\"><span onclick=\"closePdfEditor()\" class=\"close-btn\">&times;</span></div><object data=\""+ response.data.file  + "\" type=\"application/pdf\" width=\"100%\" height=\"500px\"></object>";
+
+}
+}
+
+function closePdfEditor(){
+       document.getElementById("pdfViewerId").innerHTML = "";
+       document.querySelector('#directorySpaceDiv').innerHTML = tempCacheDirSpace;
+       myfilesIcons.innerHTML = tempmyfilesIcons;
 }
 
 
