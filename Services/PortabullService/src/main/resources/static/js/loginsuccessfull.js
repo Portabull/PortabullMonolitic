@@ -1,4 +1,5 @@
 
+var getNameAndTimeDtls = BASE_URL + 'UM/users/get-logged-in-dtls'
 
 function clearshowHoverOption(){
 
@@ -211,6 +212,7 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
     }
 
   function init() {
+    populateNameAndTimeDetails();
     healthCheckBasePort2653(loadStaticAssets1121122);
         }
 
@@ -219,6 +221,18 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
         }
 
   function getStaticImage() {
+
+  }
+
+  function populateNameAndTimeDetails(){
+         executeRestCall(getNameAndTimeDtls,null,"GET",populateNameAndTimeDetails1,null);
+  }
+
+  function populateNameAndTimeDetails1(xhr,response){
+
+    document.getElementById("nameAndTimeDetails").innerHTML = '';
+
+  document.getElementById("nameAndTimeDetails").innerHTML = '<p><b>' + response.data.time + '<br>' + response.data.userName + '</b></p>';
 
   }
 

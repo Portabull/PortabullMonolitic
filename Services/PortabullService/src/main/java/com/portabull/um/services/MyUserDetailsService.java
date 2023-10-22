@@ -261,4 +261,15 @@ public class MyUserDetailsService implements UserDetailsService {
     }
 
 
+    public PortableResponse getLoggedInDtls() {
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("userName", CommonUtils.getLoggedInUserName());
+
+        response.put("time", userDao.getLastLoggedTime().getData());
+
+        return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, response);
+
+    }
 }
