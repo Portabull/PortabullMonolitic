@@ -204,10 +204,9 @@ downloadFile(selectedFileName,selectedFileId);
 function viewImageData(xhr,response){
 
  if (response.statusCode == 200) {
-
+    stopLoader();
     document.querySelector("#full-image").src = response.data.file;
      document.querySelector("#image-viewer").style.display = "block";
-
                 }
 }
 
@@ -510,6 +509,9 @@ function downloadFile(fileName,fileId) {
      fileName.endsWith(".png") || fileName.endsWith(".gif") || fileName.endsWith(".bmp") || fileName.endsWith(".hif") ||
      fileName.endsWith(".hcic") || fileName.endsWith(".webp"))
      {
+
+            invokeLoader();
+
             selectedFileId = fileId;
 
             selectedFileName = fileName;
@@ -518,6 +520,8 @@ function downloadFile(fileName,fileId) {
 
              return;
      } else if(fileName.endsWith(".pdf")) {
+
+        invokeLoader();
 
         selectedFileId = fileId;
 
@@ -544,6 +548,8 @@ function populateFileContent(callbackmethod) {
 function viewPdfData(xhr,response) {
 
  if (response.statusCode == 200) {
+
+        stopLoader();
 
         tempCacheDirSpace = document.querySelector('#directorySpaceDiv').innerHTML;
 
