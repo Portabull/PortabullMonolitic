@@ -340,7 +340,16 @@ margin-bottom: 0;
 color: inherit;
 background-color: #fff;
 border-bottom: 1px solid #e5e9f2;
-}</style></head><body><div class="container p-0">
+}</style></head><body>
+
+
+<form hidden id="multipleUploadForm" name="multipleUploadForm">
+    <input id="file-input" type="file" name="files" class="file-input" multiple required />
+    <button type="submit" id="submitIddsdsd" class="primary submit-btn">Submit</button>
+</form>
+
+
+<div class="container p-0">
 <h1 class="h3 mb-3">Settings</h1><button type="submit" onclick="backToHomePage()" class="btn btn-primary">Back</button>
 <div class="row">
 <div class="col-md-5 col-xl-4">
@@ -455,6 +464,9 @@ Delete account
 
     </div>
     <br>
+
+
+
     <button onclick="uploadProfilePic()" class="btn btn-primary">Upload</button>
 
 </div>
@@ -722,6 +734,65 @@ Delete account
 <script type="text/javascript"></script>
 
 <script>
+
+var uploadProfilePicUrl = BASE_URL + 'UM/profile/upload-profile-picture';
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+function uploadProfilePicToServer(file){
+
+
+    var formData = new FormData();
+
+    formData.append("file", file);
+
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST",uploadProfilePicUrl);
+
+    xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+     xhr.onload = function () {
+            console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if (response.statusCode == 200) {
+                alert(response.message);
+
+                document.getElementById("imageDivTag").innerHTML = "";
+
+                var base64 = getBase64(file).then(
+                         data =>
+                        document.getElementById("imageDivTag").innerHTML = "<img alt=\"Andrew Jones\" src=\"" + data + "\" class=\"rounded-circle img-responsive mt-2\" width=\"153\" height=\"153\">"
+                );
+
+
+            } else {
+                alert(response.message);
+            }
+        }
+
+
+    xhr.send(formData);
+}
+
+
+window.onload = function()
+        {
+        document.getElementById('file-input').onchange =
+          function(e) {
+                var fileInput = document.querySelector('#file-input');
+              var files = fileInput.files;
+                uploadProfilePicToServer(files[0]);
+            }
+        }
+
 var onHold = false;
 var cacheGoogleUrl;
 var cachePlanData = [];
@@ -759,7 +830,7 @@ window.location.href = "loginsuccessfull.html";
     }
 
     function uploadProfilePic() {
-        alert('sdg');
+       document.getElementById("file-input").click();
     }
 
     function loadProfilePic(xhr,response){
