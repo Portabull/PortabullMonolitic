@@ -51,4 +51,9 @@ public class UserController {
         }
     }
 
+    @GetMapping("get-logged-in-dtls")
+    public ResponseEntity<?> getLoggedInDtls() {
+        return new ResponseEntity<>(userDetailsService.getLoggedInDtls(), HttpStatus.OK);
+    }
+
 }

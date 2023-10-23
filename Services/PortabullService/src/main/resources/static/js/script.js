@@ -94,6 +94,12 @@ function loadLoggedInPages(){
 			if (xhr.readyState === 4) {
 				console.log(xhr.status);
 				console.log(xhr.responseText);
+				if(xhr.status == 401){
+                    window.localStorage.removeItem('token');
+                    window.location.href="index.html";
+                    return;
+				}
+
 				const response = JSON.parse(xhr.responseText);
 				window.localStorage.setItem('registrationCheck', true);
 				if (response.data ==null || !response.data) {

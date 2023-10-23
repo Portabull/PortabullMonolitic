@@ -3,7 +3,14 @@ var createDMSDir = BASE_URL + 'DMS/create-dms-dir';
 var modifyDMSFileDir = BASE_URL + 'DMS/modify-dms-file-dir';
 var uploadFileToDMSServer = BASE_URL + 'DMS/upload-multiple-files-to-dir';
 var loginstaticimages;
+var tempCacheDirSpace;
+var tempmyfilesIcons;
 loadStaticAssets(createStaticImages);
+
+document.querySelector("#image-viewer .close").addEventListener("click", function () {
+  document.querySelector("#image-viewer").style.display = "none";
+});
+
 
 
 function createStaticImages() {
@@ -33,6 +40,8 @@ var currentCreateFolderDirId = '';
 
 
 var renameIcon = "<a href=\"#\" id=\"aEditIconId\" onclick=\"renameDir()\"><i class='fas fa-pen' style='font-size:29px'></i></a>";
+
+var viewIcon = "<a href=\"#\" id=\"aViewIconId\" onclick=\"viewFileContent()\"><i class='fa fa-eye' style='font-size:29px'></i></a>";
 
 var deleteIcon = "<a href=\"#\" id=\"aDeleteIconId\" onclick=\"deleteDir()\"><i  class=\"material-icons md-48\" style='font-size:36px' >delete</i></a>";
 
@@ -177,6 +186,28 @@ document.getElementById("fileEditFolderNameId").value = selectedFileName;
 
 }
 
+}
+
+function viewFileContent() {
+
+if(selectedFileName=='' && selectedFileId==''){
+
+return;
+
+}
+
+downloadFile(selectedFileName,selectedFileId);
+
+}
+
+
+function viewImageData(xhr,response){
+
+ if (response.statusCode == 200) {
+    stopLoader();
+    document.querySelector("#full-image").src = response.data.file;
+     document.querySelector("#image-viewer").style.display = "block";
+                }
 }
 
 
@@ -365,7 +396,7 @@ function hideAndUnHideIcons() {
 
         if(dirLevel != 0) {
 
-            myfilesIcons.innerHTML =  renameIcon + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + downloadIcon + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + deleteIcon + '<br>' + backButtonIcon + createFolderButtonIcon + uploadFolderButtonIcon + openFolderButtonIcon ;
+            myfilesIcons.innerHTML =  renameIcon + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + downloadIcon + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + deleteIcon + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + viewIcon + '<br>' + backButtonIcon + createFolderButtonIcon + uploadFolderButtonIcon + openFolderButtonIcon ;
 
         } else{
 
@@ -474,8 +505,69 @@ function populateDirectories(dirs,directorySpaceDiv) {
 
 function downloadFile(fileName,fileId) {
 
+    if(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".tiff") ||
+     fileName.endsWith(".png") || fileName.endsWith(".gif") || fileName.endsWith(".bmp") || fileName.endsWith(".hif") ||
+     fileName.endsWith(".hcic") || fileName.endsWith(".webp"))
+     {
+
+            invokeLoader();
+
+            selectedFileId = fileId;
+
+            selectedFileName = fileName;
+
+             populateFileContent(viewImageData);
+
+             return;
+     } else if(fileName.endsWith(".pdf")) {
+
+        invokeLoader();
+
+        selectedFileId = fileId;
+
+        selectedFileName = fileName;
+
+        populateFileContent(viewPdfData);
+
+        return;
+
+     }
+
+
+
     myfunction1(fileId);
 
+}
+
+function populateFileContent(callbackmethod) {
+
+ executeRestCall(BASE_URL + "DMS/download-documents" + "?documentId=" + selectedFileId,null,"GET",callbackmethod,null);
+
+}
+
+function viewPdfData(xhr,response) {
+
+ if (response.statusCode == 200) {
+
+        stopLoader();
+
+        tempCacheDirSpace = document.querySelector('#directorySpaceDiv').innerHTML;
+
+        document.querySelector('#directorySpaceDiv').innerHTML = '';
+
+        tempmyfilesIcons = myfilesIcons.innerHTML;
+
+        myfilesIcons.innerHTML = '';
+
+       document.getElementById("pdfViewerId").innerHTML = "<div align=\"center\"><span onclick=\"closePdfEditor()\" class=\"close-btn\">&times;</span></div><object data=\""+ response.data.file  + "\" type=\"application/pdf\" width=\"100%\" height=\"500px\"></object>";
+
+}
+}
+
+function closePdfEditor(){
+       document.getElementById("pdfViewerId").innerHTML = "";
+       document.querySelector('#directorySpaceDiv').innerHTML = tempCacheDirSpace;
+       myfilesIcons.innerHTML = tempmyfilesIcons;
 }
 
 
