@@ -32,7 +32,9 @@ public class RoutingPages {
     public ModelAndView handleApproval(@RequestParam(required = false) String token,
                                        @RequestParam(required = false) String approval) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("notifyapproval.html?token=" + token + "&approval=" + approval);
+        modelAndView.setViewName("notifyapproval.html");
+        modelAndView.getModelMap().put("token", token);
+        modelAndView.getModelMap().put("approval", approval);
         return modelAndView;
     }
 
