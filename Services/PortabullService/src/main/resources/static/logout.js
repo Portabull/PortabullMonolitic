@@ -40,8 +40,11 @@ function logout() {
                                                 console.log(xhr.responseText);
                                                 var redirectionUrl = window.localStorage.getItem(pageRedirectionPort);
                                                 var staticAssets = window.localStorage.getItem(loginstaticimagesConstKey);
+                                                var buildId = window.localStorage.getItem(buildIdNumberCashe1238);
                                                 window.localStorage.clear();
                                                  window.localStorage.setItem(pageRedirectionPort,redirectionUrl);
+                                                 window.localStorage.setItem(buildIdNumberCashe1238,buildId);
+
                                                    if(staticAssets != null && staticAssets != "null" && staticAssets != undefined && staticAssets != "undefined")
                                                         window.localStorage.setItem(loginstaticimagesConstKey,staticAssets);
                                                 let a1 = JSON.parse(xhr.responseText);

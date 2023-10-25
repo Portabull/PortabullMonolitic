@@ -72,7 +72,9 @@ function login() {
 
         redirectionUrl = window.localStorage.getItem(pageRedirectionPort);
          var staticAssets = window.localStorage.getItem(loginstaticimagesConstKey);
+         var buildId = window.localStorage.getItem(buildIdNumberCashe1238);
         window.localStorage.clear();
+        window.localStorage.setItem(buildIdNumberCashe1238,buildId);
            window.localStorage.setItem("location",latLong);
            window.localStorage.setItem("devdtls",devdtls);
            if(staticAssets != null && staticAssets != "null" && staticAssets != undefined && staticAssets != "undefined")
