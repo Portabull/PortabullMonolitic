@@ -144,6 +144,8 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
  showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/sticky-notes-6292787-5175966.webp') + "\" id=\"documentButton\"/><p>Sticky Notes</p>";
 
+    }else if(optionName == "qr"){
+    showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/qr.webp') + "\" id=\"documentButton\"/><p>QR Scanner</p>";
     }
 
     showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
@@ -180,7 +182,9 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
         var mystickyNotesButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/sticky-notes-6292787-5175966.webp') + "\" onmouseover=\"showHoverOption('stickyNotes')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToStickyNotesPage()\" id=\"stickyNotesButton\"/>";
 
-document.getElementById("buttonsTagDivStatic").innerHTML = myfilesButton + mygalleryButton + myoperationsButton + mystickyNotesButton;
+        var QRButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/qr.webp') + "\" onmouseover=\"showHoverOption('qr')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToQRPage()\" id=\"QRButton\"/>";
+
+        document.getElementById("buttonsTagDivStatic").innerHTML = myfilesButton + mygalleryButton + myoperationsButton + mystickyNotesButton + QRButton;
 
             document.getElementById("backButtonDiv").innerHTML  = "<input data-toggle=\"tooltip\" draggable=\"false\"  onclick=\"redirectToHomePage()\" data-placement=\"top\" title=\"Back\" class=\"backButtonP\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
 
@@ -200,7 +204,12 @@ document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\
     };
 </script>
 
+<script>
+    function redirectToQRPage(){
+        window.location.href = "qr";
+    }
 
+</script>
 
 <script type="text/javascript">
     document.getElementById("settingsButton").onclick = function () {

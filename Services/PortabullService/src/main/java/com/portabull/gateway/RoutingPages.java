@@ -36,6 +36,13 @@ public class RoutingPages {
         return modelAndView;
     }
 
+    @RequestMapping("qr")
+    public ModelAndView handleQR() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("qrscanner.html");
+        return modelAndView;
+    }
+
     @PostMapping("get-image-via-gateway")
     public ResponseEntity<?> getImageViaGateway(@RequestBody List<String> fileNames) {
 
