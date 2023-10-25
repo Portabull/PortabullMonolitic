@@ -139,8 +139,16 @@ domReady(function () {
     if(decodeText.startsWith("http://") || decodeText.startsWith("https://")){
     url = "<button onclick=\"redirectToPage('" +  decodeText + "')\">Open Link</button>";
     }
-     document.getElementById("qrDetails").innerHTML = '<div class=\"section\"><p><b>Qr Details : </b></p>' +
-        '<br><p>' + decodeText +  '</p> <br><button onclick=\"reloadQR()\">Scan Again</button>' + url + '</div>';
+
+   var textArray = decodeText.match(/.{1,42}/g);
+
+     var innerHtmlT = "<div class=\"section\"><p><b>Qr Details : </b></p><br>";
+
+     for(i = 0; i < textArray.length; i++){
+       innerHtmlT = innerHtmlT + '<p>' + textArray[i] +  '</p>'
+     }
+
+     document.getElementById("qrDetails").innerHTML = innerHtmlT + ' <br><button onclick=\"reloadQR()\">Scan Again</button>' + url + '</div>';
 
 	}
 
