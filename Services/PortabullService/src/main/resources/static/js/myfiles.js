@@ -6,21 +6,6 @@ var loginstaticimages;
 var tempCacheDirSpace;
 var tempmyfilesIcons;
 
-var myfilesIcons = document.querySelector('#myfilesIcons');
-loadStaticAssets(createStaticImages);
-
-document.querySelector("#image-viewer .close").addEventListener("click", function () {
-  document.querySelector("#image-viewer").style.display = "none";
-});
-
-
-
-function createStaticImages() {
-     var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
-
-    loginstaticimages  = new Map(Object.entries(JSON.parse(loginstaticimages1)));
-
-}
 
 var dirLevel = 0;
 
@@ -40,24 +25,63 @@ var onHold = false;
 
 var currentCreateFolderDirId = '';
 
+var renameIcon;
 
-var renameIcon = "<a href=\"#\" id=\"aEditIconId\" onclick=\"renameDir()\"><i class='fas fa-pen' style='font-size:29px'></i></a>";
+var viewIcon ;
 
-var viewIcon = "<a href=\"#\" id=\"aViewIconId\" onclick=\"viewFileContent()\"><i class='fa fa-eye' style='font-size:29px'></i></a>";
+var deleteIcon;
 
-var deleteIcon = "<a href=\"#\" id=\"aDeleteIconId\" onclick=\"deleteDir()\"><i  class=\"material-icons md-48\" style='font-size:36px' >delete</i></a>";
+var downloadIcon;
 
-var downloadIcon = "<a href=\"#\" id=\"aDownloadIconId\" onclick=\"myfunction1()\"><i  class=\"fa fa-download\" style='font-size:36px' ></i></a>";
+var uploadFolderButtonIcon;
 
-var uploadFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\"  onclick=\"uploadFileToDMS()\" data-placement=\"top\" title=\"Upload\" class=\"createFolderButton\" id=\"uploadFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/upload.webp') + "\"/>";
+var createFolderButtonIcon;
 
-var createFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"createDMSDirectory()\" data-placement=\"top\" title=\"Create Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/createFolder.png') + "\"/>";
+var openFolderButtonIcon;
 
-var openFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"openFolder()\" data-placement=\"top\" title=\"Open Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/openFolder.jpg') + "\"/>";
+var backButtonIcon;
 
-var backButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"goToPrevFolder()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
+var backButtonIconToMyfiles;
 
-var backButtonIconToMyfiles = "<input draggable=\"false\" data-toggle=\"tooltip\" onclick=\"redirectToDocumentsPage()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
+var myfilesIcons;
+
+loadStaticAssets(createStaticImages);
+
+document.querySelector("#image-viewer .close").addEventListener("click", function () {
+  document.querySelector("#image-viewer").style.display = "none";
+});
+
+
+
+function createStaticImages() {
+     var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
+
+    loginstaticimages  = new Map(Object.entries(JSON.parse(loginstaticimages1)));
+
+     renameIcon = "<a href=\"#\" id=\"aEditIconId\" onclick=\"renameDir()\"><i class='fas fa-pen' style='font-size:29px'></i></a>";
+
+     viewIcon = "<a href=\"#\" id=\"aViewIconId\" onclick=\"viewFileContent()\"><i class='fa fa-eye' style='font-size:29px'></i></a>";
+
+     deleteIcon = "<a href=\"#\" id=\"aDeleteIconId\" onclick=\"deleteDir()\"><i  class=\"material-icons md-48\" style='font-size:36px' >delete</i></a>";
+
+     downloadIcon = "<a href=\"#\" id=\"aDownloadIconId\" onclick=\"myfunction1()\"><i  class=\"fa fa-download\" style='font-size:36px' ></i></a>";
+
+     uploadFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\"  onclick=\"uploadFileToDMS()\" data-placement=\"top\" title=\"Upload\" class=\"createFolderButton\" id=\"uploadFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/upload.webp') + "\"/>";
+
+     createFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"createDMSDirectory()\" data-placement=\"top\" title=\"Create Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/createFolder.png') + "\"/>";
+
+     openFolderButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"openFolder()\" data-placement=\"top\" title=\"Open Folder\" class=\"createFolderButton\" id=\"createFolderButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/openFolder.jpg') + "\"/>";
+
+     backButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclick=\"goToPrevFolder()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
+
+     backButtonIconToMyfiles = "<input draggable=\"false\" data-toggle=\"tooltip\" onclick=\"redirectToDocumentsPage()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
+
+     myfilesIcons = document.querySelector('#myfilesIcons');
+
+     getDmsFiles();
+}
+
+
 
 
 
