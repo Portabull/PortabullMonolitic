@@ -117,7 +117,7 @@ video {
 <script src="js/qrscript.js"></script>
 
 <script>
-
+var QRTEXT;
 
 function domReady(fn) {
 	if (
@@ -141,6 +141,7 @@ domReady(function () {
     }
 
    var textArray = decodeText.match(/.{1,42}/g);
+   QRTEXT  = decodeText;
 
      var innerHtmlT = "<div class=\"section\"><p><b>Qr Details : </b></p><br>";
 
@@ -148,7 +149,7 @@ domReady(function () {
        innerHtmlT = innerHtmlT + '<p>' + textArray[i] +  '</p>'
      }
 
-     document.getElementById("qrDetails").innerHTML = innerHtmlT + ' <br><button onclick=\"reloadQR()\">Scan Again</button>' + url + '</div>';
+     document.getElementById("qrDetails").innerHTML = innerHtmlT + ' <br><button onclick=\"copyText()\">Copy</button><button onclick=\"reloadQR()\">Scan Again</button>' + url + '<p id="paraCopied"></p></div>';
 
 	}
 
@@ -185,6 +186,22 @@ document.getElementById("backButtonDiv").innerHTML  = "<input data-toggle=\"tool
 function redirectToHomePage(){
 window.location.href = "documents.html";
 }
+var   clearIntervalId;
+ function copyText() {
+            navigator.clipboard.writeText
+                (QRTEXT);
+                 document.getElementById("paraCopied").innerHTML  = 'Copied';
+clearIntervalId = setInterval(removedCopiedText, 500);
+
+        }
+
+        function removedCopiedText(){
+        clearInterval(clearIntervalId);
+        document.getElementById("paraCopied").innerHTML  = '';
+        }
+
+
+
     </script>
 </body>
 
