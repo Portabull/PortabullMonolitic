@@ -5,6 +5,8 @@ var uploadFileToDMSServer = BASE_URL + 'DMS/upload-multiple-files-to-dir';
 var loginstaticimages;
 var tempCacheDirSpace;
 var tempmyfilesIcons;
+
+var myfilesIcons = document.querySelector('#myfilesIcons');
 loadStaticAssets(createStaticImages);
 
 document.querySelector("#image-viewer .close").addEventListener("click", function () {
@@ -57,7 +59,6 @@ var backButtonIcon = "<input draggable=\"false\"  data-toggle=\"tooltip\" onclic
 
 var backButtonIconToMyfiles = "<input draggable=\"false\" data-toggle=\"tooltip\" onclick=\"redirectToDocumentsPage()\" data-placement=\"top\" title=\"Back\" class=\"createFolderButton\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
 
-var myfilesIcons = document.querySelector('#myfilesIcons');
 
 
 function getDmsFiles(dirId,dirStatus) {
