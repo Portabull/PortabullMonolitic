@@ -28,6 +28,13 @@ public class RoutingPages {
         return modelAndView;
     }
 
+    @RequestMapping("speedometer")
+    public ModelAndView handleSpeedometer() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("speedometer.html");
+        return modelAndView;
+    }
+
     @RequestMapping("approve-request")
     public ModelAndView handleApproval(@RequestParam(required = false) String token,
                                        @RequestParam(required = false) String approval) {

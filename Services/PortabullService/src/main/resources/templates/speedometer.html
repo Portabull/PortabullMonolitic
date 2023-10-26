@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Title</title>
+
+    <style>
+
+    *{
+        margin: auto;
+        padding: auto;
+        box-sizing: border-box;
+    }
+
+    .box{
+        width: 350px;
+        height: 350px;
+        position: relative;
+        margin-top: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+
+.box #accelerator{
+       width: 40px;
+        height: 60px;
+        position: absolute;
+        right: 0;
+        bottom: 15px;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+        border-radius: 10px;
+        background: linear-gradient(to top,#4d4d4d,#b2b2af);
+        box-shadow:0px 7px 10px 0px gray;
+        transition: 0.5s;
+}
+
+.box #accelerator:active{
+    transform-origin: bottom;
+    transform: rotateX(30deg);
+    box-shadow: 0px 3px 5px 0px gray
+}
+
+
+
+.box #brake{
+       width: 40px;
+        height: 40px;
+        position: absolute;
+        right: 50px;
+        bottom: 15px;
+        outline: none;
+        user-select: none;
+        cursor: pointer;
+        border-radius: 10px;
+        background: linear-gradient(to top,#4d4d4d,#b2b2af);
+        box-shadow:0px 7px 10px 0px gray;
+        transition: 0.5s;
+}
+
+.box #brake:active{
+    transform-origin: bottom;
+    transform: rotateX(30deg);
+    box-shadow: 0px 3px 5px 0px gray
+}
+
+#speedometer{
+  width: 250px;
+        height: 250px;
+        border: 2px solid gray;
+        border-radius: 50%;
+        box-shadow: 0px 0px 10px 5px gray;
+        background-image: url("/APIGateway/images/speedometer.jpg");
+        background-size: 100%, 100%;
+        background-repeat: no-repeat;
+        position: relative;
+}
+
+
+#speedometer #needle{
+    width: 3px;
+        height: 60px;
+        border: 1px solid white;
+        border-radius: 5px;
+         background-color: #89ff00;
+         position: absolute;
+         top: 25%;
+         left: 49%;
+         z-index: 111;
+         transform-origin: bottom;
+         transform: rotate(-134deg);
+         transition: 2s;
+}
+
+#point{
+    width: 20px;
+        height: 20px;
+        position: absolute;
+        border: 1px solid white;
+        border-radius: 50px;
+        bottom: -10px;
+        left: -9px;
+        background-color: #89ff00;
+        transition: 2s;
+}
+#logo{
+
+        position: absolute;
+        border: 1px solid gray;
+        bottom: 65px;
+        left: 85px;
+        padding: 2px 5px 2px 5px;
+        border-radius: 5px;
+        font-family: Arial Black;
+        color: white;
+        background-color: #4f7a36;
+        box-shadow: inset 0px 0px 4px 0px #83ff00;
+        z-index: 1;
+        animation: 0s vibrate linear infinite;
+}
+
+@keyframes vibrate {
+    from {
+        left: 84px;
+    }
+
+    to{
+        left: 85px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <audio id="caraccelerator" loop>
+        <source src="car-Accelerator.mp3" type="audio/mpeg">
+        </audio>
+
+        <audio id="carsound" loop>
+            <source src="car-sound.mp3" type="audio/mpeg">
+        </audio>
+
+        <audio id="carbrake">
+            <source src="car-brake.mp3" type="audio/mpeg">
+        </audio>
+
+        <button id="accelerator" onmousedown="carAccelerator()" onmouseup="LeaveCarAccelerator()">||||</button>
+
+
+        <button id="brake" onmousedown="carbrake()" onmouseup="">||||</button>
+
+        <div id="speedometer">
+            <div id="needle">
+                <div id="point"></div>
+
+            </div>
+            <div id="logo">B-LINK</div>
+
+        </div>
+        </div>
+
+
+<script>
+
+    var caraccelerator = document.getElementById("caraccelerator");
+
+    var carsound = document.getElementById("carsound");
+
+    var carbrake = document.getElementById("carbrake");
+
+    function carAccelerator(){
+
+
+    document.getElementById("needle").style.cssText = "transform-origin: bottom;transform: rotate(134deg);background-color:red;";
+
+    document.getElementById("point").style.cssText = "background-color:red;";
+
+    document.getElementById("logo").style.cssText = "animation: 0.1s vibrate linear infinite;";
+
+    }
+
+function LeaveCarAccelerator(){
+
+
+    document.getElementById("needle").style.cssText = "transform-origin: bottom;transform: rotate(-134deg);background-color:#89ff00;transition: 3s;";
+
+    document.getElementById("point").style.cssText = "background-color:#89ff00;transition: 3s";
+
+    document.getElementById("logo").style.cssText = "animation: 0s vibrate linear infinite;";
+
+    }
+
+
+
+function carbrake(){
+
+
+    document.getElementById("needle").style.cssText = "transform-origin: bottom;transform: rotate(-135deg);background-color:#89ff00;transition: 0.5s;";
+
+    document.getElementById("point").style.cssText = "background-color:#89ff00;transition: 0.5s";
+
+    }
+</script>
+
+
+</body>
+</html>
+
+
