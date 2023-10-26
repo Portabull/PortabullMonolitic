@@ -39,6 +39,7 @@
 
         <!-- Database version starts -->
         <threetenbp.version>0.7.2</threetenbp.version>
+        <mysql.connecter.version>8.0.33</mysql.connecter.version>
         <!-- Database version ends -->
 
         <!-- jwt version starts -->
@@ -175,6 +176,12 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql.connecter.version}</version>
         </dependency>
 
         <!-- It is for test cases -->

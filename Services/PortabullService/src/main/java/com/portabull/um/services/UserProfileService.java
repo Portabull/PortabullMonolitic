@@ -153,34 +153,33 @@ public class UserProfileService {
             NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException,
             ClassNotFoundException {
 
+        Map<String, Object> fileResponse = new HashMap<>();
 
         UserCredentials userCredential = userCredentialsDao.getUserCredential();
 
-        if (userCredential.getProfilePicDMSId() == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("userName", CommonUtils.getLoggedInUserName());
-            response.put("twoStepChecked", BooleanUtils.isTrue(userCredential.getTwoStepVerificationEnabled()) ? "checked" : "unchecked");
-            response.put("singleSignInChecked", BooleanUtils.isTrue(userCredential.getSingleSignIn()) ? "checked" : "unchecked");
-            response.put("mfaLoginType", userCredential.getMfaLoginType());
-            return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, response);
-        }
+        if (userCredential.getProfilePicDMSId() != null) {
 
-        DocumentResponse documentResponse = documentService.downloadDocument(userCredential.getProfilePicDMSId());
+            DocumentResponse documentResponse = documentService.downloadDocument(userCredential.getProfilePicDMSId());
 
-        if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
-            return new PortableResponse(documentResponse.getMessage(), documentResponse.getStatusCode(), documentResponse.getStatus(), documentResponse.getData());
+            if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
+                return new PortableResponse(documentResponse.getMessage(), documentResponse.getStatusCode(), documentResponse.getStatus(), documentResponse.getData());
 
-        Map<String, Object> fileResponse = new HashMap<>();
+            String contentType = "";
+            if (documentResponse.getFileResponse().getFileName().endsWith(".pdf")) {
+                contentType = MediaType.APPLICATION_PDF_VALUE;
+            }
 
-        String contentType = "";
-        if (documentResponse.getFileResponse().getFileName().endsWith(".pdf")) {
-            contentType = MediaType.APPLICATION_PDF_VALUE;
+            fileResponse.put("file", "data:" + contentType + ";base64," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(documentResponse.getFileResponse().getInputStream())));
+            fileResponse.put("fileName", documentResponse.getFileResponse().getFileName());
         }
 
         UserProfile userProfile = userCredentialsDao.getUserProfiles(userCredential.getUserID());
 
-        fileResponse.put("file", "data:" + contentType + ";base64," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(documentResponse.getFileResponse().getInputStream())));
-        fileResponse.put("fileName", documentResponse.getFileResponse().getFileName());
+        fileResponse.put("userName", CommonUtils.getLoggedInUserName());
+        fileResponse.put("twoStepChecked", BooleanUtils.isTrue(userCredential.getTwoStepVerificationEnabled()) ? "checked" : "unchecked");
+        fileResponse.put("singleSignInChecked", BooleanUtils.isTrue(userCredential.getSingleSignIn()) ? "checked" : "unchecked");
+        fileResponse.put("mfaLoginType", userCredential.getMfaLoginType());
+
         fileResponse.put("userName", CommonUtils.getLoggedInUserName());
         fileResponse.put("twoStepChecked", BooleanUtils.isTrue(userCredential.getTwoStepVerificationEnabled()) ? "checked" : "unchecked");
         fileResponse.put("singleSignInChecked", BooleanUtils.isTrue(userCredential.getSingleSignIn()) ? "checked" : "unchecked");
