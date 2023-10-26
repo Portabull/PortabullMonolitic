@@ -45,6 +45,13 @@ public class RoutingPages {
         return modelAndView;
     }
 
+    @RequestMapping("compass")
+    public ModelAndView handleCompass() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("compass.html");
+        return modelAndView;
+    }
+
     @PostMapping("get-image-via-gateway")
     public ResponseEntity<?> getImageViaGateway(@RequestBody List<String> fileNames) {
 

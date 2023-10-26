@@ -146,7 +146,11 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
     }else if(optionName == "qr"){
     showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/qr.webp') + "\" id=\"documentButton\"/><p>QR Scanner</p>";
+    }else if(optionName == "compass"){
+    showHoverOptionDivInner = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/compass.webp') + "\" id=\"documentButton\"/><p>Compass</p>";
     }
+
+
 
     showHoverOptionDiv.innerHTML = showHoverOptionDivInner;
 
@@ -184,7 +188,9 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
         var QRButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/qr.webp') + "\" onmouseover=\"showHoverOption('qr')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToQRPage()\" id=\"QRButton\"/>";
 
-        document.getElementById("buttonsTagDivStatic").innerHTML = myfilesButton + mygalleryButton + myoperationsButton + mystickyNotesButton + QRButton;
+        var compassButton = "<input class=\"filesButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/compass.webp') + "\" onmouseover=\"showHoverOption('compass')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" onclick=\"redirectToCompassPage()\" id=\"QRButton\"/>";
+
+        document.getElementById("buttonsTagDivStatic").innerHTML = myfilesButton + mygalleryButton + myoperationsButton + mystickyNotesButton + QRButton + compassButton;
 
             document.getElementById("backButtonDiv").innerHTML  = "<input data-toggle=\"tooltip\" draggable=\"false\"  onclick=\"redirectToHomePage()\" data-placement=\"top\" title=\"Back\" class=\"backButtonP\" id=\"backButtonInput\" type=\"image\" src=\"" + loginstaticimages.get('static/images/back.jpg') + "\"/>";
 
@@ -207,6 +213,10 @@ document.getElementById("logoID").innerHTML = "<h4>Powered by : <span><img src=\
 <script>
     function redirectToQRPage(){
         window.location.href = "qr";
+    }
+
+function redirectToCompassPage(){
+        window.location.href = "compass";
     }
 
 </script>
