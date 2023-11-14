@@ -86,7 +86,7 @@ function login() {
             if (xhr.readyState === 4) {
                 console.log(xhr.status);
                 console.log(xhr.responseText);
-                onHold = false;
+
                 const tokenData = JSON.parse(xhr.responseText);
                 if (tokenData.statusCode == 200) {
                     window.localStorage.setItem(tokenKey, 'Bearer ' + tokenData.data.jwt);
@@ -112,6 +112,7 @@ function login() {
                             window.location.href = "loginsuccessfull.html";
                     }
                 } else if(xhr.status == 401){
+                onHold = false;
                        if('Your account is locked Due to 3 wrong attempts, please contact administrator' == tokenData.message
                        || 'Your account is locked by admin team, please contact administrator'  == tokenData.message ){
                         myFunction123();
