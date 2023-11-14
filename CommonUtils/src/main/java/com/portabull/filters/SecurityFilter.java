@@ -54,6 +54,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                 Map<String, Object> errorDetails = new HashMap<>();
                 errorDetails.put("message", "Unauthorized");
                 errorDetails.put("status", "FAILED");
+                errorDetails.put("desc", response.getMessage());
 
                 PrintWriter out = httpServletResponse.getWriter();
                 out.write("");

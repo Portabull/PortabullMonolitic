@@ -4,6 +4,7 @@ import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
 import com.portabull.payloads.TokenData;
 import com.portabull.response.PortableResponse;
+import org.apache.commons.lang.BooleanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,11 +26,12 @@ public class LoginUtils {
                     if (tokenData.isTwoStepVerificationEnabled() && !tokenData.isValidatedTwoStepAuth()) {
                         return new PortableResponse("Two step auth is required", 401L, PortableConstants.SUCCESS, null);
                     }
-                } else {
-                    if (DBCacheUtils.isAlreadyLoggedIn(token)) {
-                        return new PortableResponse(MessageConstants.SIGLE_SIGN_IN_ERR, 401L, PortableConstants.SUCCESS, null);
-                    }
                 }
+
+                if (BooleanUtils.isTrue(tokenData.isSingleSignOn()) && DBCacheUtils.isAlreadyLoggedIn(token)) {
+                    return new PortableResponse(MessageConstants.SIGLE_SIGN_IN_ERR, 401L, PortableConstants.SUCCESS, null);
+                }
+
                 addTokenToCache(token, tokenData.getExpirationTime(), tokenData);
                 return new PortableResponse("Successfully LoggedIn", 200L, PortableConstants.SUCCESS, null);
             } else {

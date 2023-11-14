@@ -206,18 +206,43 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
 
 
-
+var clearTextIntervalId;
+var loadCounter = 0;
     function doNothing(xhr,response){
     alert(response.message);
     }
 
   function init() {
+
+  clearTextIntervalId = setInterval(loadTextToUser, 500);
     populateNameAndTimeDetails();
     healthCheckBasePort2653(loadStaticAssets1121122);
         }
 
         function loadStaticAssets1121122(){
              loadStaticAssets(createStaticButtons);
+        }
+
+        function loadTextToUser(){
+
+            if(loadCounter == 5){
+              document.getElementById('uploadLoading1').innerHTML = 'Installing Assets';
+            }else if(loadCounter == 13){
+               document.getElementById('uploadLoading1').innerHTML = 'Please wait while installing assets';
+            }else if(loadCounter == 21){
+             document.getElementById('uploadLoading1').innerHTML = 'Almost done with the installation please wait';
+            }else if(loadCounter == 40){
+              document.getElementById('uploadLoading1').innerHTML = 'Your internet connection is slow please hold';
+           }else if(loadCounter == 55){
+               document.getElementById('uploadLoading1').innerHTML = 'Please wait for some more time to install assets';
+            }else if(loadCounter == 65){
+             document.getElementById('uploadLoading1').innerHTML = 'Your internet connection is slow please hold';
+            }else if(loadCounter == 80){
+               document.getElementById('uploadLoading1').innerHTML = 'Please wait while installing assets';
+            }else if(loadCounter == 95){
+             document.getElementById('uploadLoading1').innerHTML = 'Your internet connection is very slow please hold';
+        }
+            loadCounter++;
         }
 
   function getStaticImage() {
@@ -240,7 +265,12 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
         var loginstaticimages1 =  window.localStorage.getItem(loginstaticimagesConstKey);
 
-        var loginstaticimages = new Map(Object.entries(JSON.parse(loginstaticimages1)))
+        var loginstaticimages = new Map(Object.entries(JSON.parse(loginstaticimages1)));
+
+        clearInterval(clearIntervalId);
+        loadCounter = 0;
+
+            document.getElementById('uploadLoading1').innerHTML = 'Loading';
 
     var aaaaaa = loginstaticimages.get('static/images/source-documents-1024x682.jpeg');
 
