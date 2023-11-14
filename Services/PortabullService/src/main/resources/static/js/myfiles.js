@@ -584,9 +584,23 @@ function viewPdfData(xhr,response) {
 
         myfilesIcons.innerHTML = '';
 
-       document.getElementById("pdfViewerId").innerHTML = "<div align=\"center\"><span onclick=\"closePdfEditor()\" class=\"close-btn\">&times;</span></div><object data=\""+ response.data.file  + "\" type=\"application/pdf\" width=\"100%\" height=\"500px\"></object>";
+       const blob = base64ToBlob( response.data.file.replace("data:application/pdf;base64,", ""), 'application/pdf');
+       
+       const url = URL.createObjectURL(blob);
+
+       document.getElementById("pdfViewerId").innerHTML = "<div align=\"center\"><span onclick=\"closePdfEditor()\" class=\"close-btn\">&times;</span></div><object data=\""+ url  + "\" type=\"application/pdf\" width=\"100%\" height=\"500px\"></object>";
 
 }
+}
+
+function base64ToBlob( base64, type = "application/octet-stream" ) {
+  const binStr = atob(base64);
+  const len = binStr.length;
+  const arr = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    arr[ i ] = binStr.charCodeAt(i);
+  }
+  return new Blob( [ arr ], { type: type } );
 }
 
 function closePdfEditor(){
