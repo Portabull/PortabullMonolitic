@@ -2,6 +2,8 @@ package com.portabull.constants;
 
 public class StatusCodes {
 
+    public static final Long C_406 = 406L;
+
     private StatusCodes() {
 
     }
