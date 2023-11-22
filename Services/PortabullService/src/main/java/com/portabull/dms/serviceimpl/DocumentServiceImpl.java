@@ -1,6 +1,5 @@
 package com.portabull.dms.serviceimpl;
 
-import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
 import com.portabull.dms.configuration.EncriptionConfiguration;
 import com.portabull.dms.dao.DocumentDao;
@@ -9,6 +8,7 @@ import com.portabull.dms.service.DocumentService;
 import com.portabull.dms.utils.DMSUtils;
 import com.portabull.dms.utils.DocumentOperationUtils;
 import com.portabull.entitys.Document;
+import com.portabull.execption.NotFoundException;
 import com.portabull.execption.UnAuthorizedException;
 import com.portabull.generic.dao.CommonDao;
 import com.portabull.generic.models.UserDocumentStorage;
@@ -194,12 +194,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentResponse downloadDocument(String eLocation) throws IllegalBlockSizeException, NoSuchAlgorithmException, IOException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, ClassNotFoundException {
-        Document document = documentDao.getDocumentByELocation(eLocation);
 
-        if (document == null) {
-            return new DocumentResponse(MessageConstants.DOCUMENT_NOT_FOUND,
-                    404L, PortableConstants.FAILED, null);
-        }
+        Document document = checkFilePermissions(eLocation);
 
         DocumentResponse documentResponse = documentStorageModule.downloadDocument(eLocation);
 
@@ -316,14 +312,49 @@ public class DocumentServiceImpl implements DocumentService {
         return Mono.fromSupplier(() -> byteArrayResource);
     }
 
-    @Override
-    public DocumentResponse downloadDocument(Long documentId) throws IllegalBlockSizeException, NoSuchAlgorithmException, IOException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, ClassNotFoundException {
+
+    private Document checkFilePermissions(Document document) {
+
+        if (!CommonUtils.getLoggedInUserId().equals(document.getUserID())) {
+            throw new UnAuthorizedException("File Not belongs to you...");
+        }
+
+        return document;
+
+    }
+
+    private Document checkFilePermissions(Long documentId) {
+
         Document document = documentDao.getDocument(documentId);
 
         if (document == null) {
-            return new DocumentResponse(MessageConstants.DOCUMENT_NOT_FOUND,
-                    404L, PortableConstants.FAILED, null);
+            throw new NotFoundException("Document Not Found...");
         }
+
+        checkFilePermissions(document);
+
+        return document;
+
+    }
+
+    private Document checkFilePermissions(String eLocation) {
+
+        Document document = documentDao.getDocumentByELocation(eLocation);
+
+        if (document == null) {
+            throw new NotFoundException("Document Not Found...");
+        }
+
+        checkFilePermissions(document);
+
+        return document;
+
+    }
+
+    @Override
+    public DocumentResponse downloadDocument(Long documentId) throws IllegalBlockSizeException, NoSuchAlgorithmException, IOException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, ClassNotFoundException {
+
+        Document document = checkFilePermissions(documentId);
 
         DocumentResponse documentResponse = documentStorageModule.downloadDocument(document.geteLocation());
 

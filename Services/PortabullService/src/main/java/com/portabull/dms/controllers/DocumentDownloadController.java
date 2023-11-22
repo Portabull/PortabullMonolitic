@@ -1,10 +1,8 @@
 package com.portabull.dms.controllers;
 
-import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.dms.service.DocumentService;
-import com.portabull.execption.TokenNotFoundException;
 import com.portabull.response.DocumentResponse;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.DownloadUtils;
@@ -41,53 +39,35 @@ public class DocumentDownloadController {
     static final Logger logger = LoggerFactory.getLogger(DocumentDownloadController.class);
 
     @GetMapping("/download")
-    public ResponseEntity<?> download(@RequestParam String elocation) {
-        try {
-            DocumentResponse documentResponse = documentService.downloadDocument(elocation);
+    public ResponseEntity<?> download(@RequestParam String elocation) throws IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
 
-            if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
-                return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
+        DocumentResponse documentResponse = documentService.downloadDocument(elocation);
 
-            return DownloadUtils.download(documentResponse.getFileResponse().getFileName(),
-                    MediaType.parseMediaType(DMSFileUtils.getContentType(documentResponse.getFileResponse().getFileName())),
-                    documentResponse.getFileResponse().getInputStreamResource());
-        } catch (Exception e) {
-            logger.error("While downloading the document throws error", e);
-            return new ResponseEntity<>(new DocumentResponse(MessageConstants.DOWNLOADING_FAILED,
-                    500L, PortableConstants.FAILED, null), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
+            return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
+
+        return DownloadUtils.download(documentResponse.getFileResponse().getFileName(),
+                MediaType.parseMediaType(DMSFileUtils.getContentType(documentResponse.getFileResponse().getFileName())),
+                documentResponse.getFileResponse().getInputStreamResource());
+
     }
 
     @GetMapping("/downloadMultipleFiles")
-    public ResponseEntity<?> download(@RequestBody List<String> elocations) {
-        try {
-            DocumentResponse documentResponse = documentService.downloadDocuments(elocations);
+    public ResponseEntity<?> download(@RequestBody List<String> elocations) throws IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, IOException, InvalidKeyException, ClassNotFoundException {
+        DocumentResponse documentResponse = documentService.downloadDocuments(elocations);
 
-            if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
-                return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
+        if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
+            return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
 
-            return DownloadUtils.download(documentResponse.getFileResponse().getFileName(),
-                    MediaType.parseMediaType(DMSFileUtils.getContentType(documentResponse.getFileResponse().getFileName())),
-                    documentResponse.getFileResponse().getInputStreamResource());
-        } catch (Exception e) {
-            logger.error("While downloading the document throws error", e);
-            return new ResponseEntity<>(new DocumentResponse(MessageConstants.DOWNLOADING_FAILED,
-                    500L, PortableConstants.FAILED, null), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return DownloadUtils.download(documentResponse.getFileResponse().getFileName(),
+                MediaType.parseMediaType(DMSFileUtils.getContentType(documentResponse.getFileResponse().getFileName())),
+                documentResponse.getFileResponse().getInputStreamResource());
+
     }
 
     @PostMapping("/view-documents")
     public ResponseEntity<?> viewDocuments(@RequestParam(required = false) Integer pageNo, @RequestParam(required = false) Integer resultSize) {
-        try {
-            return new ResponseEntity<>(documentService.getDocumentsForUser(pageNo, resultSize), HttpStatus.OK);
-        } catch (TokenNotFoundException te) {
-            return new ResponseEntity<>(new DocumentResponse(te.getMessage(),
-                    401L, PortableConstants.FAILED, null), HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
-            logger.error("While downloading the document throws error", e);
-            return new ResponseEntity<>(new DocumentResponse(MessageConstants.DOWNLOADING_FAILED,
-                    500L, PortableConstants.FAILED, null), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(documentService.getDocumentsForUser(pageNo, resultSize), HttpStatus.OK);
     }
 
     @GetMapping(value = "/play", produces = "video/mp4")
@@ -98,30 +78,27 @@ public class DocumentDownloadController {
 
 
     @GetMapping("/download-documents")
-    public ResponseEntity<?> download(@RequestParam Long documentId) {
-        try {
-            String contentType = "";
-            DocumentResponse documentResponse = documentService.downloadDocument(documentId);
+    public ResponseEntity<?> download(@RequestParam Long documentId) throws IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
 
-            if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
-                return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
+        String contentType = "";
 
-            Map<String, Object> fileResponse = new HashMap<>();
+        DocumentResponse documentResponse = documentService.downloadDocument(documentId);
 
-            if (documentResponse.getFileResponse().getFileName().endsWith(".pdf")) {
-                contentType = MediaType.APPLICATION_PDF_VALUE;
-            }
+        if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
+            return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
 
-            fileResponse.put("file", "data:" + contentType + ";base64," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(documentResponse.getFileResponse().getInputStream())));
+        Map<String, Object> fileResponse = new HashMap<>();
 
-            fileResponse.put("fileName", documentResponse.getFileResponse().getFileName());
-
-            return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, fileResponse), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("While downloading the document throws error", e);
-            return new ResponseEntity<>(new DocumentResponse(MessageConstants.DOWNLOADING_FAILED,
-                    500L, PortableConstants.FAILED, null), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (documentResponse.getFileResponse().getFileName().endsWith(".pdf")) {
+            contentType = MediaType.APPLICATION_PDF_VALUE;
         }
+
+        fileResponse.put("file", "data:" + contentType + ";base64," + Base64.getEncoder().encodeToString(IOUtils.toByteArray(documentResponse.getFileResponse().getInputStream())));
+
+        fileResponse.put("fileName", documentResponse.getFileResponse().getFileName());
+
+        return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, fileResponse), HttpStatus.OK);
+
     }
 
     @PostMapping("get-dms-files")
