@@ -404,7 +404,15 @@ public class DocumentServiceImpl implements DocumentService {
             throw new UnAuthorizedException("This file is not belongs to you");
         }
 
-//        deleteDocument(document.geteLocation());
+        deleteDocument(document.geteLocation());
+
+        double megabytes = (document.getSize() / 1024.0) / 1024.0;
+
+        UserDocumentStorage userDocumentStorage = commonDao.getUserDocumentStorage();
+
+        userDocumentStorage.setUserStorageSize(userDocumentStorage.getUserStorageSize() - megabytes);
+
+        commonDao.saveOrUpdateEntity(userDocumentStorage);
 
         return documentDao.deleteFile(document);
     }
