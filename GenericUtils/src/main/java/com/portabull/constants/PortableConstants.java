@@ -41,4 +41,6 @@ public class PortableConstants {
     public static final String EMAIL_PAYLOAD = "email";
 
     public static final String BLOCK_LOG_INS = "BLOCK_LOG_INS";
+
+    public static final String MAPS_URL = "https://www.google.com/maps/search/";
 }
