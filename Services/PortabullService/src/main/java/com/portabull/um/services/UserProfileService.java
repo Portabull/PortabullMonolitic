@@ -186,7 +186,7 @@ public class UserProfileService {
         fileResponse.put("mfaLoginType", userCredential.getMfaLoginType());
         fileResponse.put("userLoginName", CommonUtils.getLoggedInEmail());
         fileResponse.put("sessionTime", getSessionTimeinCode(userCredential.getLoggedInSessionTime()));
-        fileResponse.put("googleUrl", "https://www.google.com/maps/search/");
+        fileResponse.put("googleUrl", PortableConstants.MAPS_URL);
 
         List<TokenCache> tokenCaches = DBCacheUtils.getTokenCache(CommonUtils.getLoggedInUserId());
         List<Map<String, Object>> deviceLocationDetails = new ArrayList<>();

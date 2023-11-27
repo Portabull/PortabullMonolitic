@@ -1,5 +1,6 @@
 package com.portabull.utils;
 
+import com.portabull.constants.PortableConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -31,11 +32,19 @@ public class HTMLTemplete {
 
     public String getNotifyEmailTemplate(String token) {
 
-        String loggedDetails = getLoggedInDetails();
+        String location = RequestHelper.getCurrentRequest().getHeader("location");
+
+        String loggedDetails = getLoggedInDetails(location);
+
+        String latLong = PortableConstants.MAPS_URL;
+        if (!StringUtils.isEmpty(location) && !"null".equalsIgnoreCase(location)) {
+            latLong = latLong + location.split(";")[0] + "," + location.split(";")[1];
+        }
 
         return getHtmlText("appovalRequest.html").replace(
-                        "{DEVICE_DETAILS}", loggedDetails
-                ).replace("{PORTABULL_VERIFY_URL_APPROVE}", "https://portabull.in/APIGateway/approve-request?token=" + token + "&approval=1")
+                        "{DEVICE_DETAILS}", loggedDetails)
+                .replace("{CLICK_HERE_TO_SEE_DETAILS_IN_MAP}", latLong)
+                .replace("{PORTABULL_VERIFY_URL_APPROVE}", "https://portabull.in/APIGateway/approve-request?token=" + token + "&approval=1")
                 .replace("{PORTABULL_VERIFY_URL_DECLINE}", "https://portabull.in/APIGateway/approve-request?token=" + token + "&approval=2");
     }
 
@@ -57,7 +66,7 @@ public class HTMLTemplete {
         return html.toString();
     }
 
-    public String getLoggedInDetails() {
+    public String getLoggedInDetails(String location) {
 
         StringBuilder loggedUserDetails = new StringBuilder("<p>Device Details : ");
 
@@ -67,7 +76,7 @@ public class HTMLTemplete {
 
         String latitude = null;
         String longitute = null;
-        String location = RequestHelper.getCurrentRequest().getHeader("location");
+
         if (!StringUtils.isEmpty(location) && !"null".equalsIgnoreCase(location)) {
             latitude = location.split(";")[0];
             longitute = location.split(";")[1];
