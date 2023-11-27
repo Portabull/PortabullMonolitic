@@ -245,7 +245,7 @@ function registration() {
                 const response = JSON.parse(xhr.responseText);
                 if (response.status == "SUCCESS") {
                   window.localStorage.setItem("registrationToken", response.data.token);
-                  window.location.href = "registrationotp.html";
+                  window.location.href = "register.html";
                 } else {
                     alert(response.message)
                 }
