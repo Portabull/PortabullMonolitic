@@ -764,10 +764,15 @@ function redirectToDocumentsPage() {
 
 
            var xhr = new XMLHttpRequest();
-           xhr.open("GET",BASE_URL + "DMS/download-documents" + "?documentId="+documentId);
+
+             if(documentId == undefined || documentId ==null || documentId=""){
+                     xhr.open("GET",BASE_URL + "DMS/download-documents" + "?folderId="+currentDirId);
+             }else{
+                    xhr.open("GET",BASE_URL + "DMS/download-documents" + "?documentId="+documentId);
+             }
+
 
            xhr.setRequestHeader("Accept", "application/json");
-
 
            xhr.setRequestHeader("Content-Type", "application/json");
            xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));

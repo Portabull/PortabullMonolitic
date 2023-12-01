@@ -125,6 +125,14 @@ public class DocumentServiceImpl implements DocumentService {
 
     }
 
+    @Override
+    public DocumentResponse downloadFolder(Long folderId) {
+
+
+
+        return null;
+    }
+
     private synchronized Long getLoggedInUserId() {
         Long userId = CommonUtils.getLoggedInUserId();
         Long syncUserId = userIds.stream().filter(syUserId ->

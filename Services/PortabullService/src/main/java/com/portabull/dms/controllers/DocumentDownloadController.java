@@ -78,11 +78,17 @@ public class DocumentDownloadController {
 
 
     @GetMapping("/download-documents")
-    public ResponseEntity<?> download(@RequestParam Long documentId) throws IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
+    public ResponseEntity<?> download(@RequestParam(required = false) Long documentId,
+                                      @RequestParam(required = false) Long folderId) throws IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
 
         String contentType = "";
 
-        DocumentResponse documentResponse = documentService.downloadDocument(documentId);
+        DocumentResponse documentResponse;
+        if (folderId != null) {
+            documentResponse = documentService.downloadFolder(folderId);
+        } else {
+            documentResponse = documentService.downloadDocument(documentId);
+        }
 
         if (PortableConstants.FAILED.equalsIgnoreCase(documentResponse.getStatus()))
             return new ResponseEntity<>(documentResponse, PortableResponse.getHttpCode(documentResponse.getStatusCode()));
