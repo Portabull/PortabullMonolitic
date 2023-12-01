@@ -765,7 +765,7 @@ function redirectToDocumentsPage() {
 
            var xhr = new XMLHttpRequest();
 
-             if(documentId == undefined || documentId ==null || documentId=""){
+             if(documentId == undefined || documentId ==null || documentId==""){
                      xhr.open("GET",BASE_URL + "DMS/download-documents" + "?folderId="+currentDirId);
              }else{
                     xhr.open("GET",BASE_URL + "DMS/download-documents" + "?documentId="+documentId);
