@@ -133,7 +133,15 @@ public class DocumentServiceImpl implements DocumentService {
 
         List<DocumentResponse> documentResponses = new ArrayList<>();
 
+        UserDirectory currentDirectory = commonDao.findEntity(UserDirectory.class, folderId);
+
+        if (currentDirectory.getUserID() != CommonUtils.getLoggedInUserId()) {
+            throw new UnAuthorizedException("Folder not belongs to you...");
+        }
+
         List<UserDirectory> userFolders = documentDao.getUserFolders(folderId);
+
+        userFolders.add(currentDirectory);
 
         List<UserDocumentDirectoryMapping> dirMapping = documentDao.getDirMapping(userFolders);
 
