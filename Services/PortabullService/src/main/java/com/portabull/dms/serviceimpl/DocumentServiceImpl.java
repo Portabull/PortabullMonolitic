@@ -153,7 +153,8 @@ public class DocumentServiceImpl implements DocumentService {
 
         DocumentResponse response = documentOperationUtils.compressToZipFile(documentResponses);
 
-        response.getFileResponse().setFileName(currentDirectory.getDirectoryName().trim() + ".zip");
+        if (response.getFileResponse() != null)
+            response.getFileResponse().setFileName(currentDirectory.getDirectoryName().trim() + ".zip");
 
         return response;
 
