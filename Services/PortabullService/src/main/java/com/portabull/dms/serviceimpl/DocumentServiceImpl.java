@@ -151,7 +151,11 @@ public class DocumentServiceImpl implements DocumentService {
             documentResponses.add(downloadDocument(mapping.getDocumentId()));
         }
 
-        return documentOperationUtils.compressToZipFile(documentResponses);
+        DocumentResponse response = documentOperationUtils.compressToZipFile(documentResponses);
+
+        response.getFileResponse().setFileName(currentDirectory.getDirectoryName().trim() + ".zip");
+
+        return response;
 
     }
 
