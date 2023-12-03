@@ -1,6 +1,8 @@
 package com.portabull.dms.dao;
 
 import com.portabull.entitys.Document;
+import com.portabull.entitys.UserDirectory;
+import com.portabull.entitys.UserDocumentDirectoryMapping;
 import com.portabull.response.DocumentResponse;
 
 import java.util.List;
@@ -33,4 +35,7 @@ public interface DocumentDao {
 
     DocumentResponse deleteFile(Document document);
 
+    List<UserDirectory> getUserFolders(Long folderId);
+
+    List<UserDocumentDirectoryMapping> getDirMapping(List<UserDirectory> userFolders);
 }

@@ -112,8 +112,7 @@ public class DocumentDaoImpl implements DocumentDao {
 
         try (Session session = hibernateUtils.getSession()) {
 
-            Long parentDirId = (Long) session.createQuery("SELECT parentDirectory.id FROM UserDirectory WHERE id=:id and userID=:userID")
-                    .setParameter("id", dirId).setParameter("userID", userID).uniqueResult();
+            Long parentDirId = (Long) session.createQuery("SELECT parentDirectory.id FROM UserDirectory WHERE id=:id and userID=:userID").setParameter("id", dirId).setParameter("userID", userID).uniqueResult();
 
             currentDirectories.put(PARENT_DIR, parentDirId == null ? "root" : parentDirId);
 
@@ -125,11 +124,9 @@ public class DocumentDaoImpl implements DocumentDao {
 
             }
 
-            UserDirectory currentDirectory = (UserDirectory) session.createQuery(" FROM UserDirectory WHERE id=:dirId and userID=:userID")
-                    .setParameter("dirId", dirId).setParameter("userID", userID).uniqueResult();
+            UserDirectory currentDirectory = (UserDirectory) session.createQuery(" FROM UserDirectory WHERE id=:dirId and userID=:userID").setParameter("dirId", dirId).setParameter("userID", userID).uniqueResult();
 
-            List<UserDirectory> directories = session.createQuery(" FROM UserDirectory WHERE parentDirectory.id=:dirId and userID=:userID and (isDeleted=false or isDeleted is null)")
-                    .setParameter("userID", userID).setParameter("dirId", dirId).list();
+            List<UserDirectory> directories = session.createQuery(" FROM UserDirectory WHERE parentDirectory.id=:dirId and userID=:userID and (isDeleted=false or isDeleted is null)").setParameter("userID", userID).setParameter("dirId", dirId).list();
 
             if (currentDirectory != null) {
 
@@ -142,8 +139,7 @@ public class DocumentDaoImpl implements DocumentDao {
 
                         Document document = session.get(Document.class, userDocumentDirectoryMapping.getDocumentId());
 
-                        if (BooleanUtils.isTrue(document.getDeleted()))
-                            continue;
+                        if (BooleanUtils.isTrue(document.getDeleted())) continue;
 
                         Map<String, Object> file = new LinkedHashMap<>();
 
@@ -195,8 +191,7 @@ public class DocumentDaoImpl implements DocumentDao {
 
         try (Session session = hibernateUtils.getSession()) {
 
-            userDirectories = session.createQuery(" FROM UserDirectory WHERE parentDirectory IS NULL AND rootLevel=true AND userID=:userID")
-                    .setParameter("userID", userID).list();
+            userDirectories = session.createQuery(" FROM UserDirectory WHERE parentDirectory IS NULL AND rootLevel=true AND userID=:userID").setParameter("userID", userID).list();
 
         }
 
@@ -237,8 +232,7 @@ public class DocumentDaoImpl implements DocumentDao {
     public DocumentResponse createDMSDir(String dirName, Integer level, Long parentDirectoryId) {
 
         try (Session session = hibernateUtils.getSession()) {
-            Number dirCount = (Number) session.createQuery("SELECT count(*) FROM UserDirectory WHERE parentDirectory.id=:id AND directoryName=:directoryName")
-                    .setParameter("directoryName", dirName).setParameter("id", parentDirectoryId).uniqueResult();
+            Number dirCount = (Number) session.createQuery("SELECT count(*) FROM UserDirectory WHERE parentDirectory.id=:id AND directoryName=:directoryName").setParameter("directoryName", dirName).setParameter("id", parentDirectoryId).uniqueResult();
 
             if (dirCount != null && dirCount.intValue() != 0) {
                 throw new BadRequestException("Already Dir Present Not Allowed Duplicate Directory");
@@ -316,8 +310,7 @@ public class DocumentDaoImpl implements DocumentDao {
 
         try (Session session = hibernateUtils.getSession()) {
 
-            List<Long> documentsIds = session.createQuery(" SELECT documentId FROM UserDocumentDirectoryMapping WHERE userDirectory.id=:id")
-                    .setParameter("id", dirId).list();
+            List<Long> documentsIds = session.createQuery(" SELECT documentId FROM UserDocumentDirectoryMapping WHERE userDirectory.id=:id").setParameter("id", dirId).list();
 
             Transaction transaction = session.beginTransaction();
 
@@ -358,6 +351,39 @@ public class DocumentDaoImpl implements DocumentDao {
         hibernateUtils.saveOrUpdateEntity(document);
 
         return new DocumentResponse("File Deleted Successfully", StatusCodes.C_200, PortableConstants.SUCCESS, null);
+    }
+
+    @Override
+    public List<UserDirectory> getUserFolders(Long folderId) {
+
+        List<UserDirectory> userFolders = new ArrayList<>();
+
+        folderStructure(userFolders, folderId);
+
+        return userFolders;
+    }
+
+    @Override
+    public List<UserDocumentDirectoryMapping> getDirMapping(List<UserDirectory> userFolders) {
+
+        try (Session session = hibernateUtils.getSession()) {
+
+            return session.createQuery(" FROM UserDocumentDirectoryMapping WHERE userDirectory IN (:userFolders)").setParameter("userFolders", userFolders).list();
+
+        }
+
+    }
+
+
+    public void folderStructure(List<UserDirectory> userDirs, Long folderId) {
+        List<UserDirectory> dirs;
+        try (Session session = hibernateUtils.getSession()) {
+            dirs = session.createQuery(" FROM UserDirectory WHERE parentDirectory.id =: dirId").setParameter("dirId", folderId).list();
+            for (UserDirectory dir : dirs) {
+                userDirs.add(dir);
+                folderStructure(userDirs, dir.getId());
+            }
+        }
     }
 
 

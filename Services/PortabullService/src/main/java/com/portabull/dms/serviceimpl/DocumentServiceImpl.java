@@ -8,6 +8,8 @@ import com.portabull.dms.service.DocumentService;
 import com.portabull.dms.utils.DMSUtils;
 import com.portabull.dms.utils.DocumentOperationUtils;
 import com.portabull.entitys.Document;
+import com.portabull.entitys.UserDirectory;
+import com.portabull.entitys.UserDocumentDirectoryMapping;
 import com.portabull.execption.NotFoundException;
 import com.portabull.execption.UnAuthorizedException;
 import com.portabull.generic.dao.CommonDao;
@@ -126,11 +128,23 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentResponse downloadFolder(Long folderId) {
+    public DocumentResponse downloadFolder(Long folderId) throws IllegalBlockSizeException,
+            NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException {
 
+        List<DocumentResponse> documentResponses = new ArrayList<>();
 
+        List<UserDirectory> userFolders = documentDao.getUserFolders(folderId);
 
-        return null;
+        List<UserDocumentDirectoryMapping> dirMapping = documentDao.getDirMapping(userFolders);
+
+        //for now just creating all files in only one dir
+
+        for (UserDocumentDirectoryMapping mapping : dirMapping) {
+            documentResponses.add(downloadDocument(mapping.getDocumentId()));
+        }
+
+        return documentOperationUtils.compressToZipFile(documentResponses);
+
     }
 
     private synchronized Long getLoggedInUserId() {

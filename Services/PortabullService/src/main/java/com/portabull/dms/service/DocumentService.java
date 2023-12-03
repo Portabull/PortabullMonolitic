@@ -58,5 +58,5 @@ public interface DocumentService {
 
     DocumentResponse uploadDocumentInternally(MultipartFile file, UserDocumentStorage userDocumentStorage) throws NoSuchAlgorithmException, IOException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, InvalidKeyException;
 
-    DocumentResponse downloadFolder(Long folderId);
+    DocumentResponse downloadFolder(Long folderId) throws IllegalBlockSizeException, NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, InvalidKeyException, ClassNotFoundException;
 }
