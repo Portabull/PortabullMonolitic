@@ -1,0 +1,1113 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="js/portabullconfig.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="logout.js"></script>
+    <style>
+
+
+.filesButton {
+        border: none;
+            color: white;
+            padding: 15px 32px;
+
+
+                       height:100px;
+            width:100px;
+
+        }
+
+
+#range1 {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+#range1::-webkit-slider-runnable-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+#range1::-moz-range-track {
+  height: 15px;
+  background: #ccc;
+  border-radius: 16px;
+}
+
+#range1::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #4E4E4C;
+  box-shadow: -407px 0 0 400px #4E4E4C;
+}
+
+#range1::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #4E4E4C;
+  box-shadow: -407px 0 0 400px #4E4E4C;
+}
+
+
+/* range 2 */
+.range-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  height: 6px;
+  background: #ccc;
+}
+
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  background-color: #4E4E4C;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+}
+
+.range-input::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: #4E4E4C;
+  border-radius: 50%;
+  border: none;
+  transition: .2s ease-in-out;
+}
+
+.range-input::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+.range-input:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+.range-input:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+.range-input::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+.range-input:active::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+.range-input:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+.value2, .value3, .value4 {
+  font-size: 26px;
+  width: 50px;
+  text-align: center;
+}
+
+/* range 3 */
+#range3 {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+  height: 20px;
+  height: 6px;
+  background: #ccc;
+}
+
+#range3::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 30px;
+  width: 30px;
+  background: transparent;
+  background-image: url("https://ibaslogic.github.io/hosted-assets/smile.png");
+  background-size: cover;
+  border-radius: 50%;
+  transition: .2s ease-in-out;
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+}
+
+/* Thumb: Firefox */
+#range3::-moz-range-thumb {
+  height: 30px;
+  width: 30px;
+  background: transparent;
+  background-image: url("https://ibaslogic.github.io/hosted-assets/smile.png");
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  transform: rotateZ(var(--thumb-rotate, 0deg));
+  transition: .2s ease-in-out;
+}
+
+#range3::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+#range3:active::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+#range3:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+#range3::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 10px rgba(255,85,0, .1)
+}
+#range3:active::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+#range3:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 13px rgba(255,85,0, .2)
+}
+
+/* range 3 */
+.range-slider {
+  flex: 1;
+}
+
+.sliderticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.sliderticks span {
+  display: flex;
+  justify-content: center;
+  width: 1px;
+  height: 10px;
+  background: #d3d3d3;
+  line-height: 40px;
+}
+
+/*=============
+Aesthetics
+=========================*/
+
+body {
+  font-family: system-ui;
+}
+
+h1 {
+  color: #4b4949;
+  text-align: center;
+}
+
+.wrapper {
+  color: #4b4949;
+  background: #4E4E4C;
+  max-width: 600px;
+  width: 100%;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.content {
+  width: 100%;
+  max-width: 500px;
+  height: 80%;
+  background: #fff;
+  padding: 0px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.range {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
+    body{
+margin-top:20px;
+background:#F0F8FF;
+}
+.card {
+margin-bottom: 1.5rem;
+box-shadow: 0 1px 15px 1px rgba(52,40,104,.08);
+}
+.card {
+position: relative;
+display: -ms-flexbox;
+display: flex;
+-ms-flex-direction: column;
+flex-direction: column;
+min-width: 0;
+word-wrap: break-word;
+background-color: #fff;
+background-clip: border-box;
+border: 1px solid #e5e9f2;
+border-radius: .2rem;
+}
+.card-header:first-child {
+border-radius: calc(.2rem - 1px) calc(.2rem - 1px) 0 0;
+}
+.card-header {
+border-bottom-width: 1px;
+}
+.card-header {
+padding: .75rem 1.25rem;
+margin-bottom: 0;
+color: inherit;
+background-color: #fff;
+border-bottom: 1px solid #e5e9f2;
+}</style></head><body>
+
+
+<form hidden id="multipleUploadForm" name="multipleUploadForm">
+    <input id="file-input" type="file" name="files" class="file-input" multiple required />
+    <button type="submit" id="submitIddsdsd" class="primary submit-btn">Submit</button>
+</form>
+
+
+<div class="container p-0">
+<h1 class="h3 mb-3">Company Information</h1><button type="submit" onclick="backToHomePage()" class="btn btn-primary">Back</button>
+<div class="row">
+<div class="col-md-5 col-xl-4">
+<div class="card">
+<div class="card-header">
+<h5 class="card-title mb-0">Tool Mapper</h5>
+
+</div>
+<div class="list-group list-group-flush" role="tablist">
+
+
+<a class="list-group-item list-group-item-action active" data-toggle="list" href="#account" role="tab">
+Account
+</a>
+
+
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#password" role="tab">
+Password
+</a>
+
+
+<a class="list-group-item list-group-item-action" data-toggle="list" href="#Privacyandsafety" role="tab">
+Privacy and safety
+</a>
+
+
+
+
+</div>
+</div>
+</div>
+<div class="col-md-7 col-xl-8">
+<div class="tab-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="tab-pane fade show active" id="account" role="tabpanel">
+<div class="card">
+<div class="card-header">
+<div class="card-actions float-right">
+<div class="dropdown show">
+<a href="#" data-toggle="dropdown" data-display="static">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</a>
+<div class="dropdown-menu dropdown-menu-right">
+<a class="dropdown-item" href="#">Action</a>
+<a class="dropdown-item" href="#">Another action</a>
+<a class="dropdown-item" href="#">Something else here</a>
+</div>
+</div>
+</div>
+<h5 class="card-title mb-0">Public info</h5>
+</div>
+<div class="card-body">
+<form  action="javascript:void(0)" >
+<div class="row">
+<div class="col-md-8">
+<div class="form-group">
+<label for="inputUsername">Company Name</label>
+<input onchange="populateEntityName()" type="text" class="form-control" id="inputUsername" placeholder="Username">
+</div>
+<div class="form-group">
+<label for="inputUsername">Biography</label>
+<textarea rows="2" class="form-control" id="inputBio" placeholder="Tell something about yourself"></textarea>
+</div>
+</div>
+<div class="col-md-4">
+
+<div class="text-center">
+
+    <div id="imageDivTag">
+
+    </div>
+    <br>
+
+
+
+    <button onclick="uploadCompanyLogo()" class="btn btn-primary">Upload Company Logo</button>
+
+</div>
+
+
+</div>
+</div>
+<button type="submit" onclick="saveCompanyDetails()" class="btn btn-primary">Save changes</button>
+</form>
+</div>
+</div>
+
+
+
+<div class="card">
+<div class="card-header">
+<div class="card-actions float-right">
+<div class="dropdown show">
+<a href="#" data-toggle="dropdown" data-display="static">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal align-middle">
+<circle cx="12" cy="12" r="1"></circle>
+<circle cx="19" cy="12" r="1"></circle>
+<circle cx="5" cy="12" r="1"></circle>
+</svg>
+</a>
+<div class="dropdown-menu dropdown-menu-right">
+<a class="dropdown-item" href="#">Action</a>
+<a class="dropdown-item" href="#">Another action</a>
+<a class="dropdown-item" href="#">Something else here</a>
+</div>
+</div>
+</div>
+<h5 class="card-title mb-0">Private info</h5>
+</div>
+<div class="card-body">
+<form action="javascript:void(0)" >
+<div class="form-row">
+<div class="form-group col-md-6">
+<label for="inputFirstName" >Entity Name</label>
+<input disabled type="text" class="form-control" id="inputFirstName" placeholder="First name">
+</div>
+<div class="form-group col-md-6">
+<label for="mobileNumberID">Mobile Number</label>
+<input type="text" class="form-control" id="mobileNumberID" placeholder="Mobile number">
+</div>
+</div>
+<div class="form-group">
+<label for="inputEmail4">Email</label>
+<input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+</div>
+<div class="form-group">
+<label for="inputAddress">Address</label>
+<input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+</div>
+<div class="form-group">
+<label for="inputAddress2">Address 2</label>
+<input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+</div>
+<div class="form-row">
+<div class="form-group col-md-6">
+<label for="inputCity">City</label>
+<input type="text" class="form-control" id="inputCity">
+</div>
+
+    <div class="form-group col-md-6">
+        <label for="inputState">State</label>
+        <input type="text" class="form-control" id="inputState">
+    </div>
+
+
+<div class="form-group col-md-2">
+<label for="inputZip">Zip</label>
+<input type="text" class="form-control" id="inputZip">
+</div>
+</div>
+<button type="submit" onclick="saveCompanyDetails()" class="btn btn-primary">Save changes</button>
+</form>
+</div>
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="tab-pane fade" id="password" role="tabpanel">
+<div class="card">
+<div class="card-body">
+<h5 class="card-title">Password</h5>
+<form action="javascript:void(0)">
+<div class="form-group">
+<label for="inputPasswordCurrent">Current password</label>
+<input type="password" class="form-control" id="inputPasswordCurrent">
+<small><a href="#">Forgot your password?</a></small>
+</div>
+<div class="form-group">
+<label for="inputPasswordNew">New password</label>
+<input type="password" class="form-control" id="inputPasswordNew">
+</div>
+<div class="form-group">
+<label for="inputPasswordNew2">Verify password</label>
+<input type="password" class="form-control" id="inputPasswordNew2">
+</div>
+<button type="submit" class="btn btn-primary" onclick="changeNewPassword()">Save changes</button>
+</form>
+</div>
+</div>
+</div>
+
+
+
+
+    <div class="tab-pane fade" id="Privacyandsafety" role="tabpanel">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Privacy and safety</h5>
+                <br>
+                <form action="javascript:void(0)">
+                    <div class="form-group">
+
+
+
+                        <p><span> Enable Two-Step Verification :
+
+                        <label class="switch">
+                            <input id="enableTwoStepVerifyID" onchange="enableTwoStepVerification(this)" type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+
+
+                        </span>
+                        </p>
+
+
+                    </div>
+                    <div class="form-group">
+
+
+                        <p><span> Enable Single SignIn(Log In) :
+
+                        <label class="switch">
+                            <input id="singleSignOnID" onchange="enableSingleSignOn(this)"  type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+
+
+                        </span>
+                        </p>
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="inputPasswordCurrent">Select Login Type(MFA Type) :</label>
+
+
+                        <span>
+                            <br>
+                                    <input onchange="changeMFAType()"  type="radio" id="sendOtpToEmailId" name="fav_language" value="Send OTP to email">
+                                     <label for="sendOtpToEmailId">Send OTP to email</label><br>
+                                    <input onchange="changeMFAType()"  type="radio" id="emailLinkAuthId" name="fav_language" value="Email Link Authentication">
+                                     <label for="emailLinkAuthId">Email Link Authentication</label>
+                                    <br>
+                            </span>
+
+                    </div>
+
+
+                    <span>  <label for="inputSessionExpiryTime">Session Expire Time : </label> <div hidden class="value2">0</div>   </span><br>
+                    <br>
+                    <div class="range">
+                        <input type="range" min="1" max="85" value="1" id="range2" class="range-input" />
+
+                    </div>
+
+                    <div id="progressBarValue">
+
+
+                    </div>
+
+                    <div id="deviceAndLocationDetailsId">
+
+
+                    </div>
+
+
+                    <button type="submit" onclick="savePrivacyDetails()" class="btn btn-primary">Save changes</button>
+
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+       <div id="deviceDetailsPlace">
+
+
+       </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript"></script>
+
+<script>
+
+var clientId = new URL(window.location.href).searchParams.get("clientId");
+
+var uploadCompanyLogoUrl = BASE_URL + 'ad/upload-company-logo';
+
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+
+function uploadCompanyLogoToServer(file){
+
+
+    var formData = new FormData();
+
+    formData.append("file", file);
+
+     formData.append("clientId", clientId);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST",uploadCompanyLogoUrl);
+
+    xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
+
+     xhr.onload = function () {
+            console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if (response.statusCode == 200) {
+                alert(response.message);
+
+                document.getElementById("imageDivTag").innerHTML = "";
+
+                var base64 = getBase64(file).then(
+                         data =>
+                        document.getElementById("imageDivTag").innerHTML = "<img alt=\"\" src=\"" + data + "\" class=\"rounded-circle img-responsive mt-2\" width=\"153\" height=\"153\">"
+                );
+
+
+            } else {
+                alert(response.message);
+            }
+        }
+
+
+    xhr.send(formData);
+}
+
+
+window.onload = function()
+        {
+        document.getElementById('file-input').onchange =
+          function(e) {
+                var fileInput = document.querySelector('#file-input');
+              var files = fileInput.files;
+                uploadCompanyLogoToServer(files[0]);
+            }
+        }
+
+var onHold = false;
+var cacheGoogleUrl;
+var cachePlanData = [];
+var deviceHeader1 = "<div class=\"card\"><div class=\"card-header\"><div class=\"card-actions float-right\"><div class=\"dropdown show\"><a href=\"#\" data-toggle=\"dropdown\" data-display=\"static\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"feather feather-more-horizontal align-middle\"><circle cx=\"12\" cy=\"12\" r=\"1\"></circle><circle cx=\"19\" cy=\"12\" r=\"1\"></circle><circle cx=\"5\" cy=\"12\" r=\"1\"></circle></svg></a><div class=\"dropdown-menu dropdown-menu-right\">";
+var deviceHeader2 = "<a onclick=\"logoutTheSelectedSession(";
+var deviceHeader3 =  ")\" class=\"dropdown-item\" href=\"#\">Logout</a>";
+var deviceHeader4 = "</div></div></div><h5 class=\"card-title mb-0\">Device Details " ;
+
+var deviceHeader4a = "</h5></div><div class=\"card-body\">";
+var deviceHeader5 = "<form action=\"javascript:void(0)\" >";
+var deviceHeader6  = "</form></div></div>";
+
+const sliderEl = document.querySelector("#range2")
+const sliderValue = document.querySelector(".value2")
+
+var mfaType;
+var singlesignon;
+var twostepverification;
+
+var currentSessionTiming;
+
+    var userLoginName123;
+
+function backToHomePage(){
+window.location.href = "adminadcompanyinfo.html";
+}
+
+    init();
+
+    function init() {
+
+            if(clientId == undefined || clientId == "null" || clientId == null){
+                return;
+            }
+
+            executeRestCall( BASE_URL +  "ad/get-company-info?clientId=" + clientId,null,"GET",loadCompanyInfo,null);
+
+
+    }
+
+    function uploadCompanyLogo() {
+        if(clientId == null || clientId=="null" || clientId == undefined){
+        alert("Please upload Company Information");
+        return;
+        }
+
+
+       document.getElementById("file-input").click();
+    }
+
+    function loadCompanyInfo(xhr,response){
+
+         document.getElementById("imageDivTag").innerHTML = "<img alt=\"\" src=\"" + response.data.companyLogo + "\" class=\"rounded-circle img-responsive mt-2\" width=\"153\" height=\"153\">";
+
+         document.getElementById("inputUsername").value = response.data.companyName;
+
+         document.getElementById("inputFirstName").value = response.data.companyName;
+
+         document.getElementById("inputEmail4").value = response.data.companyEmail;
+
+         document.getElementById("inputBio").value = response.data.companyBiography;
+
+
+<!--         userLoginName123 = response.data.userLoginName;-->
+
+         document.getElementById("mobileNumberID").value = response.data.companyMobile;
+
+         document.getElementById("inputAddress").value = response.data.companyAddress1;
+
+         document.getElementById("inputAddress2").value = response.data.companyAddress2;
+
+         document.getElementById("inputCity").value = response.data.companyCity;
+
+         document.getElementById("inputState").value = response.data.companyState;
+
+          document.getElementById("inputZip").value = response.data.companyZip;
+
+<!--                        var mfaLoginType =  response.data.mfaLoginType;-->
+
+<!--                        mfaType = mfaLoginType;-->
+
+<!--                                  if(mfaLoginType == 0){-->
+<!--                                        document.getElementById('sendOtpToEmailId').checked = "checked";-->
+<!--                                  }else-->
+<!--                                 {-->
+<!--                                        document.getElementById('emailLinkAuthId').checked = "checked";-->
+<!--                                 }-->
+
+
+<!--           if(response.data.twoStepChecked == "checked"){-->
+<!--           twostepverification = true;-->
+<!--           document.getElementById("enableTwoStepVerifyID").checked = true;-->
+<!--           }else{-->
+<!--            twostepverification = false;-->
+<!--           document.getElementById("enableTwoStepVerifyID").checked = false;-->
+<!--           }-->
+
+
+<!--           if(response.data.singleSignInChecked == "checked"){-->
+<!--           singlesignon = true;-->
+<!--           document.getElementById("singleSignOnID").checked = true;-->
+<!--           }else{-->
+<!--           singlesignon = false;-->
+<!--           document.getElementById("singleSignOnID").checked = false;-->
+<!--           }-->
+
+<!--        document.getElementById("range2").value = response.data.sessionTime;-->
+<!--        document.getElementById("progressBarValue").innerHTML = '';-->
+
+<!--        var tempSliderValue1 = response.data.sessionTime;-->
+<!--        currentSessionTiming = tempSliderValue1;-->
+<!--         if(tempSliderValue1 <= 59) {-->
+<!--document.getElementById("progressBarValue").innerHTML = '<p>'  + tempSliderValue1 + ' Minutes</p>'-->
+<!--  }else if(tempSliderValue1 >= 60 && tempSliderValue1 <= 82){-->
+<!--    document.getElementById("progressBarValue").innerHTML = '<p>'  + (tempSliderValue1 - 59) + ' Hours</p>'-->
+<!--  }else if(tempSliderValue1 >= 83 && tempSliderValue1 <= 85){-->
+<!--    document.getElementById("progressBarValue").innerHTML = '<p>'  + (tempSliderValue1 - 82) + ' Days</p>'-->
+<!--  }-->
+
+
+
+<!-- const progress = (tempSliderValue1 / sliderEl.max) * 100;-->
+
+<!--  sliderEl.style.background = `linear-gradient(to right, #4E4E4C ${progress}%, #ccc ${progress}%)`;-->
+
+
+
+
+<!--cachePlanData = response.data;-->
+
+
+<!--cacheGoogleUrl = response.data.googleUrl;-->
+<!--     cachePlanData =    response.data.locationDeviceDetails;-->
+
+<!--populateDeviceDetails();-->
+    }
+
+    function populateEntityName(){
+    document.getElementById("inputFirstName").value = document.getElementById("inputUsername").value;
+    }
+
+    function populateDeviceDetails(){
+    document.getElementById("deviceDetailsPlace").innerHTML  = '';
+    for(var i=0;i<cachePlanData.length;i++){
+            var aa =  cachePlanData[i];
+
+            if(aa.osName == "windows") {
+               var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4 + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/window.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+
+            }
+            else if(aa.osName == "android"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/android.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
+            else if(aa.osName == "ios" || aa.osName == "apple" || aa.osName == "macos" || aa.osName == "mac"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/apple.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
+            else if(aa.osName == "linux" || aa.osName == "ubuntu"){
+                    var tempInnerHtml = '<b>Logged in ' + aa.osName + ' ' + aa.osVersion + ' device ' + aa.browserName + ' browser version ' + aa.browserVersion + '</b>';
+               var googleLinkUrl = cacheGoogleUrl + aa.locationDetails;
+               var locationDetails = "<br><a href=\" " + googleLinkUrl + "\" target=\"_blank\">Click Here to see location details</a>"
+
+            document.getElementById("deviceDetailsPlace").innerHTML  = document.getElementById("deviceDetailsPlace").innerHTML+ deviceHeader1+
+             deviceHeader2 + aa.id + deviceHeader3+ deviceHeader4  + getUserStatus(aa) + deviceHeader4a + deviceHeader5+
+
+                "<p><span><input class=\"filesButton\" type=\"image\" src=\"" + 'images/devices/linux.png' + "\" id=\"documentButton\"/> "  + tempInnerHtml + locationDetails + "</p></span>";
+               + deviceHeader6;
+
+            }
+
+        }
+    }
+
+    function logoutTheSelectedSession(sessionId) {
+
+        if(onHold){
+            return;
+        }
+
+        onHold = true;
+
+
+        var tempcachePlanData = [];
+        var count = 0;
+        for(var i=0;i<cachePlanData.length;i++){
+
+              var aa =  cachePlanData[i];
+
+              if(aa.id == sessionId &&  aa.currentUser == true){
+                    logout();
+                    return;
+              }
+
+            if(aa.id != sessionId){
+                tempcachePlanData[count] = aa;
+                count++;
+            }
+
+        }
+
+      cachePlanData = tempcachePlanData;
+
+      executeRestCall(BASE_URL + "UM/logout-session?sessionId=" + sessionId ,null,"POST",changeLoggedDetails,null);
+
+    }
+
+    function changeLoggedDetails(xhr,response) {
+        populateDeviceDetails();
+        onHold = false;
+    }
+
+    function getUserStatus(aa){
+        if(aa.currentUser == true){
+            return "(You)"
+        }
+
+        return "";
+    }
+
+    function saveCompanyDetails(){
+
+    if(clientId == undefined || clientId == null || clientId == "null"){
+        clientId = null;
+    }
+
+    var data = JSON.stringify({
+    "clientId":clientId,
+    "companyName":document.getElementById("inputFirstName").value,
+    "companyEmail":document.getElementById("inputEmail4").value,
+    "companyBiography":document.getElementById("inputBio").value,
+    "companyMobile":document.getElementById("mobileNumberID").value ,
+    "companyAddress1":document.getElementById("inputAddress").value ,
+    "companyAddress2":document.getElementById("inputAddress2").value ,
+    "companyCity":document.getElementById("inputCity").value ,
+    "companyState":document.getElementById("inputState").value ,
+    "companyZip":document.getElementById("inputZip").value
+    });
+
+      executeRestCall(BASE_URL + "ad/save-company-info",data,"POST",populateClientId,null);
+
+    }
+
+function doNothing(){
+
+}
+
+function populateClientId(xhr,response){
+
+window.location.href = "adcompanyinfo.html?clientId=" + response.data;
+
+}
+
+function changeNewPassword(){
+
+    if(checkIfStringObjIsEmpty(document.getElementById("inputPasswordCurrent").value) || checkIfStringObjIsEmpty(document.getElementById("inputPasswordNew").value)
+     || checkIfStringObjIsEmpty(document.getElementById("inputPasswordNew2").value)) {
+        alert('Mandatory Fields are missing');
+        return;
+     }
+
+     if(document.getElementById("inputPasswordNew").value != document.getElementById("inputPasswordNew2").value) {
+        alert('Password and Verify Password not matched');
+        return;
+     }
+
+
+    var currentPassword =  btoa(btoa(document.getElementById("inputPasswordCurrent").value).split("").reverse().join(""));
+    var newPassword1 = btoa(btoa(document.getElementById("inputPasswordNew").value).split("").reverse().join(""));
+    var newPassword2 = btoa(btoa(document.getElementById("inputPasswordNew2").value).split("").reverse().join(""));
+
+       var data = JSON.stringify({
+    "newPassword": newPassword1,
+    "confirmNewPassword": newPassword2,
+    "currentPassword":currentPassword,
+    "to":userLoginName123
+    });
+
+  executeRestCall(BASE_URL + 'UM/update-password',data,"POST",changeNewPasswordStatus,null);
+}
+
+function changeNewPasswordStatus(xhr,response){
+    alert(response.message);
+    document.getElementById("inputPasswordCurrent").value = "";
+    document.getElementById("inputPasswordNew").value = "";
+    document.getElementById("inputPasswordNew2").value = "";
+    return;
+}
+
+
+sliderEl.addEventListener("input", (event) => {
+  const tempSliderValue = event.target.value;
+  sliderValue.textContent = tempSliderValue ;
+
+
+   document.getElementById("progressBarValue").innerHTML = '';
+   var tempSliderValue1 = Number(tempSliderValue);
+   currentSessionTiming = tempSliderValue1;
+  if(tempSliderValue1 <= 59) {
+document.getElementById("progressBarValue").innerHTML = '<p>'  + tempSliderValue1 + ' Minutes</p>'
+  }else if(tempSliderValue1 >= 60 && tempSliderValue1 <= 82){
+    document.getElementById("progressBarValue").innerHTML = '<p>'  + (tempSliderValue1 - 59) + ' Hours</p>'
+  }else if(tempSliderValue1 >= 83 && tempSliderValue1 <= 85){
+    document.getElementById("progressBarValue").innerHTML = '<p>'  + (tempSliderValue1 - 82) + ' Days</p>'
+  }
+
+  const progress = (tempSliderValue / sliderEl.max) * 100;
+
+  sliderEl.style.background = `linear-gradient(to right, #4E4E4C ${progress}%, #ccc ${progress}%)`;
+})
+
+
+function changeMFAType(){
+    mfaType = getMfaValue();
+}
+
+function enableSingleSignOn(obj){
+singlesignon = obj.checked;
+}
+
+function enableTwoStepVerification(obj){
+twostepverification = obj.checked;
+}
+
+function savePrivacyDetails(){
+
+        var url = BASE_URL + 'UM/profile/update-twostep-verification?twoStep=' + twostepverification + '&singleSignIn=' + singlesignon + '&mfa=' + mfaType + '&sessionExpiredTime='+currentSessionTiming;
+
+         executeRestCall(url,null,"POST",doNothing,null);
+}
+
+function getMfaValue(){
+
+if (document.getElementById('emailLinkAuthId').checked) {
+  return 1;
+}else {
+return 0;
+}
+}
+
+</script>
+</body></html>

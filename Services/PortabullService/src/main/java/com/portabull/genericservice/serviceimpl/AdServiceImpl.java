@@ -2,18 +2,23 @@ package com.portabull.genericservice.serviceimpl;
 
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
+import com.portabull.execption.NotFoundException;
 import com.portabull.generic.dao.CommonDao;
 import com.portabull.generic.models.ads.AdCompanyInformation;
+import com.portabull.genericservice.models.CompanyDetailedInfo;
 import com.portabull.genericservice.models.CompanyDetails;
 import com.portabull.genericservice.service.AdService;
 import com.portabull.payloads.KeyValueMapping;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.commonutils.CommonUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -24,8 +29,13 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public PortableResponse saveCompanyDetails(CompanyDetails companyDetails) {
+        AdCompanyInformation adCompanyInformation;
 
-        AdCompanyInformation adCompanyInformation = commonDao.findEntity(AdCompanyInformation.class, "companyName", companyDetails.getCompanyName());
+        if (companyDetails.getClientId() != null) {
+            adCompanyInformation = commonDao.findEntity(AdCompanyInformation.class, companyDetails.getClientId());
+        } else {
+            adCompanyInformation = commonDao.findEntity(AdCompanyInformation.class, "companyName", companyDetails.getCompanyName());
+        }
 
         if (adCompanyInformation == null) {
             adCompanyInformation = new AdCompanyInformation();
@@ -74,6 +84,22 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public PortableResponse getCompanyDetails(Long clientId) {
+
+        CompanyDetailedInfo companyDetailedInfo = new CompanyDetailedInfo();
+
+        AdCompanyInformation adCompanyInformation = commonDao.findEntity(AdCompanyInformation.class, clientId);
+
+        if (adCompanyInformation == null)
+            throw new NotFoundException("Company Information not found");
+
+        BeanUtils.copyProperties(adCompanyInformation, companyDetailedInfo);
+
+        return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, companyDetailedInfo);
+
+    }
+
+    @Override
     public PortableResponse searchCompanies(String search) {
 
         Map<String, Object> response = new HashMap<>();
@@ -113,5 +139,25 @@ public class AdServiceImpl implements AdService {
                 new KeyValueMapping<String, Object>().setKeys("clientIds").setValues(companyIds).getResult());
 
         return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null);
+    }
+
+    @Override
+    public PortableResponse uploadCompanyLogo(MultipartFile file, Long clientId) throws IOException {
+
+        AdCompanyInformation adCompanyInformation = commonDao.findEntity(AdCompanyInformation.class, clientId);
+
+        if (adCompanyInformation == null) {
+            throw new NotFoundException("Company Information not found");
+        }
+
+        adCompanyInformation.setCompanyLogo("data:;base64," + new String(Base64.encodeBase64(file.getBytes())));
+
+        adCompanyInformation.setUpdatedDate(new Date());
+
+        adCompanyInformation.setUpdatedBy(CommonUtils.getLoggedInUserId());
+
+        commonDao.saveOrUpdateEntity(adCompanyInformation);
+
+        return new PortableResponse("Company Logo Uploaded Successfully", StatusCodes.C_200, PortableConstants.SUCCESS, null);
     }
 }

@@ -245,7 +245,7 @@ return;
 }
 
 
-window.location.href = "accountcalculation.html?accId=" + id;
+window.location.href = "adcompanyinfo.html?clientId=" + id;
 
 }
 
@@ -266,7 +266,7 @@ init();
 
 
 function addNewCompanys() {
-window.location.href = "accountcreationh.html";
+window.location.href = "adcompanyinfo.html";
 }
 
 
@@ -542,7 +542,7 @@ document.addEventListener('keydown', function(event) {
 
 
 function changeView(){
-    window.location.href = "callistpage.html";
+    window.location.href = "adminadcompanyinfo.html";
 }
 
 function cutName(name){
