@@ -5,6 +5,7 @@ import com.portabull.generic.dao.CommonDao;
 import com.portabull.generic.models.UserDocumentStorage;
 import com.portabull.utils.commonutils.CommonUtils;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,23 @@ public class CommonDaoImpl implements CommonDao {
             if (!CollectionUtils.isEmpty(params)) {
                 params.forEach((k, v) -> queryBuilder.setParameter(k, v));
             }
+            response = queryBuilder.list();
+            return !CollectionUtils.isEmpty(response) ? response : Collections.emptyList();
+        }
+    }
+
+    @Override
+    public <T> List<T> execueQuery(String query, Map<String, Object> params, Integer pageNo, Integer resultSize) {
+        List<T> response;
+        try (Session session = hibernateUtils.getSession()) {
+            Query queryBuilder = session.createQuery(query);
+
+            if (!CollectionUtils.isEmpty(params)) {
+                params.forEach((k, v) -> queryBuilder.setParameter(k, v));
+            }
+
+            queryBuilder.setFirstResult(pageNo).setMaxResults(resultSize);
+
             response = queryBuilder.list();
             return !CollectionUtils.isEmpty(response) ? response : Collections.emptyList();
         }
@@ -127,5 +145,26 @@ public class CommonDaoImpl implements CommonDao {
 
         return Collections.emptyList();
     }
+
+    @Override
+    public void execute(String query, Map<String, Object> params) {
+        Transaction transaction;
+
+        try (Session session = hibernateUtils.getSession()) {
+
+            transaction = session.beginTransaction();
+
+            Query queryBuilder = session.createQuery(query);
+
+            if (!CollectionUtils.isEmpty(params)) {
+                params.forEach((paramKey, paramValue) -> queryBuilder.setParameter(paramKey, paramValue));
+            }
+
+            queryBuilder.executeUpdate();
+
+            transaction.commit();
+        }
+    }
+
 
 }

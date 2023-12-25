@@ -202,3 +202,39 @@ create table portabull_generic.shared_notes_settings (share_id int8 not null, no
 
 
 create table portabull_generic.user_acc_cal_details (user_acc_cal_id int8 not null, created_date timestamp, description varchar(255), profit_loss float8, tittle varchar(255), total_amount float8, updated_date timestamp, primary key (user_acc_cal_id));
+
+
+
+
+
+
+
+
+
+
+
+create table portabull_generic.ad_activation_history (activation_id int8 not null, activate boolean, activate_desc varchar(255), activate_reason varchar(255), created_by int8, created_date timestamp, updated_by int8, updated_date timestamp, primary key (activation_id));
+create table portabull_generic.ad_company_information (client_id int8 not null, company_address1 varchar(255), company_address2 varchar(255), company_biography TEXT, company_city varchar(255), company_email varchar(255), company_logo TEXT, company_mobile varchar(255), company_name varchar(255), company_state varchar(255), company_zip varchar(255), primary key (client_id));
+create table portabull_generic.ad_company_master (company_master_id int8 not null, ad_desc varchar(255), images TEXT, meta_data TEXT, primary key (company_master_id));
+create table portabull_generic.ad_company_tool_subscriptions (toolId int8 not null, activation_last_date timestamp, activation_time_in_days int8, active boolean, created_by int8, created_date timestamp, deactivate_reason boolean, updated_by int8, updated_date timestamp, activationId int8 not null, clientId int8 not null, masterId int8 not null, paymentId int8 not null, primary key (toolId));
+create table portabull_generic.ad_payment_details (payment_id int8 not null, payment_created_by int8, payment_created_date timestamp, payment_desc varchar(255), payment_name varchar(255), payment_updated_by int8, payment_updated_date timestamp, plan_payment_amount_due float8, total_plan_payment_amount float8, total_subscription_amount float8, primary key (payment_id));
+create table portabull_generic.ad_payment_history (paymentId int8 not null, payment_amount float8, payment_history_created_by int8, payment_history_created_date timestamp, payment_history_desc float8, payment_history_updated_by int8, payment_history_updated_date timestamp, primary key (paymentId));
+create table portabull_generic.ad_portabull_tools (tool_id int8 not null, tool_details varchar(255), tool_dimensions TEXT, tool_html_pages varchar(255), tool_name varchar(255), primary key (tool_id));
+alter table portabull_generic.ad_company_information drop constraint UK_s8obcbqma6pr134cqqn2ne9jh;
+alter table portabull_generic.ad_company_information add constraint UK_s8obcbqma6pr134cqqn2ne9jh unique (company_name);
+alter table portabull_generic.ad_company_tool_subscriptions drop constraint UK_5m27cf88c85054tm1rnhuura4;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint UK_5m27cf88c85054tm1rnhuura4 unique (activationId);
+alter table portabull_generic.ad_company_tool_subscriptions drop constraint UK_22kqor4cd5eskf591hk5t352v;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint UK_22kqor4cd5eskf591hk5t352v unique (clientId);
+alter table portabull_generic.ad_company_tool_subscriptions drop constraint UK_s9ip33n8nh429bif7nbggcmnc;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint UK_s9ip33n8nh429bif7nbggcmnc unique (masterId);
+alter table portabull_generic.ad_company_tool_subscriptions drop constraint UK_nbrort8om4vrkft6074lugp8b;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint UK_nbrort8om4vrkft6074lugp8b unique (paymentId);
+alter table portabull_generic.ad_portabull_tools drop constraint UK_tkess494fuustigjvq7os4wk9;
+alter table portabull_generic.ad_portabull_tools add constraint UK_tkess494fuustigjvq7os4wk9 unique (tool_name);
+alter table portabull_generic.ad_company_tool_subscriptions add constraint FKhtyd42rk6yafkedk9vmmy9nm8 foreign key (activationId) references portabull_generic.ad_activation_history;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint FKmspivta5069mvubjb53b919yd foreign key (clientId) references portabull_generic.ad_company_information;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint FK9ryb4awjb43dcdvm5p8blgjo5 foreign key (masterId) references portabull_generic.ad_company_master;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint FKq5pwhh5up25gv4e6hj25a06cx foreign key (paymentId) references portabull_generic.ad_payment_details;
+alter table portabull_generic.ad_company_tool_subscriptions add constraint FKdjrojj1ct43y672a3y4k6htg5 foreign key (toolId) references portabull_generic.ad_portabull_tools;
+alter table portabull_generic.ad_payment_history add constraint FK9bq6f12cysvbfj6aa6pcjifr9 foreign key (paymentId) references portabull_generic.ad_payment_details;

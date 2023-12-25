@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/portabullconfig.js"></script>
+    <style>
+
+.table-title {
+  color: #ffffff;
+  background-color: #2f2f2f;
+  padding: 15px;
+}
+.table-title h2 {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+    table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+
+table tr {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+ table tr:hover {
+  background-color: #FDA61C;
+}
+table th,
+table td {
+  padding: .625em;
+  text-align: center;
+}
+
+table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+
+  table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+
+
+.button-container {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-end;
+}
+.button-container span {
+  color: #8f8f8f;
+  text-align: right;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.button-container button {
+  font-family: inherit;
+  font-size: inherit;
+  color: #ffffff;
+  padding: 10px 15px;
+  border: 0;
+  margin: 0;
+  outline: 0;
+  border-radius: 0;
+  transition: background-color 225ms ease-out;
+}
+.button-container button.primary {
+  background-color: #147eff;
+}
+.button-container button.primary:hover {
+  background-color: #479aff;
+}
+.button-container button.primary:active {
+  background-color: #0065e0;
+}
+.button-container button.primary {
+  background-color: green;
+}
+.button-container button.primary:hover {
+  background-color: #479aff;
+}
+.button-container button.primary:active {
+  background-color: #0065e0;
+}
+.button-container button.danger {
+  background-color: #d11800;
+}
+.button-container button.danger:hover {
+  background-color: #ff2205;
+}
+.button-container button.danger:active {
+  background-color: #9e1200;
+}
+.button-container button svg {
+  fill: #ffffff;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* general styling */
+body {
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.25;
+}
+</style>
+</head>
+<body>
+
+<div class="table-title">
+    <h2 align="center" style="color:white">Company Information</h2>
+</div>
+
+<div class="table-title">
+
+    <form action="javaScript:donothing()"  align="center"    action="donothing()">
+
+        <button style="align:left" onclick="goToBack()">Back</button>
+        <input placeholder="Search..." type="search" id="gcallsearch" name="gsearch">
+        <button onclick="searchAccounts()">Search</button>
+
+        <label for="pageSizeSelected">Page Size : </label>
+        <select onchange="changePageSize(this.value);" name="cars" id="pageSizeSelected">
+            <option value="5">5</option>
+            <option selected="selected" value="10">10</option>
+            <option value="15">15</option>
+        </select>
+
+        <button onclick="goToCompanyHome()">Home</button>
+        <button onclick="clearCompanys()">Reset</button>
+        <button onclick="changeView()">Change View</button>
+
+    </form>
+
+</div>
+
+<div class="button-container"><span>Add Or Delete Company Here ></span>
+    <button onclick="addNewCompanys()" class="primary" title="Add New Company">
+        <svg viewBox="0 0 512 512" width="16" title="plus-circle">
+            <path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm144 276c0 6.6-5.4 12-12 12h-92v92c0 6.6-5.4 12-12 12h-56c-6.6 0-12-5.4-12-12v-92h-92c-6.6 0-12-5.4-12-12v-56c0-6.6 5.4-12 12-12h92v-92c0-6.6 5.4-12 12-12h56c6.6 0 12 5.4 12 12v92h92c6.6 0 12 5.4 12 12v56z"></path>
+        </svg>
+    </button>
+    <button onclick="deleteSelectedCompany()" class="danger" title="Delete Selected Company">
+        <svg viewBox="0 0 448 512" width="16" title="trash-alt">
+            <path d="M32 464a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128H32zm272-256a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zm-96 0a16 16 0 0 1 32 0v224a16 16 0 0 1-32 0zM432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16z"></path>
+        </svg>
+    </button>
+</div>
+
+
+<div class="table-concept" id="fgafgfasgfsa">
+
+
+
+
+</div>
+
+<script src="js/adadmincompany.js"></script>
+
+<script>
+    document.addEventListener('keydown', function(event) {
+ const key = event.key;
+  if (key === "Delete" && !onHold) {
+        deleteSelectedCompany();
+  }
+});
+
+</script>
+</body>
+</html>

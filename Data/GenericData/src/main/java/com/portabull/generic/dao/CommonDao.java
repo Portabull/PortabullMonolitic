@@ -34,4 +34,8 @@ public interface CommonDao {
 
     public <T> List<T> executeQuery(String query, Map<String, Object> params, Class<T> expectedReturn);
 
+    public <T> List<T> execueQuery(String query, Map<String, Object> params,Integer pageNo,Integer resultSize);
+
+    public void execute(String query, Map<String, Object> params);
+
 }

@@ -1,71 +1,18 @@
-package com.portabull.generic.models.ads;
+package com.portabull.genericservice.models;
 
+public class CompanyDetails {
 
-import com.portabull.constants.DatabaseSchema;
-
-import javax.persistence.*;
-import java.util.Date;
-
-@Entity
-@Table(name = "ad_company_information", schema = DatabaseSchema.PORTABULL_GENERIC, catalog = DatabaseSchema.PORTABULL_GENERIC)
-public class AdCompanyInformation {
-
-    @Id
-    @Column(name = "client_id")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
-    @SequenceGenerator(name = "seq", sequenceName = ".seq_ad_company_info_id")
     private Long clientId;
-
-
-    @Column(name = "company_name", unique = true)
     private String companyName;
-
-    @Column(name = "company_biography", columnDefinition = "TEXT")
     private String companyBiography;
-
-    @Column(name = "company_email")
     private String companyEmail;
-
-    @Column(name = "company_mobile")
     private String companyMobile;
-
-    @Column(name = "company_address1")
     private String companyAddress1;
-
-    @Column(name = "company_address2")
     private String companyAddress2;
-
-    @Column(name = "company_city")
     private String companyCity;
-
-    @Column(name = "company_state")
     private String companyState;
-
-    @Column(name = "company_zip")
     private String companyZip;
-
-    @Column(name = "company_logo", columnDefinition = "TEXT")
     private String companyLogo;
-
-    @Column(name = "updated_date")
-    private Date updatedDate;
-
-    @Column(name = "created_date")
-    private Date createdDate;
-
-    @Column(name = "created_by")
-    private Long createdBy;
-
-    @Column(name = "updated_by")
-    private Long updatedBy;
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
-    }
 
     public String getCompanyName() {
         return companyName;
@@ -147,35 +94,11 @@ public class AdCompanyInformation {
         this.companyLogo = companyLogo;
     }
 
-    public Date getUpdatedDate() {
-        return updatedDate;
+    public Long getClientId() {
+        return clientId;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Long getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(Long updatedBy) {
-        this.updatedBy = updatedBy;
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 }
