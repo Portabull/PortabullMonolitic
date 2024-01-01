@@ -118,7 +118,7 @@ function login() {
                         myFunction123();
                        }
 
-                    alert(tokenData.message);
+                    launch_toast(tokenData.message);
                 }else {
                    window.location.href = "portabullcompleteserverdown.html";
                 }
@@ -450,7 +450,7 @@ if(redirectionUrl != null && redirectionUrl != undefined && redirectionUrl != ""
 }
        window.location.href = "loginsuccessfull.html";
     }else if(response.data.a == 2){
-      launch_toast();
+      launch_toast("Access Denined");
           closeProgressBar();
           clearInterval(clearIntervalId);
           notificationHold = false;
@@ -464,9 +464,9 @@ if(redirectionUrl != null && redirectionUrl != undefined && redirectionUrl != ""
 
 
 
-function launch_toast() {
+function launch_toast(message) {
         var toastMaker = document.querySelector('#toast');
-        toastMaker.innerHTML = "<div id=\"desc\" style=\"color:white;\">Access Denined</div>";
+        toastMaker.innerHTML = "<div id=\"desc\" style=\"color:white;\">" + message + "</div>";
 
     var x = document.getElementById("toast")
     x.className = "show";
