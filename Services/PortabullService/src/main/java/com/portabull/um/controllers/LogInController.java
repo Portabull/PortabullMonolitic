@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("UM")
@@ -135,9 +136,10 @@ public class LogInController {
     }
 
     @PostMapping(value = "/logout-session")
-    public ResponseEntity<?> logoutSession(@RequestParam String sessionId) {
+    public ResponseEntity<?> logoutSession(@RequestParam(required = false) Optional<String> sessionId,
+                                           @RequestParam(required = false) Optional<Boolean> logoutFrmAllDevices) {
 
-        DBCacheUtils.removeTokenCache(Long.valueOf(sessionId));
+        DBCacheUtils.removeTokenCache(sessionId, logoutFrmAllDevices);
 
         return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null), HttpStatus.OK);
 
@@ -159,7 +161,7 @@ public class LogInController {
 
         tokenData.setLocationDetails(latLong);
 
-        DBCacheUtils.put(CommonUtils.getAuthorizationToken(),tokenData);
+        DBCacheUtils.put(CommonUtils.getAuthorizationToken(), tokenData);
 
         return new ResponseEntity<>(new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null), HttpStatus.OK);
     }

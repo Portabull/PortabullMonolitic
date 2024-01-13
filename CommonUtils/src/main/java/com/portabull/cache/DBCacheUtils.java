@@ -4,14 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portabull.dbutils.HibernateUtils;
 import com.portabull.execption.DataParseException;
+import com.portabull.execption.UnAuthorizedException;
 import com.portabull.payloads.TokenData;
 import com.portabull.utils.commonutils.CommonUtils;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DBCacheUtils {
@@ -213,8 +218,32 @@ public class DBCacheUtils {
         return hibernateUtils.findEntitiesByCriteria(TokenCache.class, "userID", userID);
     }
 
-    public static void removeTokenCache(Long sessionId) {
-        hibernateUtils.deleteEntity(TokenCache.class, sessionId);
+    public static void removeTokenCache(Optional<String> sessionId, Optional<Boolean> logoutFrmAllDevices) {
+        if (logoutFrmAllDevices.isPresent() && logoutFrmAllDevices.get()) {
+            Long loggedInUserId = CommonUtils.getLoggedInUserId();
+            Transaction tx = null;
+            try (Session session = hibernateUtils.getSession()) {
+                tx = session.beginTransaction();
+                session.createQuery("DELETE FROM TokenCache WHERE token != :token AND userID=:userID")
+                        .setParameter("userID", loggedInUserId)
+                        .setParameter("token", CommonUtils.getAuthorizationToken()).executeUpdate();
+                tx.commit();
+            } catch (Exception e) {
+                if (tx != null) {
+                    tx.rollback();
+                }
+            }
+        } else {
+
+            TokenCache tokenCache = hibernateUtils.findEntity(TokenCache.class, Long.valueOf(sessionId.get()));
+
+            if (tokenCache == null || !CommonUtils.getLoggedInUserId().equals(tokenCache.getUserID())) {
+                throw new UnAuthorizedException();
+            }
+
+            hibernateUtils.deleteEntitys(Arrays.asList(tokenCache));
+
+        }
     }
 
 
