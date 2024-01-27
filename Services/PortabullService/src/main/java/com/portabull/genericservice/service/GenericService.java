@@ -2,9 +2,6 @@ package com.portabull.genericservice.service;
 
 import com.portabull.response.PortableResponse;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 public interface GenericService {
@@ -13,5 +10,5 @@ public interface GenericService {
 
     PortableResponse getClientContactDetails();
 
-    PortableResponse callRestService(Map<String, Object> payload) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException;
+    PortableResponse callRestService(Map<String, Object> payload);
 }
