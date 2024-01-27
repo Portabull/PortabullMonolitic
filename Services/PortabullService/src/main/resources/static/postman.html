@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="js/portabullconfig.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postman-like API Client with CORS Proxy</title>
+    <title>Advanced API Client</title>
     <style>
+
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -38,65 +40,116 @@
         #response {
             white-space: pre-wrap;
         }
+
+
+          .uploadLoading:after { content: ' .'; animation: dots 1s steps(5, end) infinite;} @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: #4CAF50; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 #4CAF50;}}
     </style>
 </head>
 <body>
 
-    <h1>Postman-like API Client with CORS Proxy</h1>
+<h1>Advanced API Client</h1>
 
-    <label for="url">URL:</label>
-    <input type="text" id="url" placeholder="Enter API URL">
 
-    <label for="method">Method:</label>
-    <select id="method">
-        <option value="GET">GET</option>
-        <option value="POST">POST</option>
-        <option value="PUT">PUT</option>
-        <option value="DELETE">DELETE</option>
-    </select>
+<label for="url">URL:</label>
+<input type="text" id="url" placeholder="Enter API URL">
 
-    <label for="headers">Headers:</label>
-    <textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
+<label for="method">Method:</label>
+<select id="method">
+    <option value="GET">GET</option>
+    <option value="POST">POST</option>
+    <option value="PUT">PUT</option>
+    <option value="DELETE">DELETE</option>
+</select>
 
-    <label for="queryParams">Query Parameters:</label>
-    <textarea id="queryParams" placeholder='{"param1": "value1", "param2": "value2"}'></textarea>
+<label for="headers">Headers:</label>
+<textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
 
-    <label for="body">Request Body:</label>
-    <textarea id="body" placeholder='{"key": "value"}'></textarea>
-    <button onclick="makeRequest()">Send Request</button>
+<label for="queryParams">Query Parameters:</label>
+<textarea id="queryParams" placeholder='{"param1": "value1", "param2": "value2"}'></textarea>
 
-    <h2>Response:</h2>
-    <pre id="response"></pre>
+<label for="body">Request Body:</label>
+<textarea id="body" placeholder='{"key": "value"}'></textarea>
+<button onclick="beautifyRequestBody()">Beautify</button>
 
-    <script>
-        function makeRequest() {
+<button onclick="makeRequest()">Send Request</button>
+
+<h4 id="uploadLoading123" class="uploadLoading" style="text-align: center; color: #4CAF50;" hidden>Loading</h4>
+
+
+<h2>Response:</h2>
+<pre id="response"></pre>
+
+<script>
+        function beautifyRequestBody() {
+            const bodyTextarea = document.getElementById('body');
+            const queryParams = document.getElementById('queryParams');
+            const headers = document.getElementById('headers');
+
+            try {
+
+                if(!checkIfStringObjIsEmpty(bodyTextarea.value)){
+                    const beautifiedBody = JSON.stringify(JSON.parse(bodyTextarea.value), null, 2);
+                bodyTextarea.value = beautifiedBody;
+                }
+
+                if(!checkIfStringObjIsEmpty(queryParams.value)){
+                      const queryParamsBody = JSON.stringify(JSON.parse(queryParams.value), null, 2);
+                queryParams.value = queryParamsBody;
+
+                }
+
+                 if(!checkIfStringObjIsEmpty(headers.value)){
+                      const headersP = JSON.stringify(JSON.parse(headers.value), null, 2);
+                headers.value = headersP;
+
+                }
+
+            } catch (error) {
+                alert('Invalid JSON format in the request body.');
+            }
+        }
+
+
+ function makeRequest() {
+   document.getElementById('response').textContent  = '';
             const url = document.getElementById('url').value;
             const method = document.getElementById('method').value;
             const headers = JSON.parse(document.getElementById('headers').value || '{}');
             const queryParams = JSON.parse(document.getElementById('queryParams').value || '{}');
             const body = document.getElementById('body').value;
 
-            // Construct URL with query parameters
-            const urlWithParams = new URL(url);
-            Object.keys(queryParams).forEach(key => urlWithParams.searchParams.append(key, queryParams[key]));
-
-            // Use CORS Anywhere proxy
-            const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-            const targetUrl = proxyUrl + urlWithParams;
-
-            fetch(targetUrl, {
+               const data = {
+                url: url,
                 method: method,
                 headers: headers,
-                body: method !== 'GET' ? body : undefined,
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
-            })
-            .catch(error => {
-                document.getElementById('response').textContent = 'Error: ' + error.message;
-            });
+                params: queryParams,
+                body: body
+            };
+
+invokeLoader();
+             executeRestCall(BASE_URL + "gs/proxy/call-rest-service",JSON.stringify(data),"POST",handleResponse,null);
         }
+
+        function handleResponse(xhr,response){
+        document.getElementById('response').textContent  = '';
+            if(response.statusCode!=200){
+                document.getElementById('response').textContent = 'Error : ' + '\n' + 'Status Code : '+  response.statusCode + '\n' +  'Response : ' + response.data;
+            }else{
+           document.getElementById('response').textContent = response.data;
+            }
+            stopLoader();
+        }
+
+
+
+
+function invokeLoader(){
+     document.getElementById("uploadLoading123").hidden = false;
+}
+
+function stopLoader(){
+ document.getElementById("uploadLoading123").hidden = true;
+}
     </script>
 
 </body>
