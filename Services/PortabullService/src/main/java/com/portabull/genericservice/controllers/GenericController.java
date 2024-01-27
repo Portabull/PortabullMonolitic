@@ -25,9 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -139,7 +136,7 @@ public class GenericController {
     }
 
     @PostMapping("proxy/call-rest-service")
-    public ResponseEntity<PortableResponse> callRestService(@RequestBody Map<String, Object> payload) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    public ResponseEntity<PortableResponse> callRestService(@RequestBody Map<String, Object> payload) {
 
         if (StringUtils.isEmpty(payload.get("url"))) {
             throw new BadRequestException("Url Should not be empty");
