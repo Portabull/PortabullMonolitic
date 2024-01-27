@@ -16,13 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.net.ssl.SSLContext;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -72,35 +71,51 @@ public class GenericServiceImpl implements GenericService {
     }
 
     @Override
-    public PortableResponse callRestService(Map<String, Object> payload) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    public PortableResponse callRestService(Map<String, Object> payload) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(payload.get("url").toString());
+        try {
 
-        Map<String, String> headers = (Map<String, String>) payload.get("headers");
+            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(payload.get("url").toString());
 
-        Map<String, String> params = (Map<String, String>) payload.get("params");
+            Map<String, String> headers = (Map<String, String>) payload.get("headers");
 
-        Object body = payload.get("body");
+            Map<String, String> params = (Map<String, String>) payload.get("params");
 
-        HttpEntity entity;
+            Object body = payload.get("body");
 
-        HttpHeaders httpHeaders = new HttpHeaders();
+            HttpEntity entity;
 
-        if (!CollectionUtils.isEmpty(headers))
-            headers.forEach((k, v) -> httpHeaders.put(k, Arrays.asList(v)));
+            HttpHeaders httpHeaders = new HttpHeaders();
 
-        if (body != null && !StringUtils.isEmpty(body)) {
-            entity = new HttpEntity<>(body, httpHeaders);
-        } else {
-            entity = new HttpEntity(headers);
+            if (!CollectionUtils.isEmpty(headers))
+                headers.forEach((k, v) -> httpHeaders.put(k, Arrays.asList(v)));
+
+            if (body != null && !StringUtils.isEmpty(body)) {
+                entity = new HttpEntity<>(body, httpHeaders);
+            } else {
+                entity = new HttpEntity(headers);
+            }
+
+            if (!CollectionUtils.isEmpty(params))
+                params.forEach((k, v) -> builder.queryParam(k, v));
+
+            ResponseEntity<String> response = template.exchange(builder.build().toString(), getHttpMethod(payload.get("method").toString()), entity, String.class);
+
+            return new PortableResponse("", Long.valueOf(response.getStatusCode().value()), PortableConstants.SUCCESS, response.getBody());
+
+        } catch (ResourceAccessException e1) {
+            if (e1.getMessage().contains("Connection refused: connect")) {
+                return new PortableResponse("", 503L, PortableConstants.SUCCESS, "Connection refused");
+            } else if (e1.getMessage().contains("No such host is known ")) {
+                return new PortableResponse("", 503L, PortableConstants.SUCCESS, "No such host is known");
+            }
+
+            return new PortableResponse("", 503L, PortableConstants.SUCCESS, "Connection Issue");
+        } catch (HttpClientErrorException ee) {
+            return new PortableResponse("", 503L, PortableConstants.SUCCESS, "Connection Issue");
+        } catch (Exception e) {
+            return new PortableResponse("", 500L, PortableConstants.SUCCESS, "Internal Server Error");
         }
-
-        if (!CollectionUtils.isEmpty(params))
-            params.forEach((k, v) -> builder.queryParam(k, v));
-
-        ResponseEntity<String> response = template.exchange(builder.build().toString(), getHttpMethod(payload.get("method").toString()), entity, String.class);
-
-        return new PortableResponse("", Long.valueOf(response.getStatusCode().value()), PortableConstants.SUCCESS, response.getBody());
     }
 
     public HttpMethod getHttpMethod(String method) {
