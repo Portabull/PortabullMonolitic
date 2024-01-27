@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced API Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+
+        button {
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #response {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Advanced API Client</h1>
+
+<label for="url">URL:</label>
+<input type="text" id="url" placeholder="Enter API URL">
+
+<label for="method">Method:</label>
+<select id="method">
+    <option value="GET">GET</option>
+    <option value="POST">POST</option>
+    <option value="PUT">PUT</option>
+    <option value="DELETE">DELETE</option>
+</select>
+
+<label for="headers">Headers:</label>
+<textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
+
+<label for="queryParams">Query Parameters:</label>
+<textarea id="queryParams" placeholder='{"param1": "value1", "param2": "value2"}'></textarea>
+
+<label for="body">Request Body:</label>
+<textarea id="body" placeholder='{"key": "value"}'></textarea>
+<button onclick="beautifyRequestBody()">Beautify</button>
+
+<button onclick="makeRequest()">Send Request</button>
+
+<h2>Response:</h2>
+<pre id="response"></pre>
+
+<script>
+        function beautifyRequestBody() {
+            const bodyTextarea = document.getElementById('body');
+            try {
+                const beautifiedBody = JSON.stringify(JSON.parse(bodyTextarea.value), null, 2);
+                bodyTextarea.value = beautifiedBody;
+            } catch (error) {
+                alert('Invalid JSON format in the request body.');
+            }
+        }
+
+        function makeRequest() {
+            const url = document.getElementById('url').value;
+            const method = document.getElementById('method').value;
+            const headers = JSON.parse(document.getElementById('headers').value || '{}');
+            const queryParams = JSON.parse(document.getElementById('queryParams').value || '{}');
+            const body = document.getElementById('body').value;
+
+            // Construct URL with query parameters
+            const urlWithParams = new URL(url);
+            Object.keys(queryParams).forEach(key => urlWithParams.searchParams.append(key, queryParams[key]));
+
+            fetch(urlWithParams, {
+                method: method,
+                headers: headers,
+                body: method !== 'GET' ? body : undefined,
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            });
+        }
+    </script>
+
+</body>
+</html>
