@@ -3,6 +3,7 @@ package com.portabull.genericservice.controllers;
 import com.portabull.constants.LoggerErrorConstants;
 import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
+import com.portabull.execption.BadRequestException;
 import com.portabull.genericservice.service.GenericEmailService;
 import com.portabull.genericservice.service.GenericService;
 import com.portabull.loggerutils.LoggerUtils;
@@ -24,6 +25,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,6 +136,21 @@ public class GenericController {
     @GetMapping("/get-client-contact-details")
     public ResponseEntity<PortableResponse> getClientContactDetails() {
         return new ResponseEntity<>(genericService.getClientContactDetails(), HttpStatus.OK);
+    }
+
+    @PostMapping("proxy/call-rest-service")
+    public ResponseEntity<PortableResponse> callRestService(@RequestBody Map<String, Object> payload) throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+
+        if (StringUtils.isEmpty(payload.get("url"))) {
+            throw new BadRequestException("Url Should not be empty");
+        }
+
+        if (StringUtils.isEmpty(payload.get("method"))) {
+            throw new BadRequestException("Method Should not be empty");
+        }
+
+        return new ResponseEntity<>(genericService.callRestService(payload), HttpStatus.OK);
+
     }
 
 
