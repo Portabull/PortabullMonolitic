@@ -20,6 +20,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import java.util.Arrays;
@@ -28,8 +30,9 @@ import java.util.Map;
 @Service
 public class GenericServiceImpl implements GenericService {
 
-
     static RestTemplate template;
+
+    private static final Logger logger = LoggerFactory.getLogger(GenericServiceImpl.class);
 
     static {
         try {
@@ -93,7 +96,7 @@ public class GenericServiceImpl implements GenericService {
             if (body != null && !StringUtils.isEmpty(body)) {
                 entity = new HttpEntity<>(body, httpHeaders);
             } else {
-                entity = new HttpEntity(headers);
+                entity = new HttpEntity(httpHeaders);
             }
 
             if (!CollectionUtils.isEmpty(params))
