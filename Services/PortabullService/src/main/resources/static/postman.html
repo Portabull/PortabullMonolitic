@@ -116,7 +116,7 @@
             const method = document.getElementById('method').value;
             const headers = JSON.parse(document.getElementById('headers').value || '{}');
             const queryParams = JSON.parse(document.getElementById('queryParams').value || '{}');
-            const body = document.getElementById('body').value;
+            const body = JSON.parse(document.getElementById('body').value || '{}');
 
                const data = {
                 url: url,
