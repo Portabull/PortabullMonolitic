@@ -238,3 +238,13 @@ alter table portabull_generic.ad_company_tool_subscriptions add constraint FK9ry
 alter table portabull_generic.ad_company_tool_subscriptions add constraint FKq5pwhh5up25gv4e6hj25a06cx foreign key (paymentId) references portabull_generic.ad_payment_details;
 alter table portabull_generic.ad_company_tool_subscriptions add constraint FKdjrojj1ct43y672a3y4k6htg5 foreign key (toolId) references portabull_generic.ad_portabull_tools;
 alter table portabull_generic.ad_payment_history add constraint FK9bq6f12cysvbfj6aa6pcjifr9 foreign key (paymentId) references portabull_generic.ad_payment_details;
+
+
+
+
+
+create table portabull_generic.scheduler_actions (scheduler_action_id int8 not null, action TEXT, action_type varchar(255), scheduler_id int8, primary key (scheduler_action_id))
+create table portabull_generic.scheduler_task (scheduler_id int8 not null, days varchar(255), is_active boolean, last_triggered_date timestamp, scheduler_name varchar(255), specific_date timestamp, time_gap int4, trigger_type varchar(255), user_id int8, primary key (scheduler_id))
+create sequence seq_scheduler_action_id start 1 increment 1
+create sequence seq_scheduler_id start 1 increment 1
+alter table portabull_generic.scheduler_actions add constraint FKs2gkv5y7ewyyw1ppg2qmckuar foreign key (scheduler_id) references portabull_generic.scheduler_task

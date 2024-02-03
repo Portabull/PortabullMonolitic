@@ -117,9 +117,16 @@ public class GenericServiceImpl implements GenericService {
         } catch (HttpClientErrorException ee) {
             return new PortableResponse("", 503L, PortableConstants.SUCCESS, "Connection Issue");
         } catch (Exception e) {
-             logger.error("Exception :: ", e);
+            logger.error("Exception :: ", e);
             return new PortableResponse("", 500L, PortableConstants.SUCCESS, "Internal Server Error");
         }
+    }
+
+    @Override
+    public PortableResponse saveSchedularDetails(Map<String, Object> payload) {
+
+        return genericDao.saveSchedularDetails(payload);
+
     }
 
     public HttpMethod getHttpMethod(String method) {

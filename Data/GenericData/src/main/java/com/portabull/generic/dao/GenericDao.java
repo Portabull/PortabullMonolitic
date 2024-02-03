@@ -10,4 +10,5 @@ public interface GenericDao {
 
     PortableResponse getClientContactDetails();
 
+    PortableResponse saveSchedularDetails(Map<String, Object> payload);
 }

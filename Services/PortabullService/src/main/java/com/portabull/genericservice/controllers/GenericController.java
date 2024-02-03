@@ -150,5 +150,12 @@ public class GenericController {
 
     }
 
+    @PostMapping("save-schedular-details")
+    public ResponseEntity<PortableResponse> saveSchedularDetails(@RequestBody Map<String, Object> payload) {
+
+        return new ResponseEntity<>(genericService.saveSchedularDetails(payload), HttpStatus.OK);
+
+    }
+
 
 }
