@@ -7,7 +7,9 @@ import com.portabull.dbutils.HibernateUtils;
 import com.portabull.execption.BadRequestException;
 import com.portabull.generic.models.SchedulerActions;
 import com.portabull.generic.models.SchedulerTask;
+import com.portabull.generic.models.StaticJavaImports;
 import com.portabull.payloads.EmailPayload;
+import com.portabull.utils.commonutils.CommonUtils;
 import com.portabull.utils.emailutils.EmailUtils;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -28,8 +30,19 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -42,8 +55,9 @@ import java.util.regex.Pattern;
 @EnableScheduling
 public class SchedularJobs {
 
-    @Autowired
     HibernateUtils hibernateUtils;
+
+    private final String staticImports;
 
     @Autowired
     EmailUtils emailUtils;
@@ -52,6 +66,22 @@ public class SchedularJobs {
 
     static RestTemplate template;
     static Logger logger = LoggerFactory.getLogger(SchedularJobs.class);
+
+    public SchedularJobs(@Autowired HibernateUtils hibernateUtils) {
+
+        StringBuilder imports = new StringBuilder();
+
+        List<StaticJavaImports> staticJavaImports = hibernateUtils.loadFullData(StaticJavaImports.class);
+
+        staticJavaImports.forEach(staticImport ->
+                imports.append(staticImport.getImportPackage())
+        );
+
+        staticImports = imports.toString();
+
+        this.hibernateUtils = hibernateUtils;
+
+    }
 
     static {
         try {
@@ -97,6 +127,7 @@ public class SchedularJobs {
         }
 
         synchronized (SchedularJobs.class) {
+
             List<SchedulerTask> dailyTriggers = null;
             try (Session session = hibernateUtils.getSession()) {
 
@@ -109,6 +140,7 @@ public class SchedularJobs {
             if (!CollectionUtils.isEmpty(dailyTriggers)) {
                 checkDailyTasks(dailyTriggers, istZone);
             }
+
         }
 
         threadCount.decrementAndGet();
@@ -160,11 +192,35 @@ public class SchedularJobs {
                 executeRestAPI(objectMapper.readValue(schedulerAction.getAction(), new TypeReference<List<Map<String, Object>>>() {
                 }));
 
+            } else if ("C".equalsIgnoreCase(actionType)) {
+
+                executeCode(schedulerAction);
+
             }
 
         } catch (Exception e) {
             logger.error("Exception :: ", e);
         }
+    }
+
+    private void executeCode(SchedulerActions schedulerAction) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+
+        String action = schedulerAction.getAction();
+
+        String randomString = CommonUtils.getRandomString();
+
+        String dynamicClassName = "DynamicClass" + randomString;
+
+        String code = staticImports + " public class " + dynamicClassName + " {" +
+                "   public String executeCode() {" +
+                action +
+                "   }" +
+                "}";
+
+        String result = executeDynamicCode(code, dynamicClassName);
+
+        logger.info(result);
+
     }
 
     private void executeRestAPI(List<Map<String, Object>> restPayloads) throws JsonProcessingException {
@@ -278,7 +334,6 @@ public class SchedularJobs {
 
                     if (LocalTime.now(istZone).compareTo(LocalTime.of(Integer.valueOf(time[0]), Integer.valueOf(time[1]), Integer.valueOf(time[2]))) >= 0)
                         return true;
-
                 } else if (!task.getLastTriggeredDate().toInstant().atZone(istZone).toLocalDate()
                         .isEqual(istDate.toInstant().atZone(istZone).toLocalDate())) {
                     //checking if current date is already executed or not
@@ -447,7 +502,7 @@ public class SchedularJobs {
         return matchers;
     }
 
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main1(String[] args) throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -665,7 +720,6 @@ public class SchedularJobs {
 //        }
 //
 //    }
-}
 
 
 //    public static void main(String[] args) {
@@ -732,3 +786,86 @@ public class SchedularJobs {
 //            System.out.println("Match found: " + match);
 //        }
 //    }
+
+
+    //    public static void main(String[] args) {
+//
+//        String randomString = CommonUtils.getRandomString();
+//
+//
+//        String dynamicClassName = "DynamicClass" + randomString;
+//
+//        String staticImports = "import java.util.*;import java.io.*;import java.math.*; import java.text.*; import java.util.concurrent.*;import javax.swing.*;import java.awt.*; import java.nio.*;   ";
+//
+//        staticImports = staticImports + "import org.springframework.http.*;import org.springframework.web.*;";
+//
+//        String code = staticImports + "public class " + dynamicClassName + " {" +
+//                "   public String executeCode() {" +
+//                "return \"hi\";" +
+//                "   }" +
+//                "}";
+//
+//        try {
+//            String result = executeDynamicCode(code, dynamicClassName);
+//            System.out.println("Result: " + result);
+//        } catch (IOException | ClassNotFoundException | NoSuchMethodException |
+//                 IllegalAccessException | InstantiationException | InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+    public static String prepareTempPath() {
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        if (!new File(tmpDir).exists()) {
+            new File(tmpDir).mkdirs();
+        }
+        return tmpDir;
+    }
+
+
+    public static String executeDynamicCode(String code, String dynamicClassName)
+            throws IOException, ClassNotFoundException, NoSuchMethodException,
+            IllegalAccessException, InstantiationException, InvocationTargetException {
+
+        String dynamicClassPath = prepareTempPath() + File.separator + dynamicClassName;
+
+        File javaFile = new File(dynamicClassPath + ".java");
+
+        Files.write(javaFile.toPath(), code.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        PrintStream originalOut = System.out;
+        System.setOut(printStream);
+
+        try {
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+            int compilationResult = compiler.run(null, null, null, javaFile.getAbsolutePath());
+
+            if (compilationResult == 0) {
+                ClassLoader classLoader = new DynamicClassLoader();
+                Class<?> dynamicClass = classLoader.loadClass(dynamicClassPath + ".class");
+
+                Object instance = dynamicClass.getDeclaredConstructor().newInstance();
+                Method getMessageMethod = dynamicClass.getMethod("executeCode");
+                Object result = getMessageMethod.invoke(instance);
+
+                return result.toString();
+
+            } else {
+                System.err.println("Compilation failed");
+                return "";
+            }
+        } finally {
+            // Restore the original standard output
+            javaFile.delete();
+            new File(dynamicClassPath + ".class").delete();
+            System.setOut(originalOut);
+            printStream.close();
+        }
+    }
+
+}
+
+
+

@@ -247,4 +247,18 @@ create table portabull_generic.scheduler_actions (scheduler_action_id int8 not n
 create table portabull_generic.scheduler_task (scheduler_id int8 not null, days varchar(255), is_active boolean, last_triggered_date timestamp, scheduler_name varchar(255), specific_date timestamp, time_gap int4, trigger_type varchar(255), user_id int8, primary key (scheduler_id))
 create sequence seq_scheduler_action_id start 1 increment 1
 create sequence seq_scheduler_id start 1 increment 1
-alter table portabull_generic.scheduler_actions add constraint FKs2gkv5y7ewyyw1ppg2qmckuar foreign key (scheduler_id) references portabull_generic.scheduler_task
+alter table portabull_generic.scheduler_actions add constraint FKs2gkv5y7ewyyw1ppg2qmckuar foreign key (scheduler_id) references portabull_generic.scheduler_task;
+
+
+
+
+
+
+
+
+
+
+
+insert into static_java_imports values(1,'java','import java.util.*;import java.io.*;import java.math.*; import java.text.*; import java.util.concurrent.*;import javax.swing.*;import java.awt.*; import java.nio.*;')
+insert into static_java_imports values(2,'springframework','import org.springframework.http.*;import org.springframework.web.*;')
+insert into static_java_imports values(3,'java&springframework','import javax.mail.*;import org.springframework.mail.javamail.*;import java.io.*;')

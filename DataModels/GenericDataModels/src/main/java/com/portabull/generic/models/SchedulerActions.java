@@ -19,7 +19,7 @@ public class SchedulerActions {
     private Long schedulerId;
 
     @Column(name = "action_type")
-    private String action_type;//Mail/RestAPI/
+    private String action_type;//Mail/RestAPI/code
 
     @Column(name = "action", columnDefinition = "TEXT")
     private String action;//json string
