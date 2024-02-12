@@ -344,7 +344,7 @@ public class SchedularJobs {
 
         PortableResponse response = execute(BASE_URL + "gs/job/send-email", mailPayload);
 
-        logger.info(response.getStatus());
+        logger.info("sendEmail : {} ", response.getStatus());
 
     }
 
@@ -352,7 +352,7 @@ public class SchedularJobs {
 
         PortableResponse response = execute(BASE_URL + "gs/job/execute-rest-api", restPayloads);
 
-        logger.info(response.getStatus());
+        logger.info("executeRestAPI : {}", response.getStatus());
 
     }
 
@@ -378,7 +378,7 @@ public class SchedularJobs {
 
         PortableResponse response = execute(BASE_URL + "gs/job/execute-dynamic-code", payload);
 
-        logger.info(response.getData().toString());
+        logger.info("executeCode : {}", response.getData().toString());
 
     }
 
