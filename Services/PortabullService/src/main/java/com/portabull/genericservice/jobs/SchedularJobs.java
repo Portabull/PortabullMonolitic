@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portabull.dbutils.HibernateUtils;
-import com.portabull.execption.BadRequestException;
 import com.portabull.generic.models.SchedulerActions;
 import com.portabull.generic.models.SchedulerTask;
 import com.portabull.generic.models.StaticJavaImports;
-import com.portabull.payloads.EmailPayload;
+import com.portabull.response.PortableResponse;
 import com.portabull.utils.commonutils.CommonUtils;
-import com.portabull.utils.emailutils.EmailUtils;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,37 +17,26 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 @EnableScheduling
@@ -59,29 +46,18 @@ public class SchedularJobs {
 
     private final String staticImports;
 
-    @Autowired
-    EmailUtils emailUtils;
-
     static ObjectMapper objectMapper;
 
     static RestTemplate template;
-    static Logger logger = LoggerFactory.getLogger(SchedularJobs.class);
 
-    public SchedularJobs(@Autowired HibernateUtils hibernateUtils) {
+    static String BASE_URL;
 
-        StringBuilder imports = new StringBuilder();
-
-        List<StaticJavaImports> staticJavaImports = hibernateUtils.loadFullData(StaticJavaImports.class);
-
-        staticJavaImports.forEach(staticImport ->
-                imports.append(staticImport.getImportPackage())
-        );
-
-        staticImports = imports.toString();
-
-        this.hibernateUtils = hibernateUtils;
-
+    @Value("${portabull.home.page.url}")
+    public synchronized void setEmailFrom(String baseUrl) {
+        SchedularJobs.BASE_URL = baseUrl;
     }
+
+    static Logger logger = LoggerFactory.getLogger(SchedularJobs.class);
 
     static {
         try {
@@ -112,6 +88,22 @@ public class SchedularJobs {
         }
     }
 
+    public SchedularJobs(@Autowired HibernateUtils hibernateUtils) {
+
+        StringBuilder imports = new StringBuilder();
+
+        List<StaticJavaImports> staticJavaImports = hibernateUtils.loadFullData(StaticJavaImports.class);
+
+        staticJavaImports.forEach(staticImport ->
+                imports.append(staticImport.getImportPackage())
+        );
+
+        staticImports = imports.toString();
+
+        this.hibernateUtils = hibernateUtils;
+
+    }
+
     private static final AtomicInteger threadCount = new AtomicInteger();
 
     @Scheduled(cron = "1 * * * * *")
@@ -128,17 +120,39 @@ public class SchedularJobs {
 
         synchronized (SchedularJobs.class) {
 
-            List<SchedulerTask> dailyTriggers = null;
+            List<SchedulerTask> dailyTriggers;
+            List<SchedulerTask> timeToTimeTriggers;
+            List<SchedulerTask> specificTimeTriggers;
             try (Session session = hibernateUtils.getSession()) {
 
                 dailyTriggers = session.createQuery(" FROM SchedulerTask WHERE triggerType=:triggerType AND isActive=:isActive").
                         setParameter("triggerType", "D")
                         .setParameter("isActive", true).list();
 
+                timeToTimeTriggers = session.createQuery(" FROM SchedulerTask WHERE triggerType=:triggerType AND isActive=:isActive").
+                        setParameter("triggerType", "T")
+                        .setParameter("isActive", true).list();
+
+
+                specificTimeTriggers = session.createQuery(" FROM SchedulerTask WHERE triggerType=:triggerType AND isActive=:isActive AND lastTriggeredDate IS NULL").
+                        setParameter("triggerType", "S")
+                        .setParameter("isActive", true).list();
             }
 
             if (!CollectionUtils.isEmpty(dailyTriggers)) {
                 checkDailyTasks(dailyTriggers, istZone);
+            }
+
+            dailyTriggers.clear();
+
+            if (!CollectionUtils.isEmpty(timeToTimeTriggers)) {
+                checkTimeToTimeTriggers(timeToTimeTriggers, istZone);
+            }
+
+            timeToTimeTriggers.clear();
+
+            if (!CollectionUtils.isEmpty(specificTimeTriggers)) {
+                checkSpecificTimeTriggers(specificTimeTriggers, istZone);
             }
 
         }
@@ -146,6 +160,74 @@ public class SchedularJobs {
         threadCount.decrementAndGet();
 
         logger.info("SchedularJobs :: ended");
+    }
+
+    private void checkSpecificTimeTriggers(List<SchedulerTask> specificTimeTriggers, ZoneId istZone) {
+
+        specificTimeTriggers.forEach(specificTimeTrigger -> {
+
+            LocalDateTime now = LocalDateTime.now(istZone);
+
+            Date istDate = Date.from(now.atZone(istZone).toInstant());
+
+            if (!checkConfigAvailable(specificTimeTrigger, istDate))
+                return;
+
+            triggerTasks(specificTimeTrigger.getSchedulerActions());
+
+            specificTimeTrigger.setLastTriggeredDate(istDate);
+
+            hibernateUtils.saveOrUpdateEntity(specificTimeTrigger);
+
+        });
+
+    }
+
+    private boolean checkConfigAvailable(SchedulerTask specificTimeTrigger, Date istDate) {
+
+        if (specificTimeTrigger.getSpecificDate().getTime() >= istDate.getTime()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void checkTimeToTimeTriggers(List<SchedulerTask> timeToTimeTriggers, ZoneId istZone) {
+
+        timeToTimeTriggers.forEach(timeToTimeTrigger -> {
+
+            LocalDateTime now = LocalDateTime.now(istZone);
+
+            Date istDate = Date.from(now.atZone(istZone).toInstant());
+
+            if (!checkConfigAvailable(timeToTimeTrigger, now, istZone))
+                return;
+
+            triggerTasks(timeToTimeTrigger.getSchedulerActions());
+
+            timeToTimeTrigger.setLastTriggeredDate(istDate);
+
+            hibernateUtils.saveOrUpdateEntity(timeToTimeTrigger);
+
+        });
+
+    }
+
+    private boolean checkConfigAvailable(SchedulerTask task, LocalDateTime now, ZoneId istZone) {
+
+        if (task.getLastTriggeredDate() == null) {
+            return true;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(task.getLastTriggeredDate());
+        calendar.add(Calendar.MINUTE, task.getTimeGap());
+
+        if (calendar.getTime().getTime() >= Date.from(now.atZone(istZone).toInstant()).getTime()) {
+            return true;
+        }
+
+        return false;
     }
 
     private void checkDailyTasks(List<SchedulerTask> dailyTriggerTime, ZoneId istZone) {
@@ -203,121 +285,6 @@ public class SchedularJobs {
         }
     }
 
-    private void executeCode(SchedulerActions schedulerAction) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-
-        String action = schedulerAction.getAction();
-
-        String randomString = CommonUtils.getRandomString();
-
-        String dynamicClassName = "DynamicClass" + randomString;
-
-        String code = staticImports + " public class " + dynamicClassName + " {" +
-                "   public String executeCode() {" +
-                action +
-                "   }" +
-                "}";
-
-        String result = executeDynamicCode(code, dynamicClassName);
-
-        logger.info(result);
-
-    }
-
-    private void executeRestAPI(List<Map<String, Object>> restPayloads) throws JsonProcessingException {
-
-        List<String> restResponses = new ArrayList<>();
-
-        for (Map<String, Object> restPayload : restPayloads) {
-
-            HttpEntity entity;
-
-            String url = getStringDependencyResponse(restPayload.get("url").toString(), restResponses);
-
-            HttpHeaders httpHeaders = getHeaders((Map<String, String>) restPayload.get("headers"), restResponses);
-
-            Object body = getBody(restPayload.get("body"), restResponses);
-
-            String method = restPayload.get("method").toString();
-
-            if (body != null && !StringUtils.isEmpty(body)) {
-                entity = new HttpEntity<>(body, httpHeaders);
-            } else {
-                entity = new HttpEntity(httpHeaders);
-            }
-
-            ResponseEntity<String> exchange = template.exchange(url, getHttpMethod(method), entity, String.class);
-
-            restResponses.add(exchange.getBody());
-
-        }
-
-    }
-
-    private Object getBody(Object body, List<String> restResponses) throws JsonProcessingException {
-
-        if (body == null) {
-            return body;
-        }
-
-        String stringBody;
-        if (body instanceof List) {
-            stringBody = getStringDependencyResponse(objectMapper.writeValueAsString(body), restResponses);
-            return objectMapper.readValue(stringBody, List.class);
-        } else if (body instanceof Map) {
-            stringBody = getStringDependencyResponse(objectMapper.writeValueAsString(body), restResponses);
-            return objectMapper.readValue(stringBody, Map.class);
-        } else {
-            stringBody = getStringDependencyResponse(body.toString(), restResponses);
-        }
-
-        return stringBody;
-    }
-
-    private HttpHeaders getHeaders(Map<String, String> headers, List<String> restResponses) throws JsonProcessingException {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        if (CollectionUtils.isEmpty(headers) || CollectionUtils.isEmpty(restResponses))
-            return httpHeaders;
-
-        List<String> matchers = new ArrayList<>();
-        for (String value : headers.values()) {
-            if (value != null) {
-                value = value.trim();
-                if (value.startsWith("{{") && value.endsWith("}}")) {
-                    List<String> matchers1 = getMatchers(value);
-                    matchers.addAll(matchers1);
-                }
-            }
-        }
-
-        Map<String, Object> data = prepareDependencyResponse(matchers, restResponses);
-
-        headers.forEach((hk, hv) -> {
-            if (data.containsKey(hv)) {
-                httpHeaders.put(hk, Arrays.asList(data.get(hv).toString()));
-            } else {
-                httpHeaders.put(hk, Arrays.asList(hv));
-            }
-        });
-
-        return httpHeaders;
-    }
-
-    private void sendEmail(Map<String, Object> mailPayload) {
-
-        EmailPayload emailPayload = new EmailPayload();
-
-        emailPayload.setTo((List<String>) mailPayload.get("to"));
-
-        emailPayload.setCc((List<String>) mailPayload.get("cc"));
-
-        emailPayload.setBody(mailPayload.get("body") != null ? mailPayload.get("body").toString() : null);
-
-        emailPayload.setSubject(mailPayload.get("subject") != null ? mailPayload.get("subject").toString() : null);
-
-        emailUtils.sendEmail(emailPayload);
-
-    }
 
     public static boolean checkConfigAvailable(SchedulerTask task, LocalDateTime now, Date istDate, ZoneId istZone) {
 
@@ -372,135 +339,56 @@ public class SchedularJobs {
 
     }
 
-    public HttpMethod getHttpMethod(String method) {
-        switch (method) {
-            case "POST":
-                return HttpMethod.POST;
-            case "GET":
-                return HttpMethod.GET;
-            case "PUT":
-                return HttpMethod.PUT;
-            case "DELETE":
-                return HttpMethod.DELETE;
-            default:
-                throw new BadRequestException("Method Not Found");
-        }
+
+    private void sendEmail(Map<String, Object> mailPayload) {
+
+        PortableResponse response = execute(BASE_URL + "gs/job/send-email", mailPayload);
+
+        logger.info(response.getStatus());
 
     }
 
+    private void executeRestAPI(List<Map<String, Object>> restPayloads) throws JsonProcessingException {
 
-    private String getStringDependencyResponse(String data, List<String> restResponses) throws JsonProcessingException {
+        PortableResponse response = execute(BASE_URL + "gs/job/execute-rest-api", restPayloads);
 
-        if (!CollectionUtils.isEmpty(restResponses))
-            return data;
-
-        List<String> matchers = getMatchers(data);
-
-        if (!CollectionUtils.isEmpty(matchers))
-            return data;
-
-        StringBuilder builder = new StringBuilder(data);
-
-        Map<String, Object> depResp = prepareDependencyResponse(matchers, restResponses);
-
-        depResp.forEach((k, v) -> {
-
-            String tempUrl = builder.toString();
-
-            tempUrl.replaceAll(k, v != null ? v.toString() : "");
-
-            builder.delete(0, builder.length());
-
-            builder.append(tempUrl);
-
-        });
-
-        return builder.toString();
+        logger.info(response.getStatus());
 
     }
 
-    private Number getFormattedValue(Object v) {
+    private void executeCode(SchedulerActions schedulerAction) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
 
-        if (v == null)
-            return null;
+        String action = schedulerAction.getAction();
 
+        String randomString = CommonUtils.getRandomString();
 
-        if (v instanceof Integer) {
-            return Integer.valueOf(v.toString());
-        } else if (v instanceof Long) {
-            return Long.valueOf(v.toString());
-        } else if (v instanceof Float) {
-            return Float.valueOf(v.toString());
-        } else if (v instanceof Double) {
-            return Double.valueOf(v.toString());
-        } else if (v instanceof Byte) {
-            return Byte.valueOf(v.toString());
-        } else if (v instanceof BigDecimal) {
-            return new BigDecimal(v.toString());
-        } else if (v instanceof BigInteger) {
-            return new BigInteger(v.toString());
-        }
+        String dynamicClassName = "DynamicClass" + randomString;
 
+        String code = staticImports + " public class " + dynamicClassName + " {" +
+                "   public String executeCode() {" +
+                action +
+                "   }" +
+                "}";
 
-        return 0;
+        Map<String, String> payload = new HashMap<>();
+
+        payload.put("code", code);
+
+        payload.put("dynamicClassName", dynamicClassName);
+
+        PortableResponse response = execute(BASE_URL + "gs/job/execute-dynamic-code", payload);
+
+        logger.info(response.getData().toString());
+
     }
 
-    private Map<String, Object> prepareDependencyResponse(List<String> matchers, List<String> restResponses) throws JsonProcessingException {
+    private PortableResponse execute(String url, Object payload) {
 
-        Map<String, Object> result = new HashMap<>();
+        ResponseEntity<PortableResponse> response = template.postForEntity(url, new HttpEntity<>(payload), PortableResponse.class);
 
-        for (int i = 0; i < matchers.size(); i++) {
-
-            String match = matchers.get(i);
-
-            String[] responseWithDependency = match.split(",");
-
-            String code = responseWithDependency[0];
-
-            Object o = restResponses.get(Integer.valueOf(responseWithDependency[1]) - 1);
-
-            Map<String, Object> dependencyResponse;
-            if (o instanceof Map) {
-                dependencyResponse = (Map<String, Object>) o;
-            } else {
-                dependencyResponse = objectMapper.readValue(o.toString(), Map.class);
-            }
-
-            String[] tags = code.split("->");
-
-            Object finalDependency = null;
-
-            for (int j = 1; j < tags.length; j++) {
-
-                String tag = tags[j];
-
-                if (dependencyResponse != null && j == 1)
-                    finalDependency = dependencyResponse.get(tag);
-                else if (finalDependency != null && finalDependency instanceof Map)
-                    finalDependency = ((Map<String, Object>) finalDependency).get(tag);
-
-            }
-
-            result.put("{{" + match + "}}", finalDependency);
-
-        }
-
-        return result;
+        return response.getBody();
     }
 
-
-    public List<String> getMatchers(String data) {
-
-        List<String> matchers = new ArrayList<>();
-
-        Matcher matcher = Pattern.compile("\\{\\{([^}]+)}}").matcher(data);
-
-        while (matcher.find()) {
-            matchers.add(matcher.group(1));
-        }
-
-        return matchers;
-    }
 
     public static void main1(String[] args) throws JsonProcessingException {
 
@@ -814,57 +702,6 @@ public class SchedularJobs {
 //        }
 //    }
 //
-    public static String prepareTempPath() {
-        String tmpDir = System.getProperty("java.io.tmpdir");
-        if (!new File(tmpDir).exists()) {
-            new File(tmpDir).mkdirs();
-        }
-        return tmpDir;
-    }
-
-
-    public static String executeDynamicCode(String code, String dynamicClassName)
-            throws IOException, ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InstantiationException, InvocationTargetException {
-
-        String dynamicClassPath = prepareTempPath() + File.separator + dynamicClassName;
-
-        File javaFile = new File(dynamicClassPath + ".java");
-
-        Files.write(javaFile.toPath(), code.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-        PrintStream originalOut = System.out;
-        System.setOut(printStream);
-
-        try {
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int compilationResult = compiler.run(null, null, null, javaFile.getAbsolutePath());
-
-            if (compilationResult == 0) {
-                ClassLoader classLoader = new DynamicClassLoader();
-                Class<?> dynamicClass = classLoader.loadClass(dynamicClassPath + ".class");
-
-                Object instance = dynamicClass.getDeclaredConstructor().newInstance();
-                Method getMessageMethod = dynamicClass.getMethod("executeCode");
-                Object result = getMessageMethod.invoke(instance);
-
-                return result.toString();
-
-            } else {
-                System.err.println("Compilation failed");
-                return "";
-            }
-        } finally {
-            // Restore the original standard output
-            javaFile.delete();
-            new File(dynamicClassPath + ".class").delete();
-            System.setOut(originalOut);
-            printStream.close();
-        }
-    }
-
 }
 
 
