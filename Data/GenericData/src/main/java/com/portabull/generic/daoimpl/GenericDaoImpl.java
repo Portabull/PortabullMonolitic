@@ -49,21 +49,23 @@ public class GenericDaoImpl implements GenericDao {
 
         task.setActive(true);
 
-        task.setDays(payload.get("days").toString());
+        task.setDays(payload.get("days") != null ? payload.get("days").toString() : null);
 
         task.setUserId(CommonUtils.getLoggedInUserId());
 
         task.setSchedulerName(payload.get("schedulerName").toString());
 
-        task.setSpecificDailyTime(payload.get("specificDailyTime").toString());
+        task.setSpecificDailyTime(payload.get("specificDailyTime") != null ? payload.get("specificDailyTime").toString() : null);
 
         task.setTriggerType(payload.get("triggerType").toString());
+
+        task.setTimeGap(payload.get("timeGap") != null ? Integer.valueOf(payload.get("timeGap").toString()) : null);
 
         hibernateUtils.saveOrUpdateEntity(task);
 
         List<Map<String, Object>> schedulerActions = (List<Map<String, Object>>) payload.get("schedulerActions");
 
-        schedulerActions.forEach(action->{
+        schedulerActions.forEach(action -> {
             SchedulerActions actions = new SchedulerActions();
             actions.setSchedulerId(task.getSchedulerId());
             actions.setAction(action.get("action").toString());
