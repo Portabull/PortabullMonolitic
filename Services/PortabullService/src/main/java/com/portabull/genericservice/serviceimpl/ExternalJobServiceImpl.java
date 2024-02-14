@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
+import com.portabull.dbutils.HibernateUtils;
 import com.portabull.execption.BadRequestException;
+import com.portabull.generic.models.TempJsonKeka;
 import com.portabull.genericservice.jobs.DynamicClassLoader;
 import com.portabull.genericservice.service.ExternalJobService;
 import com.portabull.payloads.EmailPayload;
@@ -21,6 +23,8 @@ import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -46,6 +50,9 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
     @Autowired
     EmailUtils emailUtils;
+
+    @Autowired
+    HibernateUtils hibernateUtils;
 
     static ObjectMapper objectMapper;
 
@@ -143,6 +150,134 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         String result = executeDynamicCode(code, dynamicClassName);
 
         return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, result);
+    }
+
+    @Override
+    public Object tempEndpointKeka(String refreshToken, String flag) throws IOException {
+
+        try{
+
+            Map<String, Object> locationAddress = new HashMap<>();
+            ResponseEntity<String> stringResponseEntity ;
+            locationAddress.put("longitude", 78.3722332);
+            locationAddress.put("latitude", 17.540904);
+            locationAddress.put("zip", "500090");
+            locationAddress.put("countryCode", "IN");
+            locationAddress.put("state", "Telangana");
+            locationAddress.put("city", "Hyderabad");
+            locationAddress.put("addressLine1", "Bachupally, Bachupalli Road, Bachupally, Hyderabad 500090, Telangana");
+            locationAddress.put("addressLine2", "Hyderabad");
+
+            Map<String, Object> locationAddressLogout = new HashMap<>();
+
+            locationAddressLogout.put("longitude", 78.3856336);
+            locationAddressLogout.put("latitude", 17.5504239);
+            locationAddressLogout.put("zip", "500090");
+            locationAddressLogout.put("countryCode", "IN");
+            locationAddressLogout.put("state", "Telangana");
+            locationAddressLogout.put("city", "Hyderabad");
+            locationAddressLogout.put("addressLine1", "Bachupally, Lahari Green Park Road, Bachupally, Hyderabad 500090, Telangana");
+            locationAddressLogout.put("addressLine2", "Hyderabad");
+
+
+            String tempRefreshToken = "";
+
+            List<TempJsonKeka> tempJsonKekas = hibernateUtils.loadFullData(TempJsonKeka.class);
+
+            if (CollectionUtils.isEmpty(tempJsonKekas)) {
+                TempJsonKeka tempJsonKeka = new TempJsonKeka();
+                tempJsonKeka.setRefreshToken(refreshToken);
+                hibernateUtils.saveOrUpdateEntity(tempJsonKeka);
+                tempJsonKekas.add(tempJsonKeka);
+            }
+
+            tempRefreshToken = tempJsonKekas.get(0).getRefreshToken();
+
+            if (StringUtils.isEmpty(tempRefreshToken)) {
+                tempRefreshToken = refreshToken;
+            }
+
+
+            MultiValueMap<String, String> payload = new LinkedMultiValueMap<>();
+            payload.put("grant_type", Arrays.asList("refresh_token"));
+            payload.put("scope", Arrays.asList("offline_access kekahr.api hiro.api"));
+            payload.put("refresh_token", Arrays.asList(tempRefreshToken));
+            payload.put("client_id", Arrays.asList("987cc971-fc22-4454-99f9-16c078fa7ff6"));
+
+            HttpHeaders he = new HttpHeaders();
+
+            he.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
+
+            he.put("Cookie", Arrays.asList(".AspNetCore.Identity.Application=CfDJ8FqpALfnMQpJuN2iskteUFw4iqrx2K2zHbcGQkh1atO5TZlg8gFyrHcXgi_J5ufqaCXzIvRQCLSS63lyfXfsZzYJSm7RjGXniGvIaru-6VSMagiWEePmL4dUMezxMEcxdQ5TwwhLLFgFcDwTpjXdMMJuiaiIC5hC5WXCzPTGtiQvSC2aF0ESlDAHFN0mBYKCNVteQKxCvvBVR-9dVOJRdqr5VLbi5qj09oSzVsQEbAmMl4Msd1J8IezujRMan2gYwJ_v0zhX1C7zuAUQM1wdAYlZP2S_-_1NGiodwx6iXuiopMzNyg5BmE5SFu6ojQd_ymQStvd9xl062WniJXMP8AsCz_zz8AlzMpfYsyHXZRnz9GoE5Lgx6gZv90VyJ6NJXxENxc8UWsfEgDoK34dA5JfMlExyEQPcBwRSWLN5UDI3QHowOl-k8RJVCrLvaGEbOenX6gTh26t7haPamHwIpm2ZWP4AuAXya8Xopj9ghx4EBr6Pb9z6iTGOyIS7-SVA7ldWdl8WfjfaWqYdkIwgom8GBsq0ObzzpIKPTYKyyy7Jj3Ua79vOWBV6O3mb8eqwePRZuInwBGcdTeZjVww5K0ehQPWGqKBaxhSS88gFHVs0xxzxkEXwz5EaHixWjMGu2r54OsgNDICnIhQhgrbDBJGe9b2TJk8e8k4k0_o6i5kQOO3l6a90_qikiAU7-kdFoW0UTLh6anm32BlNM8dN5nFhvifQyLddOD69A2R4dseWUE3LwSEV0606TVQp6wrHYqmHL9Hs-RYf-CS9a2novE95eNiiRk9isWpzI1ml_mRi7T3wyp2EyRevu2AkkJzU8B5ieFcZSz6eMTBy5Dz0gWwjLNA0RriJL0gOHTqNRKtVlzEK89jscpC9qtEx8KPqqFOjjGLstU8KLGlbAH3lzKDYLoVBlT_sYxDY8dB6pHIES-3u7bMPQlB9APq10rETZwBoCM4m3C_6bKlUmURy72BE4WLtFGiplx08Xzqe-p91rc4qRFLm1fHl6cj33epgYP4UG84HYiJbs5eR-E85WEoY7fAItFJ5UGdP6rUWOoUER6-_XczxhWeKhB8DuzdEsbZ7YlrXjNqkVVbyY42-QpgaSOvDTn6oD8o_X0IumLCtDSBHFQ2C8Umqo7xviSD5TJAb9xG4Qsq451K4qDlmcO3P1kumpbiE-1EHM0rmJg8M0e4GelXboSla7NsLVTAYTy-x76cQt74z5kxdUfb2lWt-KDtXXcbU7s--jrK2uiBb5QQRLMCFgXbjv49YzdaQJ2Fk-1sYSbdLaHirVM4_FqqpaEZiOo1zjAStufpj7Em3jcvLaNtzHnlPEOwraB8Dusik42W4grWpKbPbyKCpcrxE6LlDt6CbCEW8Kw1drqa-KLhLjScI2U6UY2KAdYlzidN3W97Ob1ZeUqYlslu2hjPcflvvepl6-c9Ho5FZVjHXpYwX_xPjBaNgVoIO3D6-pElGnyqsI8zleblGs5VRqd0YOQLow2vS2reePHizg77y2XHo5B_GvEwrEj-F_jIb3S9USmyBoJzGpTqnqbWeLTR6Yp2ZW0ob-OVikjRW_LDT; TiPMix=56.53782164744028; idsrv.session=EBF800D9CA154B3BC1B1190AED7A1F5F; x-ms-routing-name=self"));
+
+            ResponseEntity<Map> response = template.postForEntity(
+                    "https://app.keka.com/connect/token", new HttpEntity<>(payload, he), Map.class);
+
+            if (response.getBody().containsKey("error")) {
+                payload.put("refresh_token", Arrays.asList(refreshToken));
+                response = template.postForEntity(
+                        "https://app.keka.com/connect/token", new HttpEntity<>(payload, new HttpHeaders()), Map.class);
+            }
+
+
+            tempRefreshToken = response.getBody().get("refresh_token").toString();
+
+
+            tempJsonKekas.get(0).setRefreshToken(tempRefreshToken);
+            hibernateUtils.saveOrUpdateEntity(tempJsonKekas.get(0));
+
+            String accessToken = response.getBody().get("access_token").toString();
+
+            if (flag.equalsIgnoreCase("login")) {
+
+                HttpHeaders loginheaders = new HttpHeaders();
+
+                loginheaders.put("authorization", Arrays.asList("Bearer " + accessToken));
+
+                loginheaders.put("cookie", Arrays.asList("Subdomain=datagaps.keka.com; ai_user=HL6sONPG4u1RAoH7RtXu64|2023-12-14T03:28:52.419Z; _clsk=13fkcaj%7C1706548729195%7C8%7C1%7Co.clarity.ms%2Fcollect; _clck=1t8ebxf%7C2%7Cfiu%7C0%7C1443; ai_session=6hB7sVeiiv58F/6jv+q9U+|1706587360936|1706587360936"));
+                loginheaders.put("content-type",Arrays.asList("application/json; charset=UTF-8"));
+                Map<String, Object> loginPayload = new HashMap<>();
+
+                loginPayload.put("attendanceLogSource", 1);
+                loginPayload.put("locationAddress", locationAddress);
+                loginPayload.put("manualClockinType", 3);
+                loginPayload.put("note", "");
+                loginPayload.put("originalPunchStatus", 0);
+
+
+                stringResponseEntity = template.postForEntity("https://datagaps.keka.com/k/attendance/api/mytime/attendance/remoteclockin"
+                        , new HttpEntity<>(loginPayload, loginheaders), String.class);
+            }else{
+
+                HttpHeaders logoutheaders = new HttpHeaders();
+
+                logoutheaders.put("authorization", Arrays.asList("Bearer " + accessToken));
+
+                logoutheaders.put("cookie", Arrays.asList("Subdomain=datagaps.keka.com; ai_user=HL6sONPG4u1RAoH7RtXu64|2023-12-14T03:28:52.419Z; _clsk=13fkcaj%7C1706548729195%7C8%7C1%7Co.clarity.ms%2Fcollect; _clck=1t8ebxf%7C2%7Cfiu%7C0%7C1443; ai_session=6hB7sVeiiv58F/6jv+q9U+|1706587360936|1706587360936"));
+
+                logoutheaders.put("content-type",Arrays.asList("application/json; charset=UTF-8"));
+
+                Map<String, Object> loginPayload = new HashMap<>();
+
+                loginPayload.put("attendanceLogSource", 1);
+                loginPayload.put("locationAddress", locationAddressLogout);
+                loginPayload.put("manualClockinType", 3);
+                loginPayload.put("note", "");
+                loginPayload.put("originalPunchStatus", 1);
+
+
+                stringResponseEntity = template.postForEntity("https://datagaps.keka.com/k/attendance/api/mytime/attendance/remoteclockin"
+                        , new HttpEntity<>(loginPayload, logoutheaders), String.class);
+            }
+
+
+            return stringResponseEntity.getBody();
+        }catch (Exception e){
+            logger.error("",e);
+        }
+
+        return "failed";
+
     }
 
 

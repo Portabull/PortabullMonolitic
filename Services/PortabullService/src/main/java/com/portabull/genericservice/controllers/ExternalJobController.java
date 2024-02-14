@@ -6,10 +6,7 @@ import com.portabull.response.PortableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -44,5 +41,11 @@ public class ExternalJobController {
 
     }
 
+    @PostMapping("temp-endpoint-keka")
+    public ResponseEntity<Object> tempEndpointKeka(@RequestParam String refreshToken, @RequestParam String flag) throws IOException {
+
+        return new ResponseEntity<>(jobService.tempEndpointKeka(refreshToken, flag), HttpStatus.OK);
+
+    }
 
 }

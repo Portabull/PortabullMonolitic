@@ -16,4 +16,5 @@ public interface ExternalJobService {
 
     public PortableResponse executeCode(Map<String, String> codePayload) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException;
 
+    Object tempEndpointKeka(String refreshToken, String flag) throws IOException;
 }
