@@ -14,6 +14,8 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -46,6 +48,8 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     EmailUtils emailUtils;
 
     static ObjectMapper objectMapper;
+
+    static Logger logger = LoggerFactory.getLogger(ExternalJobServiceImpl.class);
 
     static RestTemplate template;
 
@@ -326,6 +330,9 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         System.setOut(printStream);
 
         try {
+            logger.info("********************************************************");
+            logger.info(code);
+            logger.info("********************************************************");
             JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
             int compilationResult = compiler.run(null, null, null, javaFile.getAbsolutePath());
 
@@ -345,8 +352,8 @@ public class ExternalJobServiceImpl implements ExternalJobService {
             }
         } finally {
             // Restore the original standard output
-            javaFile.delete();
-            new File(dynamicClassPath + ".class").delete();
+//            javaFile.delete();
+//            new File(dynamicClassPath + ".class").delete();
             System.setOut(originalOut);
             printStream.close();
         }
