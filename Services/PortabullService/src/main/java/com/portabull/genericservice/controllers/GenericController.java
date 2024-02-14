@@ -3,7 +3,9 @@ package com.portabull.genericservice.controllers;
 import com.portabull.constants.LoggerErrorConstants;
 import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
+import com.portabull.constants.StatusCodes;
 import com.portabull.execption.BadRequestException;
+import com.portabull.genericservice.jobs.SchedularJobs;
 import com.portabull.genericservice.service.GenericEmailService;
 import com.portabull.genericservice.service.GenericService;
 import com.portabull.loggerutils.LoggerUtils;
@@ -15,6 +17,7 @@ import com.portabull.response.PortableResponse;
 import com.portabull.utils.DownloadUtils;
 import com.portabull.utils.JsonUtils;
 import com.portabull.utils.QRCodeGenerator;
+import com.portabull.utils.commonutils.CommonUtils;
 import com.portabull.utils.validationutils.FileValidationUtils;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,9 @@ public class GenericController {
 
     @Autowired
     GenericService genericService;
+
+    @Autowired
+    SchedularJobs schedularJobs;
 
     Logger logger = LoggerUtils.getLogger(GenericController.class);
 
@@ -157,5 +163,22 @@ public class GenericController {
 
     }
 
+    @PostMapping("save-cache")
+    public ResponseEntity<PortableResponse> saveCache(@RequestBody Map<String, Object> data) {
+
+        return new ResponseEntity<>(genericService.saveCache(data), HttpStatus.OK);
+
+    }
+
+    @PostMapping("execute-code")
+    public ResponseEntity<PortableResponse> executeCode(@RequestBody Map<String, Object> data) {
+
+        String code = data.get("code").toString();
+
+        return new ResponseEntity<>(new PortableResponse(
+                "", StatusCodes.C_200, PortableConstants.SUCCESS,
+                schedularJobs.executeCode(code, CommonUtils.getLoggedInUserId())), HttpStatus.OK);
+
+    }
 
 }

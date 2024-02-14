@@ -15,7 +15,7 @@ public class StaticJavaImports {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
     private Long schedulerId;
 
-    @Column(name = "import_package")
+    @Column(name = "import_package", columnDefinition = "TEXT")
     private String importPackage;
 
     @Column(name = "framework_name")

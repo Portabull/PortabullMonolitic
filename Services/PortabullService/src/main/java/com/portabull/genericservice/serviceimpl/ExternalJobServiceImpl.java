@@ -308,7 +308,13 @@ public class ExternalJobServiceImpl implements ExternalJobService {
             throws IOException, ClassNotFoundException, NoSuchMethodException,
             IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        String dynamicClassPath = prepareTempPath() + File.separator + dynamicClassName;
+        String tempPath = prepareTempPath() + File.separator + "java_temp_files" + File.separator;
+
+        if (!new File(tempPath).exists()) {
+            new File(tempPath).mkdirs();
+        }
+
+        String dynamicClassPath = tempPath + dynamicClassName;
 
         File javaFile = new File(dynamicClassPath + ".java");
 
@@ -335,7 +341,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
             } else {
                 System.err.println("Compilation failed");
-                return "";
+                return "Compilation failed";
             }
         } finally {
             // Restore the original standard output

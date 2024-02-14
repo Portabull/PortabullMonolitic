@@ -13,4 +13,6 @@ public interface GenericService {
     PortableResponse callRestService(Map<String, Object> payload);
 
     PortableResponse saveSchedularDetails(Map<String, Object> payload);
+
+    PortableResponse saveCache(Map<String, Object> data);
 }

@@ -1,14 +1,21 @@
 package com.portabull.genericservice.serviceimpl;
 
 import com.portabull.constants.PortableConstants;
+import com.portabull.constants.StatusCodes;
 import com.portabull.execption.BadRequestException;
+import com.portabull.execption.UnAuthorizedException;
+import com.portabull.generic.dao.CommonDao;
 import com.portabull.generic.dao.GenericDao;
+import com.portabull.generic.models.GenericCache;
 import com.portabull.genericservice.service.GenericService;
 import com.portabull.response.PortableResponse;
+import com.portabull.um.UserCredentials;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -20,11 +27,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -62,6 +68,9 @@ public class GenericServiceImpl implements GenericService {
 
     @Autowired
     GenericDao genericDao;
+
+    @Autowired
+    CommonDao commonDao;
 
     @Override
     public PortableResponse saveClientContactDetails(Map<String, String> payload) {
@@ -127,6 +136,73 @@ public class GenericServiceImpl implements GenericService {
 
         return genericDao.saveSchedularDetails(payload);
 
+    }
+
+    @Override
+    public PortableResponse saveCache(Map<String, Object> data) {
+
+        UserCredentials userCredentials = commonDao.findEntity(UserCredentials.class,
+                Long.valueOf(data.get("userId").toString()));
+
+        if (userCredentials == null)
+            throw new UnAuthorizedException(PortableConstants.AUTHENTICATION_FAILED);
+
+        boolean isGet = data.containsKey("get") ? Boolean.valueOf(data.get("get").toString()) : false;
+
+        String key = data.get("key").toString();
+
+        List<GenericCache> genericCaches = commonDao.findEntitiesByCriteria(GenericCache.class, "key", key,
+                "userId", userCredentials.getUserID());
+
+        if (isGet) {
+            if (!CollectionUtils.isEmpty(genericCaches)) {
+
+                GenericCache genericCache = genericCaches.get(0);
+
+                return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, genericCache.getValue());
+
+            } else {
+
+                return new PortableResponse("", StatusCodes.C_400, PortableConstants.SUCCESS, null);
+
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(genericCaches)) {
+
+            boolean overwrite = data.containsKey("overwrite") ? Boolean.valueOf(data.get("overwrite").toString()) : false;
+
+            if (overwrite) {
+
+                GenericCache genericCache = genericCaches.get(0);
+
+                genericCache.setKey(key);
+
+                genericCache.setValue(data.get("value").toString());
+
+                commonDao.saveOrUpdateEntity(genericCache);
+
+            } else {
+                return new PortableResponse("Key Exists, if you want to overwrite send the flag",
+                        StatusCodes.C_200, PortableConstants.SUCCESS, null);
+            }
+
+        } else {
+
+            GenericCache genericCache = new GenericCache();
+
+            genericCache.setUserId(userCredentials.getUserID());
+
+            genericCache.setKey(key);
+
+            genericCache.setValue(data.get("value").toString());
+
+            commonDao.saveOrUpdateEntity(genericCache);
+
+        }
+
+        return new PortableResponse("",
+                StatusCodes.C_200, PortableConstants.SUCCESS, null);
     }
 
     public HttpMethod getHttpMethod(String method) {

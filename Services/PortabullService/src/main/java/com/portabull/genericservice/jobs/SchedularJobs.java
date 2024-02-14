@@ -30,8 +30,6 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -173,7 +171,7 @@ public class SchedularJobs {
             if (!checkConfigAvailable(specificTimeTrigger, istDate))
                 return;
 
-            triggerTasks(specificTimeTrigger.getSchedulerActions());
+            triggerTasks(specificTimeTrigger.getSchedulerActions(), specificTimeTrigger.getUserId());
 
             specificTimeTrigger.setLastTriggeredDate(istDate);
 
@@ -203,7 +201,7 @@ public class SchedularJobs {
             if (!checkConfigAvailable(timeToTimeTrigger, now, istZone))
                 return;
 
-            triggerTasks(timeToTimeTrigger.getSchedulerActions());
+            triggerTasks(timeToTimeTrigger.getSchedulerActions(), timeToTimeTrigger.getUserId());
 
             timeToTimeTrigger.setLastTriggeredDate(istDate);
 
@@ -241,7 +239,7 @@ public class SchedularJobs {
             if (!checkConfigAvailable(dailyTrigger, now, istDate, istZone))
                 return;
 
-            triggerTasks(dailyTrigger.getSchedulerActions());
+            triggerTasks(dailyTrigger.getSchedulerActions(), dailyTrigger.getUserId());
 
             dailyTrigger.setLastTriggeredDate(istDate);
 
@@ -250,15 +248,15 @@ public class SchedularJobs {
         });
     }
 
-    private void triggerTasks(Set<SchedulerActions> schedulerActions) {
+    private void triggerTasks(Set<SchedulerActions> schedulerActions, Long userId) {
 
         schedulerActions.forEach(schedulerAction ->
-                triggerTask(schedulerAction)
+                triggerTask(schedulerAction, userId)
         );
 
     }
 
-    private void triggerTask(SchedulerActions schedulerAction) {
+    private void triggerTask(SchedulerActions schedulerAction, Long userId) {
 
         try {
 
@@ -276,7 +274,7 @@ public class SchedularJobs {
 
             } else if ("C".equalsIgnoreCase(actionType)) {
 
-                executeCode(schedulerAction);
+                executeCode(schedulerAction.getAction(), userId);
 
             }
 
@@ -356,19 +354,13 @@ public class SchedularJobs {
 
     }
 
-    private void executeCode(SchedulerActions schedulerAction) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-
-        String action = schedulerAction.getAction();
+    public String executeCode(String action, Long userId) {
 
         String randomString = CommonUtils.getRandomString();
 
         String dynamicClassName = "DynamicClass" + randomString;
 
-        String code = staticImports + " public class " + dynamicClassName + " {" +
-                "   public String executeCode() {" +
-                action +
-                "   }" +
-                "}";
+        String code = getCode(dynamicClassName, userId, action);
 
         Map<String, String> payload = new HashMap<>();
 
@@ -379,6 +371,89 @@ public class SchedularJobs {
         PortableResponse response = execute(BASE_URL + "gs/job/execute-dynamic-code", payload);
 
         logger.info("executeCode : {}", response.getData().toString());
+
+        return response.getData().toString();
+    }
+
+    private String getCode(String dynamicClassName, Long userId, String action) {
+
+
+        return staticImports + " public class " + dynamicClassName + " {" +
+                " Long userId = " + userId + "L;" +
+                "   public String executeCode() {" +
+                action +
+                "   }" +
+
+
+                " public String saveCache(String key, String value) {" +
+
+                "Map<String, Object> payload = new HashMap<>();" +
+
+                "payload.put(\"key\", key);" +
+
+                "payload.put(\"value\", value);" +
+
+                "payload.put(\"userId\", userId);" +
+
+                "return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+
+                "}" +
+
+                "public String saveCache(String key, String value, boolean overwrite) {" +
+
+                " Map<String, Object> payload = new HashMap<>();" +
+
+                "payload.put(\"key\", key);" +
+
+                "payload.put(\"value\", value);" +
+
+                "payload.put(\"userId\", userId);" +
+
+                " payload.put(\"overwrite\", overwrite);" +
+
+                " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+
+                "  }" +
+
+
+                "public String getCache(String key) {" +
+
+                " Map<String, Object> payload = new HashMap<>();" +
+
+                " payload.put(\"key\", key);" +
+
+                " payload.put(\"get\", true);" +
+
+                " payload.put(\"userId\", userId);" +
+
+                " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+
+                "}" +
+
+
+                "public String executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(Map<String, Object> payload) {" +
+
+                "try {" +
+
+                "String url =" + "\"" + BASE_URL + "gs/save-cache" + "\";" +
+
+
+                "RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.custom().setSSLContext(SSLContexts.custom().loadTrustMaterial(new TrustSelfSignedStrategy()).build()).build()));" +
+
+                " ResponseEntity<Map> response = template.postForEntity(url, new HttpEntity<>(payload,new HttpHeaders()), Map.class);" +
+
+                " if (!payload.containsKey(\"get\")) {" +
+                "return response.getBody().get(\"message\").toString();" +
+                "}" +
+
+                "return response.getBody().get(\"data\") != null ? response.getBody().get(\"data\").toString() : \"\";" +
+
+                "} catch (Exception e) {            return \"Connection issue please try again\";        }" +
+
+                " }" +
+
+                "}";
+
 
     }
 
