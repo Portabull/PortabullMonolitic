@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("oauth")
-public class OAuthLoginController {
+public class OAuthLogoutController {
 
 @RequestMapping("/plogout")
     public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException {
