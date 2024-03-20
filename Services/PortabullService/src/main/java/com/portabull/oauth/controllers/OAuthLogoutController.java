@@ -25,7 +25,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("oauth")
 public class OAuthLoginController {
