@@ -20,6 +20,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
+import org.springframework.web.util.WebUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -89,6 +91,17 @@ public class OAuthLoginController {
 
     @RequestMapping("/plogout")
     public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        Cookie sessionCookie = WebUtils.getCookie(request, "JSESSIONID");
+        
+        if (sessionCookie != null) {
+            // Invalidate the session associated with the session ID
+            request.getSession().invalidate();
+            
+            // Expire the session ID cookie by setting its max age to 0
+            sessionCookie.setMaxAge(0);
+            response.addCookie(sessionCookie);
+        }
+        
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.setAuthenticated(false);
         new SecurityContextLogoutHandler().logout(request, response, authentication);
