@@ -33,8 +33,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
@@ -127,9 +130,20 @@ public class LogInController {
     }
 
     @PostMapping(value = "/plogout")
-    public ResponseEntity<PortableResponse> logout() {
+    public ResponseEntity<PortableResponse> logout(HttpServletRequest request, HttpServletResponse response) {
         String token = RequestHelper.getAuthorizationToken(RequestHelper.getCurrentRequest());
         LoginUtils.logout(token);
+        Cookie sessionCookie = WebUtils.getCookie(request, "JSESSIONID");
+
+        if (sessionCookie != null) {
+            logger.info("Session not empty");
+            // Invalidate the session associated with the session ID
+            request.getSession().invalidate();
+
+            // Expire the session ID cookie by setting its max age to 0
+            sessionCookie.setMaxAge(0);
+            response.addCookie(sessionCookie);
+        }
         return new ResponseEntity<>(new PortableResponse()
                 .setMessage("Logout Successfully")
                 .setStatus(PortableConstants.SUCCESS).setStatusCode(200L), HttpStatus.OK);

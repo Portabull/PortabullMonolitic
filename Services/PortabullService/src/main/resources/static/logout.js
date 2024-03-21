@@ -4,28 +4,11 @@ var tokenKey = 'token';
 
 var url = BASE_URL_L + 'UM/plogout';
 
-var oauthLogout = BASE_URL_L + 'oauth/plogout'
-
 function logout() {
 
     try {
-
-        var logoutUrl = url;
-        var count = 1;
-
-           if(window.localStorage.getItem('isUserLoggedViaOAuth')){
-                logoutUrl = oauthLogout;
-                count = 2;
-            }
-
-            for(var i=0;i<count;i++) {
-
-            if(i==1){
-                logoutUrl = url;
-            }
-
                  var xhr = new XMLHttpRequest();
-                        xhr.open("POST", logoutUrl);
+                        xhr.open("POST", url);
 
                          xhr.setRequestHeader("Accept", "application/json");
 
@@ -53,7 +36,7 @@ function logout() {
                                                    window.location.href = "index.html";
                                             }
                                         };
-}
+
                     } catch (err) {
                         alert("Something went wrong please try after sometime");
                          window.location.href = "index.html";
