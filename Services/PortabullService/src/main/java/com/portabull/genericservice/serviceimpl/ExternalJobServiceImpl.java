@@ -9,6 +9,7 @@ import com.portabull.execption.BadRequestException;
 import com.portabull.generic.models.TempJsonKeka;
 import com.portabull.genericservice.jobs.DynamicClassLoader;
 import com.portabull.genericservice.service.ExternalJobService;
+import com.portabull.genericservice.service.JavaSourceFromString;
 import com.portabull.payloads.EmailPayload;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.emailutils.EmailUtils;
@@ -30,8 +31,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
+import javax.tools.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -484,6 +484,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
                 return result.toString();
 
             } else {
+                logCompilationFailure(code,dynamicClassName);
                 System.err.println("Compilation failed");
                 return "Compilation failed";
             }
@@ -493,6 +494,27 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 //            new File(dynamicClassPath + ".class").delete();
             System.setOut(originalOut);
             printStream.close();
+        }
+    }
+
+    private static void logCompilationFailure(String code,String className) {
+
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
+
+        JavaFileObject compilationUnit = new JavaSourceFromString(className, code);
+
+        // Perform the compilation
+        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(compilationUnit);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
+        boolean success = task.call();
+
+        if (!success) {
+            logger.info("Compilation Failed Output :: ***********  ");
+            for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+                logger.info(diagnostic.getMessage(null));
+            }
         }
     }
 }
