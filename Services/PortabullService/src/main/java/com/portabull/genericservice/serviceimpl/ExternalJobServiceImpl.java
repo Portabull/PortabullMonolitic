@@ -145,6 +145,8 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
         String code = codePayload.get("code");
 
+        code = new String(Base64.getDecoder().decode(code.getBytes(StandardCharsets.UTF_8)));
+
         String dynamicClassName = codePayload.get("dynamicClassName");
 
         String result = executeDynamicCode(code, dynamicClassName);

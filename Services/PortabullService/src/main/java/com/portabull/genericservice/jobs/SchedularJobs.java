@@ -30,6 +30,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -364,7 +365,7 @@ public class SchedularJobs {
 
         Map<String, String> payload = new HashMap<>();
 
-        payload.put("code", code);
+        payload.put("code", Base64.getEncoder().encodeToString(code.getBytes(StandardCharsets.UTF_8)));
 
         payload.put("dynamicClassName", dynamicClassName);
 
