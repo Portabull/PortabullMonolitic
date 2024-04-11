@@ -115,12 +115,20 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         if (mailPayload.containsKey("isHTML"))
             emailPayload.setHtmlTemplete(String.valueOf(mailPayload.get("isHTML")).equalsIgnoreCase("true") ? true : false);
 
-        emailPayload.setSubject(mailPayload.get("subject") != null ? mailPayload.get("subject").toString() : null);
+        emailPayload.setSubject(mailPayload.get("subject") != null ? getSubject(mailPayload.get("subject").toString()) : null);
 
         emailUtils.sendEmail(emailPayload);
 
         return new PortableResponse("", StatusCodes.C_200,
                 PortableConstants.SUCCESS, "");
+    }
+
+    public String getSubject(String subject) {
+        if (subject.contains("Date:{{@@}}")) {
+            String date = "" + new Date();
+            subject = subject.replace("Date:{{@@}}", date);
+        }
+        return subject;
     }
 
     @Override
