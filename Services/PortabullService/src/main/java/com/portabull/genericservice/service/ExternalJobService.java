@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface ExternalJobService {
 
-    public PortableResponse sendEmail(Map<String, Object> mailPayload);
+    public PortableResponse sendEmail(Map<String, Object> mailPayload) throws JsonProcessingException;
 
     public PortableResponse executeRestAPI(List<Map<String, Object>> restPayloads) throws JsonProcessingException;
 

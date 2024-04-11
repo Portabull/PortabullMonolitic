@@ -21,7 +21,7 @@ public class ExternalJobController {
     ExternalJobService jobService;
 
     @PostMapping("send-email")
-    public ResponseEntity<PortableResponse> sendEmail(@RequestBody Map<String, Object> mailPayload) {
+    public ResponseEntity<PortableResponse> sendEmail(@RequestBody Map<String, Object> mailPayload) throws JsonProcessingException {
 
         return new ResponseEntity<>(jobService.sendEmail(mailPayload), HttpStatus.OK);
 

@@ -91,14 +91,23 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
 
     @Override
-    public PortableResponse sendEmail(Map<String, Object> mailPayload) {
+    public PortableResponse sendEmail(Map<String, Object> mailPayload) throws JsonProcessingException {
         EmailPayload emailPayload = new EmailPayload();
 
-        emailPayload.setTo((List<String>) mailPayload.get("to"));
+        if (mailPayload.get("to") instanceof List)
+            emailPayload.setTo((List<String>) mailPayload.get("to"));
+        else
+            emailPayload.setTo(objectMapper.readValue(mailPayload.get("to").toString(), List.class));
 
-        emailPayload.setCc((List<String>) mailPayload.get("cc"));
+        if (mailPayload.get("cc") instanceof List)
+            emailPayload.setCc((List<String>) mailPayload.get("cc"));
+        else
+            emailPayload.setTo(objectMapper.readValue(mailPayload.get("cc").toString(), List.class));
 
         emailPayload.setBody(mailPayload.get("body") != null ? mailPayload.get("body").toString() : null);
+
+        if (mailPayload.containsKey("isHTML"))
+            emailPayload.setHtmlTemplete(String.valueOf(mailPayload.get("isHTML")).equalsIgnoreCase("true") ? true : false);
 
         emailPayload.setSubject(mailPayload.get("subject") != null ? mailPayload.get("subject").toString() : null);
 
@@ -157,10 +166,10 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     @Override
     public Object tempEndpointKeka(String refreshToken, String flag) throws IOException {
 
-        try{
+        try {
 
             Map<String, Object> locationAddress = new HashMap<>();
-            ResponseEntity<String> stringResponseEntity ;
+            ResponseEntity<String> stringResponseEntity;
             locationAddress.put("longitude", 78.3722332);
             locationAddress.put("latitude", 17.540904);
             locationAddress.put("zip", "500090");
@@ -237,7 +246,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
                 loginheaders.put("authorization", Arrays.asList("Bearer " + accessToken));
 
                 loginheaders.put("cookie", Arrays.asList("Subdomain=datagaps.keka.com; ai_user=HL6sONPG4u1RAoH7RtXu64|2023-12-14T03:28:52.419Z; _clsk=13fkcaj%7C1706548729195%7C8%7C1%7Co.clarity.ms%2Fcollect; _clck=1t8ebxf%7C2%7Cfiu%7C0%7C1443; ai_session=6hB7sVeiiv58F/6jv+q9U+|1706587360936|1706587360936"));
-                loginheaders.put("content-type",Arrays.asList("application/json; charset=UTF-8"));
+                loginheaders.put("content-type", Arrays.asList("application/json; charset=UTF-8"));
                 Map<String, Object> loginPayload = new HashMap<>();
 
                 loginPayload.put("attendanceLogSource", 1);
@@ -249,7 +258,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
                 stringResponseEntity = template.postForEntity("https://datagaps.keka.com/k/attendance/api/mytime/attendance/remoteclockin"
                         , new HttpEntity<>(loginPayload, loginheaders), String.class);
-            }else{
+            } else {
 
                 HttpHeaders logoutheaders = new HttpHeaders();
 
@@ -257,7 +266,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
                 logoutheaders.put("cookie", Arrays.asList("Subdomain=datagaps.keka.com; ai_user=HL6sONPG4u1RAoH7RtXu64|2023-12-14T03:28:52.419Z; _clsk=13fkcaj%7C1706548729195%7C8%7C1%7Co.clarity.ms%2Fcollect; _clck=1t8ebxf%7C2%7Cfiu%7C0%7C1443; ai_session=6hB7sVeiiv58F/6jv+q9U+|1706587360936|1706587360936"));
 
-                logoutheaders.put("content-type",Arrays.asList("application/json; charset=UTF-8"));
+                logoutheaders.put("content-type", Arrays.asList("application/json; charset=UTF-8"));
 
                 Map<String, Object> loginPayload = new HashMap<>();
 
@@ -274,8 +283,8 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
 
             return stringResponseEntity.getBody();
-        }catch (Exception e){
-            logger.error("",e);
+        } catch (Exception e) {
+            logger.error("", e);
         }
 
         return "failed";
@@ -484,7 +493,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
                 return result.toString();
 
             } else {
-                logCompilationFailure(code,dynamicClassName);
+                logCompilationFailure(code, dynamicClassName);
                 System.err.println("Compilation failed");
                 return "Compilation failed";
             }
@@ -497,7 +506,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         }
     }
 
-    private static void logCompilationFailure(String code,String className) {
+    private static void logCompilationFailure(String code, String className) {
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
