@@ -18,9 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -459,7 +457,11 @@ public class SchedularJobs {
 
     private PortableResponse execute(String url, Object payload) {
 
-        ResponseEntity<PortableResponse> response = template.postForEntity(url, new HttpEntity<>(payload), PortableResponse.class);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ResponseEntity<PortableResponse> response = template.postForEntity(url, new HttpEntity<>(payload, headers), PortableResponse.class);
 
         return response.getBody();
     }
