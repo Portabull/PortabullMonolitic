@@ -94,6 +94,8 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     public PortableResponse sendEmail(Map<String, Object> mailPayload) throws JsonProcessingException {
         EmailPayload emailPayload = new EmailPayload();
 
+        logger.info(mailPayload.get("to").toString());
+        logger.info(mailPayload.get("cc").toString());
         if (mailPayload.get("to") instanceof List)
             emailPayload.setTo((List<String>) mailPayload.get("to"));
         else
