@@ -265,8 +265,7 @@ public class SchedularJobs {
 
             if ("M".equalsIgnoreCase(actionType)) {
 
-                sendEmail(objectMapper.readValue(schedulerAction.getAction(), new TypeReference<Map<String, Object>>() {
-                }));
+                sendEmail(schedulerAction.getAction());
 
             } else if ("R".equalsIgnoreCase(actionType)) {
 
@@ -339,7 +338,7 @@ public class SchedularJobs {
     }
 
 
-    private void sendEmail(Map<String, Object> mailPayload) {
+    private void sendEmail(String mailPayload) {
 
         PortableResponse response = execute(BASE_URL + "gs/job/send-email", mailPayload);
 
