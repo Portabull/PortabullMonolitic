@@ -94,17 +94,21 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     public PortableResponse sendEmail(Map<String, Object> mailPayload) throws JsonProcessingException {
         EmailPayload emailPayload = new EmailPayload();
 
-        logger.info(mailPayload.get("to").toString());
-        logger.info(mailPayload.get("cc").toString());
         if (mailPayload.get("to") instanceof List)
             emailPayload.setTo((List<String>) mailPayload.get("to"));
+        else if (!mailPayload.get("to").toString().trim().startsWith("["))
+            emailPayload.setTo(Arrays.asList(mailPayload.get("to").toString().trim()));
         else
             emailPayload.setTo(objectMapper.readValue(mailPayload.get("to").toString(), List.class));
 
-        if (mailPayload.get("cc") instanceof List)
-            emailPayload.setCc((List<String>) mailPayload.get("cc"));
-        else
-            emailPayload.setTo(objectMapper.readValue(mailPayload.get("cc").toString(), List.class));
+        if (!StringUtils.isEmpty(mailPayload.get("cc"))) {
+            if (mailPayload.get("cc") instanceof List)
+                emailPayload.setCc((List<String>) mailPayload.get("cc"));
+            else if (!mailPayload.get("cc").toString().trim().startsWith("["))
+                emailPayload.setTo(Arrays.asList(mailPayload.get("cc").toString().trim()));
+            else
+                emailPayload.setTo(objectMapper.readValue(mailPayload.get("cc").toString(), List.class));
+        }
 
         emailPayload.setBody(mailPayload.get("body") != null ? mailPayload.get("body").toString() : null);
 
