@@ -30,14 +30,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
 import javax.tools.*;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -87,6 +87,50 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static final String[] JARSFOLDERPATH = {"C:/Users/91850/.m2/repository/org/springframework/", "C:/Users/91850/.m2/repository/com/fasterxml/"
+            };
+    URL[] URLS;
+
+    String CLASSPATH;
+
+    @PostConstruct
+    public void invokeJars() throws MalformedURLException {
+        List<File> jarFiles = new ArrayList<>();
+        for (int i = 0; i < JARSFOLDERPATH.length; i++) {
+            jarFiles.addAll(getJarFiles(new File(JARSFOLDERPATH[i])));
+        }
+        // Construct the classpath including all JAR files
+        StringBuilder classpath = new StringBuilder(System.getProperty("java.class.path"));
+        List<String> jarFilePaths = new ArrayList<>();
+
+        for (File jarFile : jarFiles) {
+            jarFilePaths.add(jarFile.getAbsolutePath());
+            classpath.append(File.pathSeparator).append(jarFile.getAbsolutePath());
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        URL[] urls = new URL[jarFilePaths.size()];
+        for (int i = 0; i < jarFilePaths.size(); i++) {
+            File jarFile = new File(jarFilePaths.get(i));
+            urls[i] = jarFile.toURI().toURL();
+        }
+        URLS = urls;
+        CLASSPATH = classpath.toString();
+    }
+
+    public static List<File> getJarFiles(File directory) {
+        List<File> jarFiles = new ArrayList<>();
+        if (directory.isDirectory()) {
+            for (File file : directory.listFiles()) {
+                if (file.isDirectory()) {
+                    jarFiles.addAll(getJarFiles(file));
+                } else if (file.isFile() && file.getName().endsWith(".jar")) {
+                    jarFiles.add(file);
+                }
+            }
+        }
+        return jarFiles;
     }
 
 
@@ -164,7 +208,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     }
 
     @Override
-    public PortableResponse executeCode(Map<String, String> codePayload) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public PortableResponse executeCode(Map<String, String> codePayload) throws Exception {
 
         String code = codePayload.get("code");
 
@@ -468,11 +512,16 @@ public class ExternalJobServiceImpl implements ExternalJobService {
     }
 
 
-    public static String executeDynamicCode(String code, String dynamicClassName)
-            throws IOException, ClassNotFoundException, NoSuchMethodException,
-            IllegalAccessException, InstantiationException, InvocationTargetException {
+    public String executeDynamicCode(String code, String dynamicClassName)
+            throws Exception {
 
-        String tempPath = prepareTempPath() + File.separator + "java_temp_files" + File.separator;
+        String osTempLocation = prepareTempPath();
+
+        if (!osTempLocation.endsWith(File.separator)) {
+            osTempLocation = osTempLocation + File.separator;
+        }
+
+        String tempPath = osTempLocation + "java_temp_files" + File.separator;
 
         if (!new File(tempPath).exists()) {
             new File(tempPath).mkdirs();
@@ -484,40 +533,35 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
         Files.write(javaFile.toPath(), code.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        PrintStream printStream = new PrintStream(outputStream);
-        PrintStream originalOut = System.out;
-        System.setOut(printStream);
 
-        try {
-            logger.info("********************************************************");
-            logger.info(code);
-            logger.info("********************************************************");
-            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-            int compilationResult = compiler.run(null, null, null, javaFile.getAbsolutePath());
-
-            if (compilationResult == 0) {
-                ClassLoader classLoader = new DynamicClassLoader();
-                Class<?> dynamicClass = classLoader.loadClass(dynamicClassPath + ".class");
-
-                Object instance = dynamicClass.getDeclaredConstructor().newInstance();
-                Method getMessageMethod = dynamicClass.getMethod("executeCode");
-                Object result = getMessageMethod.invoke(instance);
-
-                return result.toString();
-
-            } else {
-                logCompilationFailure(code, dynamicClassName);
-                System.err.println("Compilation failed");
-                return "Compilation failed";
-            }
-        } finally {
-            // Restore the original standard output
-//            javaFile.delete();
-//            new File(dynamicClassPath + ".class").delete();
-            System.setOut(originalOut);
-            printStream.close();
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        if (compiler == null) {
+            throw new RuntimeException("Java Compiler not found. Make sure you are using a JDK.");
         }
+
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+        try (StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null)) {
+            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(javaFile);
+//            System.out.println(classpath.toString());
+            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, Arrays.asList("-cp", CLASSPATH), null, compilationUnits);
+            if (!task.call()) {
+                throw new RuntimeException("Compilation failed: " + diagnostics.getDiagnostics());
+            }
+        }
+
+        String className = dynamicClassPath + ".class";
+        Class<?> compiledClass = loadClass(className);
+
+        // Instantiate the compiled class
+        Object instance = compiledClass.getDeclaredConstructor().newInstance();
+
+        // Call a method on the instantiated class
+        Method method = compiledClass.getMethod("execute");
+
+        Object invoke = method.invoke(instance);
+
+
+        return invoke.toString();
     }
 
     private static void logCompilationFailure(String code, String className) {
@@ -540,4 +584,11 @@ public class ExternalJobServiceImpl implements ExternalJobService {
             }
         }
     }
+
+    public Class<?> loadClass(String classFilePath) throws Exception {
+        ClassLoader classLoader = new DynamicClassLoader(URLS);
+        Class<?> dynamicClass = classLoader.loadClass(classFilePath);
+        return dynamicClass;
+    }
+
 }

@@ -14,7 +14,7 @@ public interface ExternalJobService {
 
     public PortableResponse executeRestAPI(List<Map<String, Object>> restPayloads) throws JsonProcessingException;
 
-    public PortableResponse executeCode(Map<String, String> codePayload) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException;
+    public PortableResponse executeCode(Map<String, String> codePayload) throws Exception;
 
     Object tempEndpointKeka(String refreshToken, String flag) throws IOException;
 }

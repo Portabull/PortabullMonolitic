@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +34,7 @@ public class ExternalJobController {
     }
 
     @PostMapping("execute-dynamic-code")
-    public ResponseEntity<PortableResponse> executeCode(@RequestBody Map<String, String> codePayload) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public ResponseEntity<PortableResponse> executeCode(@RequestBody Map<String, String> codePayload) throws Exception {
 
         return new ResponseEntity<>(jobService.executeCode(codePayload), HttpStatus.OK);
 
