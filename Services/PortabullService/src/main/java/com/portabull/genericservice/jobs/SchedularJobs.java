@@ -436,7 +436,7 @@ public class SchedularJobs {
                 "String url =" + "\"" + BASE_URL + "gs/save-cache" + "\";" +
 
 
-                "RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory(HttpClients.custom().setSSLContext(SSLContexts.custom().loadTrustMaterial(new TrustSelfSignedStrategy()).build()).build()));" +
+                "RestTemplate template = new RestTemplate();" +
 
                 " ResponseEntity<Map> response = template.postForEntity(url, new HttpEntity<>(payload,new HttpHeaders()), Map.class);" +
 
