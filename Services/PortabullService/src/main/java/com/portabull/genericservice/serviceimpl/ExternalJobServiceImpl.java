@@ -120,6 +120,7 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         }
         URLS = urls;
         CLASSPATH = classpath.toString();
+        logger.info(CLASSPATH);
     }
 
     public static List<File> getJarFiles(File directory) {
