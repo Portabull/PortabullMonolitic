@@ -253,6 +253,6 @@ alter table portabull_generic.scheduler_actions add constraint FKs2gkv5y7ewyyw1p
 
 
 
-insert into portabull_generic.static_java_jar_paths values(1,'C:/Users/Administrator/.m2/repository/org/springframework/','spring framework dependency');
-insert into portabull_generic.static_java_jar_paths values(2,'C:/Users/Administrator/.m2/repository/com/fasterxml/','objectmapper dependency');
-insert into portabull_generic.static_java_jar_paths values(3,'C:/Users/Administrator/.m2/repository/javax/','for java email system');
+insert into portabull_generic.static_java_jar_paths values(1,'spring framework dependency','C:/Users/Administrator/.m2/repository/org/springframework/');
+insert into portabull_generic.static_java_jar_paths values(2,'objectmapper dependency','C:/Users/Administrator/.m2/repository/com/fasterxml/');
+insert into portabull_generic.static_java_jar_paths values(3,'for java email system','C:/Users/Administrator/.m2/repository/javax/');

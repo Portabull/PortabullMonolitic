@@ -15,10 +15,10 @@ public class StaticJavaJarPaths {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
     private Long jarId;
 
-    @Column(name = "import_package", columnDefinition = "TEXT")
+    @Column(name = "jar_path", columnDefinition = "TEXT")
     private String jarPath;
 
-    @Column(name = "framework_name")
+    @Column(name = "description")
     private String description;
 
     public Long getJarId() {
