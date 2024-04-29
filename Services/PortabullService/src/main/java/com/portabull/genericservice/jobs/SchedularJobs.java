@@ -15,6 +15,7 @@ import org.apache.http.ssl.SSLContexts;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -37,7 +38,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @EnableScheduling
 public class SchedularJobs {
 
-    HibernateUtils hibernateUtils;
+    @Autowired
+    private HibernateUtils hibernateUtils;
 
     static ObjectMapper objectMapper;
 
