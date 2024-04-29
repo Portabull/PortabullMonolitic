@@ -369,7 +369,7 @@ public class SchedularJobs {
 
                 " public class " + dynamicClassName + " {" +
                         " Long userId = " + userId + "L;" +
-                        "   public String executeCode() {" +
+                        "   public String execute() {" +
                         map.get("code") +
                         "   }" +
 
