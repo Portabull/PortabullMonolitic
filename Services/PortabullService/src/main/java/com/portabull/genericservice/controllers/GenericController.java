@@ -1,5 +1,6 @@
 package com.portabull.genericservice.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.portabull.constants.LoggerErrorConstants;
 import com.portabull.constants.MessageConstants;
 import com.portabull.constants.PortableConstants;
@@ -171,7 +172,7 @@ public class GenericController {
     }
 
     @PostMapping("execute-code")
-    public ResponseEntity<PortableResponse> executeCode(@RequestBody Map<String, Object> data) {
+    public ResponseEntity<PortableResponse> executeCode(@RequestBody Map<String, Object> data) throws JsonProcessingException {
 
         String code = data.get("code").toString();
 
