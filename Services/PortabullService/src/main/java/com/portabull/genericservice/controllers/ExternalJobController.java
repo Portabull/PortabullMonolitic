@@ -144,7 +144,7 @@ public class ExternalJobController {
 
                     helper.setFrom("portabullmanagementsystems@gmail.com");
                     helper.setTo("harshagangavelli17@gmail.com");
-                    helper.setSubject("test");
+                    helper.setSubject("Stock market Updates!!!!" + new Date());
                     helper.setText(htmlTemplate, true);
                     javaMailSender.send(mimeMessage);
                     System.out.println(htmlTemplate);
