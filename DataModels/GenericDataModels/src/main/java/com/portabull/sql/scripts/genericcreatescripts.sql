@@ -253,13 +253,6 @@ alter table portabull_generic.scheduler_actions add constraint FKs2gkv5y7ewyyw1p
 
 
 
-
-
-
-
-
-
-insert into portabull_generic.static_java_imports values(1,'java','import java.util.*;import java.io.*;import java.math.*; import java.text.*; import java.util.concurrent.*;import javax.swing.*;import java.awt.*; import java.nio.*;');
-insert into portabull_generic.static_java_imports values(2,'springframework','import org.springframework.http.*;import org.springframework.web.*;');
-insert into portabull_generic.static_java_imports values(3,'java&springframework','import javax.mail.*;import org.springframework.mail.javamail.*;import java.io.*;');
-insert into portabull_generic.static_java_imports values(4,'apacheRestClient','import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;import org.apache.http.conn.ssl.TrustSelfSignedStrategy;import org.apache.http.ssl.SSLContexts;import org.apache.http.impl.client.HttpClients;import org.springframework.web.client.DefaultResponseErrorHandler;import org.springframework.web.client.RestTemplate;');
+insert into portabull_generic.static_java_jar_paths values(1,'C:/Users/Administrator/.m2/repository/org/springframework/','spring framework dependency');
+insert into portabull_generic.static_java_jar_paths values(2,'C:/Users/Administrator/.m2/repository/com/fasterxml/','objectmapper dependency');
+insert into portabull_generic.static_java_jar_paths values(3,'C:/Users/Administrator/.m2/repository/javax/','for java email system');

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portabull.dbutils.HibernateUtils;
 import com.portabull.generic.models.SchedulerActions;
 import com.portabull.generic.models.SchedulerTask;
-import com.portabull.generic.models.StaticJavaImports;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.commonutils.CommonUtils;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -16,7 +15,6 @@ import org.apache.http.ssl.SSLContexts;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -40,8 +38,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SchedularJobs {
 
     HibernateUtils hibernateUtils;
-
-    private final String staticImports;
 
     static ObjectMapper objectMapper;
 
@@ -83,22 +79,6 @@ public class SchedularJobs {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public SchedularJobs(@Autowired HibernateUtils hibernateUtils) {
-
-        StringBuilder imports = new StringBuilder();
-
-        List<StaticJavaImports> staticJavaImports = hibernateUtils.loadFullData(StaticJavaImports.class);
-
-        staticJavaImports.forEach(staticImport ->
-                imports.append(staticImport.getImportPackage())
-        );
-
-        staticImports = imports.toString();
-
-        this.hibernateUtils = hibernateUtils;
-
     }
 
     private static final AtomicInteger threadCount = new AtomicInteger();

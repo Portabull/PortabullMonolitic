@@ -6,6 +6,7 @@ import com.portabull.constants.PortableConstants;
 import com.portabull.constants.StatusCodes;
 import com.portabull.dbutils.HibernateUtils;
 import com.portabull.execption.BadRequestException;
+import com.portabull.generic.models.StaticJavaJarPaths;
 import com.portabull.generic.models.TempJsonKeka;
 import com.portabull.genericservice.jobs.DynamicClassLoader;
 import com.portabull.genericservice.service.ExternalJobService;
@@ -48,6 +49,11 @@ import java.util.regex.Pattern;
 @Service
 public class ExternalJobServiceImpl implements ExternalJobService {
 
+
+    URL[] URLS;
+
+    String CLASSPATH;
+
     @Autowired
     EmailUtils emailUtils;
 
@@ -89,18 +95,15 @@ public class ExternalJobServiceImpl implements ExternalJobService {
         }
     }
 
-    private static final String[] JARSFOLDERPATH = {"C:/Users/Administrator/.m2/repository/org/springframework/", "C:/Users/Administrator/.m2/repository/com/fasterxml/"
-            };
-    URL[] URLS;
-
-    String CLASSPATH;
-
     @PostConstruct
     public void invokeJars() throws MalformedURLException {
+
+        List<StaticJavaJarPaths> staticJavaJarPaths = hibernateUtils.loadFullData(StaticJavaJarPaths.class);
         List<File> jarFiles = new ArrayList<>();
-        for (int i = 0; i < JARSFOLDERPATH.length; i++) {
-            jarFiles.addAll(getJarFiles(new File(JARSFOLDERPATH[i])));
-        }
+        staticJavaJarPaths.forEach(staticJavaJarPath ->
+                jarFiles.addAll(getJarFiles(new File(staticJavaJarPath.getJarPath())))
+        );
+
         // Construct the classpath including all JAR files
         StringBuilder classpath = new StringBuilder(System.getProperty("java.class.path"));
         List<String> jarFilePaths = new ArrayList<>();
