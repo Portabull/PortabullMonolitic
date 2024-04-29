@@ -352,7 +352,7 @@ public class SchedularJobs {
 
     }
 
-    public String executeCode(String action, Long userId) {
+    public String executeCode(String action, Long userId) throws JsonProcessingException {
 
         String randomString = CommonUtils.getRandomString();
 
@@ -373,86 +373,96 @@ public class SchedularJobs {
         return response.getData().toString();
     }
 
-    private String getCode(String dynamicClassName, Long userId, String action) {
+    private String getCode(String dynamicClassName, Long userId, String action) throws JsonProcessingException {
+
+        StringBuilder codeBuilder = new StringBuilder();
+
+        Map<String, String> map = objectMapper.readValue(action, Map.class);
+
+        if (map.get("imports") != null) {
+            codeBuilder.append(map.get("imports"));
+        }
+
+        codeBuilder.append(
+
+                " public class " + dynamicClassName + " {" +
+                        " Long userId = " + userId + "L;" +
+                        "   public String executeCode() {" +
+                        map.get("code") +
+                        "   }" +
 
 
-        return staticImports + " public class " + dynamicClassName + " {" +
-                " Long userId = " + userId + "L;" +
-                "   public String executeCode() {" +
-                action +
-                "   }" +
+                        " public String saveCache(String key, String value) {" +
+
+                        "Map<String, Object> payload = new HashMap<>();" +
+
+                        "payload.put(\"key\", key);" +
+
+                        "payload.put(\"value\", value);" +
+
+                        "payload.put(\"userId\", userId);" +
+
+                        "return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+
+                        "}" +
+
+                        "public String saveCache(String key, String value, boolean overwrite) {" +
+
+                        " Map<String, Object> payload = new HashMap<>();" +
+
+                        "payload.put(\"key\", key);" +
+
+                        "payload.put(\"value\", value);" +
+
+                        "payload.put(\"userId\", userId);" +
+
+                        " payload.put(\"overwrite\", overwrite);" +
+
+                        " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+
+                        "  }" +
 
 
-                " public String saveCache(String key, String value) {" +
+                        "public String getCache(String key) {" +
 
-                "Map<String, Object> payload = new HashMap<>();" +
+                        " Map<String, Object> payload = new HashMap<>();" +
 
-                "payload.put(\"key\", key);" +
+                        " payload.put(\"key\", key);" +
 
-                "payload.put(\"value\", value);" +
+                        " payload.put(\"get\", true);" +
 
-                "payload.put(\"userId\", userId);" +
+                        " payload.put(\"userId\", userId);" +
 
-                "return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
+                        " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
 
-                "}" +
-
-                "public String saveCache(String key, String value, boolean overwrite) {" +
-
-                " Map<String, Object> payload = new HashMap<>();" +
-
-                "payload.put(\"key\", key);" +
-
-                "payload.put(\"value\", value);" +
-
-                "payload.put(\"userId\", userId);" +
-
-                " payload.put(\"overwrite\", overwrite);" +
-
-                " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
-
-                "  }" +
+                        "}" +
 
 
-                "public String getCache(String key) {" +
+                        "public String executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(Map<String, Object> payload) {" +
 
-                " Map<String, Object> payload = new HashMap<>();" +
+                        "try {" +
 
-                " payload.put(\"key\", key);" +
-
-                " payload.put(\"get\", true);" +
-
-                " payload.put(\"userId\", userId);" +
-
-                " return executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(payload);" +
-
-                "}" +
+                        "String url =" + "\"" + BASE_URL + "gs/save-cache" + "\";" +
 
 
-                "public String executeCacheasfgawhgiasufuiashgfyuhfuyhwreyuhuyhfuhgfyuhgeyuryurgyugryufgwyuywfuguyfw(Map<String, Object> payload) {" +
+                        "RestTemplate template = new RestTemplate();" +
 
-                "try {" +
+                        " ResponseEntity<Map> response = template.postForEntity(url, new HttpEntity<>(payload,new HttpHeaders()), Map.class);" +
 
-                "String url =" + "\"" + BASE_URL + "gs/save-cache" + "\";" +
+                        " if (!payload.containsKey(\"get\")) {" +
+                        "return response.getBody().get(\"message\").toString();" +
+                        "}" +
 
+                        "return response.getBody().get(\"data\") != null ? response.getBody().get(\"data\").toString() : \"\";" +
 
-                "RestTemplate template = new RestTemplate();" +
+                        "} catch (Exception e) {            return \"Connection issue please try again\";        }" +
 
-                " ResponseEntity<Map> response = template.postForEntity(url, new HttpEntity<>(payload,new HttpHeaders()), Map.class);" +
+                        " }" +
 
-                " if (!payload.containsKey(\"get\")) {" +
-                "return response.getBody().get(\"message\").toString();" +
-                "}" +
-
-                "return response.getBody().get(\"data\") != null ? response.getBody().get(\"data\").toString() : \"\";" +
-
-                "} catch (Exception e) {            return \"Connection issue please try again\";        }" +
-
-                " }" +
-
-                "}";
+                        "}");
 
 
+        return codeBuilder.toString();
     }
 
     private PortableResponse execute(String url, Object payload) {
