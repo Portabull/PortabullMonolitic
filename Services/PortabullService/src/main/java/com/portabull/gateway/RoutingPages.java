@@ -59,6 +59,13 @@ public class RoutingPages {
         return modelAndView;
     }
 
+    @RequestMapping("stockmarketdata")
+    public ModelAndView handleStockmarketdata() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("stockmarketdata.html");
+        return modelAndView;
+    }
+
     @PostMapping("get-image-via-gateway")
     public ResponseEntity<?> getImageViaGateway(@RequestBody List<String> fileNames) {
 
