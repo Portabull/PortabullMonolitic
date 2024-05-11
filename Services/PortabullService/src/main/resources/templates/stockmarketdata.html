@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Stock Market Data</title>
+	<script src="js/portabullconfig.js"></script>
+	<style>
+
+
+.uploadLoading:after { content: ' .'; animation: dots 1s steps(5, end) infinite;} @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 40% { color: #4CAF50; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0);} 60% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 rgba(0,0,0,0);} 80%, 100% { text-shadow: .25em 0 0 #4CAF50, .5em 0 0 #4CAF50;}}
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        max-width: 800px; /* Limiting table width for better readability on larger screens */
+        margin: 20px auto;
+        border-collapse: collapse;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        animation: fadeInTable 1s ease forwards;
+    }
+    @keyframes fadeInTable {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    input[type="text"], select, .clearButton {
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        opacity: 0;
+        animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    input[type="text"]:focus, select:focus, .clearButton:hover {
+        border-color: #007bff;
+        outline: none;
+    }
+    select:hover {
+        background-color: #f2f2f2;
+    }
+    .fadeIn {
+        animation: fadeIn 1s ease forwards;
+    }
+    .clearButton {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .clearButton:hover {
+        background-color: #0056b3;
+    }
+    /* Popup box */
+    .popup {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.7);
+        animation: fadeInPopup 0.5s ease forwards;
+    }
+    @keyframes fadeInPopup {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    .popup-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        opacity: 0;
+        animation: slideInPopup 0.5s ease forwards;
+    }
+    @keyframes slideInPopup {
+        from {
+            opacity: 0;
+            transform: translateY(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+<h1>Stock Market Data</h1>
+<input type="text" id="searchInput" onkeyup="searchFunction()" placeholder="Search for company..." class="fadeIn">
+
+<select id="categoryFilter" onchange="filterFunction()" class="fadeIn">
+	<option value="all">All Categories</option>
+	<option value="large">Large</option>
+	<option value="medium">Medium</option>
+	<option value="small">Small</option>
+</select>
+<button class="clearButton" onclick="clearFilters()">Clear Filters</button>
+
+
+<table id="stockTable">
+	<thead>
+	<tr>
+		<th onclick="sortTableDelayed(0)">Company Name</th>
+		<th onclick="sortTableDelayed(1)">Stock Price</th>
+		<th onclick="sortTableDelayed(2)">Market Cap</th>
+		<th onclick="sortTableDelayed(3)">Category</th>
+		<th onclick="sortTableDelayed(4)">Day Return Percentage</th>
+	</tr>
+	</thead>
+	<tbody id="tableBody">
+	</tbody>
+</table>
+
+<br><br><br><br><br><br><br><br><br><br>
+
+<h4 id="uploadLoading1" class="uploadLoading" style="text-align: center; color: #4CAF50;">Loading</h4>
+
+
+<!-- Popup box -->
+<div id="popup" class="popup">
+	<div class="popup-content">
+		<span class="close" onclick="closePopup()">&times;</span>
+		<h2>Company Details</h2>
+		<p id="companyDetails">Additional information about the selected company will appear here.</p>
+	</div>
+</div>
+
+<script>
+
+var marketUrl = BASE_URL + 'gs/job/groww/market/updates';
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closePopup();
+        }
+    });
+
+    let apiResponse;
+let tempAPIResponse;
+	init();
+
+    function init() {
+
+
+
+		 var xhr = new XMLHttpRequest();
+			xhr.open("GET", marketUrl);
+ xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+var data = JSON.stringify({});
+
+    xhr.send(data);
+
+
+  xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+
+            const response = JSON.parse(xhr.responseText);
+
+			apiResponse = response;
+			// Mock API response
+			 tempAPIResponse = apiResponse;
+
+
+ document.getElementById("uploadLoading1").hidden = true;
+
+			addTableData();
+
+        }
+    };
+
+
+    }
+
+
+
+	function addTableData(){
+    	addTableData1(apiResponse);
+    }
+
+    // Generate dynamic table
+	function addTableData1(apiResponse1){
+        let tableBody = document.getElementById("tableBody");
+    apiResponse1.forEach(company => {
+        let newRow = document.createElement("tr");
+        newRow.onclick = function() { showPopup(this); };
+        newRow.innerHTML = `
+            <td>${company.companyName}</td>
+            <td>₹${company.stockPrice}</td>
+            <td>₹${(company.marketCap / 10000000).toFixed(2)} cr</td>
+            <td>${getCategory(company.marketCap)}</td>
+            <td>${company.dayReturnPercentage.toFixed(2)}%</td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+    }
+
+
+
+    let sortTimeout;
+    function sortTableDelayed(n) {
+
+    	if(apiResponse == undefined || apiResponse == null)
+    		return;
+
+            sortTable(n);
+    }
+
+
+
+
+    function searchFunction() {
+
+
+    	if(apiResponse == undefined || apiResponse == null)
+    		return;
+
+        let input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("stockTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
+    function filterFunction() {
+
+
+    	if(apiResponse == undefined || apiResponse == null)
+    		return;
+
+	refreshCurrentData(apiResponse);
+
+        let input, filter, table, tr, td, i;
+        input = document.getElementById("categoryFilter");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("stockTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+                if (filter === "ALL") {
+                    tr[i].style.display = "";
+                } else if (td.innerHTML.toUpperCase() === filter) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+	tempAPIResponse = [];
+
+	 if (filter === "ALL") {
+		tempAPIResponse = apiResponse;
+                 return;
+                }
+
+		for(let i1=0; i1 < apiResponse.length;i1++){
+			if(filter ==  getCategory(apiResponse[i1].marketCap).toUpperCase())
+				tempAPIResponse[i1] = 	apiResponse[i1];
+	}
+
+
+    }
+
+    let   dir = "asc";
+
+    function sortTable(n) {
+        let  rows, i, x, y, switchcount = 0;
+
+
+     	if(dir == 'asc'){
+         dir = "desc";
+        }else{
+        dir = "asc";
+        }
+
+
+                if (n === 1) {
+            let sortedResp =    sortByStockPrice(tempAPIResponse,dir);
+		refreshCurrentData(sortedResp);
+
+
+                }
+                else if(n === 2){
+                   let sortedResp = sortByMarketCap(tempAPIResponse,dir);
+                         	refreshCurrentData(sortedResp);
+
+                }
+                else { // Day Return Percentage
+             let sortedResp = sortByDayReturnPercentage(tempAPIResponse,dir);
+            	refreshCurrentData(sortedResp);
+                }
+
+
+
+    }
+
+    function clearFilters() {
+	tempAPIResponse	= apiResponse;
+        document.getElementById("searchInput").value = "";
+        document.getElementById("categoryFilter").value = "all";
+        filterFunction();
+        searchFunction();
+    }
+
+function refreshCurrentData(resp){
+
+
+    	if(apiResponse == undefined || apiResponse == null)
+    		return;
+
+ clearData();
+addTableData1(resp);
+}
+
+    function showPopup(row) {
+        let companyName = row.getElementsByTagName("td")[0].innerText;
+        let stockPrice = row.getElementsByTagName("td")[1].innerText;
+        let marketCap = row.getElementsByTagName("td")[2].innerText;
+        let category = row.getElementsByTagName("td")[3].innerText;
+        let dayReturnPercentage = row.getElementsByTagName("td")[4].innerText;
+
+        let popup = document.getElementById("popup");
+        let companyDetails = document.getElementById("companyDetails");
+
+        companyDetails.innerHTML = `
+            <strong>Company Name:</strong> ${companyName}<br>
+            <strong>Stock Price:</strong> ${stockPrice}<br>
+            <strong>Market Cap:</strong> ${marketCap}<br>
+            <strong>Category:</strong> ${category}<br>
+            <strong>Day Return Percentage:</strong> ${dayReturnPercentage}<br>
+        `;
+
+        popup.style.display = "block";
+    }
+
+    function closePopup() {
+        let popup = document.getElementById("popup");
+        popup.style.display = "none";
+    }
+
+    function clearData() {
+        let tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = ""; // Clearing all table rows
+    }
+
+
+
+
+
+
+
+
+    function sortByStockPrice(response, order) {
+    return response.sort((a, b) => {
+        if (order === "asc") {
+            return a.stockPrice - b.stockPrice;
+        } else {
+            return b.stockPrice - a.stockPrice;
+        }
+    });
+}
+
+// Function to sort by dayReturnPercentage
+function sortByDayReturnPercentage(response, order) {
+    return response.sort((a, b) => {
+        if (order === "asc") {
+            return a.dayReturnPercentage - b.dayReturnPercentage;
+        } else {
+            return b.dayReturnPercentage - a.dayReturnPercentage;
+        }
+    });
+}
+
+// Function to sort by marketCap
+function sortByMarketCap(response, order) {
+    return response.sort((a, b) => {
+        if (order === "asc") {
+            return a.marketCap - b.marketCap;
+        } else {
+            return b.marketCap - a.marketCap;
+        }
+    });
+}
+
+
+
+ function getCategory(marketCap) {
+        if (marketCap > 2000000000000) {
+            return "Large";
+        } else if (marketCap < 500000000000) {
+            return "Small";
+        } else {
+            return "Medium";
+        }
+    }
+</script>
+
+</body>
+</html>
