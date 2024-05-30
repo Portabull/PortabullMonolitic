@@ -303,11 +303,13 @@ limitVal = 10000;
                 var cell = row.insertCell(-1);
                 cell.innerHTML = customers[i][j];
             }
+		if(displayDBDesign == "displayDBDesign"){
 	    var cell = row.insertCell(-1);
 		var tableName = customers[i][1];
 		var schemaName = customers[i][2];
 		var schemaWithTableName = schemaName + "." + tableName;
 	    cell.innerHTML = "<button type=\"button\" onclick=\"viewTableData('" + schemaWithTableName + "')\">View</button>";
+		}
         }
 
         var dvTable = document.getElementById("dvTable");
