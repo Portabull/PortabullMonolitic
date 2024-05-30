@@ -135,7 +135,7 @@ input[type=submit]:hover {
         </div>
         <div class="row">
             <div class="col-25">
-                <label for="subject">Subject</label>
+                <label for="subject">Query</label>
             </div>
             <div class="col-75">
                 <textarea id="queryId" name="subject" placeholder="Write Query here.." style="height:200px"></textarea>
@@ -299,7 +299,7 @@ limitVal = 10000;
         //Add the data rows.
         for (var i = 1; i < customers.length; i++) {
             row = table.insertRow(-1);
-            for (var j = 0; j < columnCount-1; j++) {
+            for (var j = 0; j < columnCount; j++) {
                 var cell = row.insertCell(-1);
                 cell.innerHTML = customers[i][j];
             }
@@ -307,7 +307,7 @@ limitVal = 10000;
 		var tableName = customers[i][1];
 		var schemaName = customers[i][2];
 		var schemaWithTableName = schemaName + "." + tableName;
-	    cell.innerHTML = "<button type=\"button\" onclick=\"viewTableData(${schemaWithTableName})\">View</button>";
+	    cell.innerHTML = "<button type=\"button\" onclick=\"viewTableData(" + schemaWithTableName + ")\">View</button>";
         }
 
         var dvTable = document.getElementById("dvTable");
