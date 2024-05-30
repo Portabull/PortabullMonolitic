@@ -280,7 +280,7 @@ limitVal = 10000;
         //Get the count of columns.
         var columnCount = customers[0].length;
 
-        //Add the header row.
+      //Add the header row.
         var row = table.insertRow(-1);
         for (var i = 0; i < columnCount; i++) {
             var headerCell = document.createElement("TH");
@@ -288,13 +288,26 @@ limitVal = 10000;
             row.appendChild(headerCell);
         }
 
+	//just to show actions button 
+	if(displayDBDesign == "displayDBDesign"){
+		 var headerCell = document.createElement("TH");
+            headerCell.innerHTML = 'Actions';
+            row.appendChild(headerCell);
+
+	}
+
         //Add the data rows.
         for (var i = 1; i < customers.length; i++) {
             row = table.insertRow(-1);
-            for (var j = 0; j < columnCount; j++) {
+            for (var j = 0; j < columnCount-1; j++) {
                 var cell = row.insertCell(-1);
                 cell.innerHTML = customers[i][j];
             }
+	    var cell = row.insertCell(-1);
+		var tableName = customers[i][1];
+		var schemaName = customers[i][2];
+		var schemaWithTableName = schemaName + "." + tableName;
+	    cell.innerHTML = "<button type=\"button\" onclick=\"viewTableData(${schemaWithTableName})\">View</button>";
         }
 
         var dvTable = document.getElementById("dvTable");
@@ -305,6 +318,13 @@ limitVal = 10000;
                     }
                 };
 }
+
+		function viewTableData(schemaWithTableName){
+		var query = "select * from " + schemaWithTableName;
+
+		 document.getElementById('queryId').value = query;
+		  document.getElementById('dbForm').submit();
+	}
 
 function prevPage(){
 if(pageNo==0){
