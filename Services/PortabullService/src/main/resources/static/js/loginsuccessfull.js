@@ -34,9 +34,9 @@ var showHoverOptionDiv = document.querySelector('#showHoverOptionDiv');
 
      showHoverOptionDivInner = "<input class=\"documentButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/message.webp') + "\" id=\"documentButton\"/><p>Message</p>";;
 
-    }else if(optionName == 'Notifications'){
+    }else if(optionName == 'Schedulers'){
 
-     showHoverOptionDivInner = "<input class=\"documentButton\" type=\"image\" src=\" " + loginstaticimages.get('static/images/notifications.webp') + "\" id=\"documentButton\"/><p>Notifications</p>";;
+     showHoverOptionDivInner = "<input class=\"documentButton\" type=\"image\" src=\" " + loginstaticimages.get('static/images/scheduler.webp') + "\" id=\"documentButton\"/><p>Schedulers</p>";;
 
     } else if(optionName == 'SPF'){
 
@@ -277,9 +277,9 @@ var loadCounter = 0;
     var documentsButton =  "<input class=\"documentButton\" type=\"image\" src=\"" + loginstaticimages.get('static/images/source-documents-1024x682.jpeg') + "\" draggable=\"false\"  onmouseover=\"showHoverOption('Documents')\" onclick=\"redirectToDocsPage()\"  onmouseleave=\"clearshowHoverOption()\" id=\"documentButton\"/>";
     var settingsButton = "<input class=\"settingsButton\" onclick=\"redirectTosettingsPage()\" type=\"image\" src=\"" + loginstaticimages.get('static/images/setting-2872383-2389560.jpg') + "\" onmouseover=\"showHoverOption('Settings')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"settingsButton\"/>";
     var messageButton = "<input class=\"messageButton\" onclick=\"redirectToMessagePage()\" type=\"image\" src=\"" + loginstaticimages.get('static/images/message.webp') + "\" onmouseover=\"showHoverOption('Message')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\" id=\"messageButton\"/>";
-    var notificationButton = "<input onclick=\"redirectToemailPage()\" class=\"notificationButton\" type=\"image\" onmouseover=\"showHoverOption('Notifications')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\"  src=\"" + loginstaticimages.get('static/images/notifications.webp') + "\" id=\"notificationButton\">";
+    var notificationButton = "<input onclick=\"redirectToNotificationPage()\" class=\"notificationButton\" type=\"image\" onmouseover=\"showHoverOption('Schedulers')\" draggable=\"false\"  onmouseleave=\"clearshowHoverOption()\"  src=\"" + loginstaticimages.get('static/images/scheduler.webp') + "\" id=\"notificationButton\">";
     var spfButton = "<input onclick=\"redirectToSPFPage()\" class=\"spf\" type=\"image\" src=\"" + loginstaticimages.get('static/images/portabull.png') + "\" draggable=\"false\"   onmouseover=\"showHoverOption('SPF')\" onmouseleave=\"clearshowHoverOption()\" id=\"spf\">";
-    var emailButton = "<input onclick=\"redirectToNotificationPage()\" class=\"emailButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/email.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Email')\" onmouseleave = \"clearshowHoverOption()\" id = \"emailButton\"/>";
+    var emailButton = "<input onclick=\"redirectToemailPage()\" class=\"emailButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/email.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Email')\" onmouseleave = \"clearshowHoverOption()\" id = \"emailButton\"/>";
     var misReportsButton = "<input onclick=\"redirectToMISReportsPage()\" class=\"misReportsButton\" type = \"image\" src = \"" + loginstaticimages.get('static/images/reports.jpg') + "\" draggable = \"false\" onmouseover = \"showHoverOption('Mis Reports')\" onmouseleave = \"clearshowHoverOption()\" id=\"misReportsButton\">";
 
         document.getElementById("buttonsTagDivStatic").innerHTML = documentsButton + settingsButton + messageButton + notificationButton+ spfButton + emailButton +misReportsButton;
@@ -346,7 +346,7 @@ function redirectToemailPage() {
     };
 
     function redirectToNotificationPage() {
-        location.href = "notificationButton.html";
+        location.href = "scheduler.html";
     };
      function redirectToMISReportsPage() {
         location.href = "adminmisreports.html";

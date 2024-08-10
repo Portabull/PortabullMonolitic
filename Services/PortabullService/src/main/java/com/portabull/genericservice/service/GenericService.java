@@ -15,4 +15,8 @@ public interface GenericService {
     PortableResponse saveSchedularDetails(Map<String, Object> payload);
 
     PortableResponse saveCache(Map<String, Object> data);
+
+    PortableResponse getSchedulers();
+
+    public PortableResponse changeSchedulerStatus(Long schedulerId, Boolean status);
 }

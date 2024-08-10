@@ -205,6 +205,16 @@ public class GenericServiceImpl implements GenericService {
                 StatusCodes.C_200, PortableConstants.SUCCESS, null);
     }
 
+    @Override
+    public PortableResponse getSchedulers() {
+        return genericDao.getSchedulers();
+    }
+
+    @Override
+    public PortableResponse changeSchedulerStatus(Long schedulerId, Boolean status) {
+        return genericDao.changeSchedulerStatus(schedulerId, status);
+    }
+
     public HttpMethod getHttpMethod(String method) {
         switch (method) {
             case "POST":

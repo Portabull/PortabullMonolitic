@@ -182,4 +182,14 @@ public class GenericController {
 
     }
 
+    @GetMapping("scheduler")
+    public ResponseEntity<?> getSchedulers() {
+        return new ResponseEntity<>(genericService.getSchedulers(), HttpStatus.OK);
+    }
+
+    @PostMapping("change-scheduler-status")
+    public ResponseEntity<?> changeSchedulerStatus(@RequestParam Long schedulerId, @RequestParam Boolean activeStatus) {
+        return new ResponseEntity<>(genericService.changeSchedulerStatus(schedulerId, activeStatus), HttpStatus.OK);
+    }
+
 }

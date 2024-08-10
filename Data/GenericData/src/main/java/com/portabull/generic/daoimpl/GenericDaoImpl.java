@@ -9,12 +9,11 @@ import com.portabull.generic.models.SchedulerActions;
 import com.portabull.generic.models.SchedulerTask;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.commonutils.CommonUtils;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class GenericDaoImpl implements GenericDao {
@@ -75,4 +74,34 @@ public class GenericDaoImpl implements GenericDao {
 
         return new PortableResponse();
     }
+
+    @Override
+    public PortableResponse getSchedulers() {
+        try (Session session = hibernateUtils.getSession()) {
+            List<SchedulerTask> tasks = session.createQuery("FROM SchedulerTask WHERE userId=:userId ORDER BY schedulerId", SchedulerTask.class)
+                    .setParameter("userId", CommonUtils.getLoggedInUserId()).list();
+            List<Map<String, Object>> response = new ArrayList<>();
+            tasks.forEach(task -> {
+                Map<String, Object> taskResponse = new HashMap<>();
+                taskResponse.put("schedulerId", task.getSchedulerId());
+                taskResponse.put("schedulerName", task.getSchedulerName());
+                taskResponse.put("lastTriggeredDate", task.getLastTriggeredDate());
+                taskResponse.put("isActive", task.isActive());
+                taskResponse.put("triggerType", task.getTriggerType());
+                response.add(taskResponse);
+            });
+            return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, response);
+        }
+    }
+
+    @Override
+    public PortableResponse changeSchedulerStatus(Long schedulerId, Boolean status) {
+        SchedulerTask task = hibernateUtils.findEntity(SchedulerTask.class, schedulerId);
+        if (task != null) {
+            task.setActive(status);
+            hibernateUtils.saveOrUpdateEntity(task);
+        }
+        return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null);
+    }
+
 }
