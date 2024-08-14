@@ -83,6 +83,10 @@
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
 
+               var data123 = JSON.stringify({});
+
+           xhr.send(data123);
+
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     console.log(xhr.status);
