@@ -17,55 +17,79 @@
             padding: 10px;
             position: relative;
             height: 100vh; /* Ensure the dashboard takes full viewport height */
+            box-sizing: border-box;
         }
 
         .widget {
-            width: 300px;
+            width: 100%; /* Full width on small screens */
+            max-width: 300px; /* Max width to maintain size */
             height: 300px;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 10px;
             background-color: #fff;
-            position: absolute;
+            position: relative;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             box-sizing: border-box;
             cursor: move;
+            margin: 5px;
         }
 
         canvas {
             width: 100% !important;
             height: 100% !important;
         }
+
+        @media (min-width: 576px) {
+            .widget {
+                width: calc(50% - 10px); /* Two widgets per row on medium screens */
+                height: 300px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .widget {
+                width: calc(25% - 10px); /* Four widgets per row on large screens */
+                height: 300px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .widget {
+                width: calc(20% - 10px); /* Five widgets per row on extra-large screens */
+                height: 300px;
+            }
+        }
     </style>
 </head>
 <body>
     <div id="dashboard">
-        <div class="widget" data-chart="pie" id="widget1" style="left: 0px; top: 0px;">
+        <div class="widget" data-chart="pie" id="widget1">
             <canvas id="pieChart"></canvas>
         </div>
-        <div class="widget" data-chart="scatter" id="widget2" style="left: 320px; top: 0px;">
+        <div class="widget" data-chart="scatter" id="widget2">
             <canvas id="scatterChart"></canvas>
         </div>
-        <div class="widget" data-chart="column" id="widget3" style="left: 640px; top: 0px;">
+        <div class="widget" data-chart="column" id="widget3">
             <canvas id="columnChart"></canvas>
         </div>
-        <div class="widget" data-chart="histogram" id="widget4" style="left: 960px; top: 0px;">
+        <div class="widget" data-chart="histogram" id="widget4">
             <canvas id="histogramChart"></canvas>
         </div>
-        <div class="widget" data-chart="bar" id="widget5" style="left: 0px; top: 320px;">
+        <div class="widget" data-chart="bar" id="widget5">
             <canvas id="barChart"></canvas>
         </div>
-        <div class="widget" data-chart="combo" id="widget6" style="left: 320px; top: 320px;">
+        <div class="widget" data-chart="combo" id="widget6">
             <canvas id="comboChart"></canvas>
         </div>
-        <div class="widget" data-chart="area" id="widget7" style="left: 640px; top: 320px;">
+        <div class="widget" data-chart="area" id="widget7">
             <canvas id="areaChart"></canvas>
         </div>
-        <div class="widget" data-chart="steppedArea" id="widget8" style="left: 960px; top: 320px;">
+        <div class="widget" data-chart="steppedArea" id="widget8">
             <canvas id="steppedAreaChart"></canvas>
         </div>
-        <div class="widget" data-chart="line" id="widget9" style="left: 0px; top: 640px;">
+        <div class="widget" data-chart="line" id="widget9">
             <canvas id="lineChart"></canvas>
         </div>
     </div>
@@ -221,24 +245,18 @@
                                             display: true,
                                             position: 'top',
                                             labels: {
+                                                color: '#555',
                                                 font: {
-                                                    size: 14,
-                                                    family: 'Arial',
-                                                },
-                                                color: '#333'
+                                                    size: 14
+                                                }
                                             }
                                         },
                                         tooltip: {
-                                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                            backgroundColor: '#333',
                                             titleColor: '#fff',
                                             bodyColor: '#fff',
-                                            borderColor: '#fff',
-                                            borderWidth: 1,
-                                            padding: 10
-                                        },
-                                        animation: {
-                                            duration: 1000, // Animation duration in ms
-                                            easing: 'easeInOutQuad' // Easing function
+                                            padding: 10,
+                                            cornerRadius: 4,
                                         }
                                     },
                                     scales: {
