@@ -70,11 +70,10 @@
         </div>
     </div>
 
-<script src="js/portabullconfig.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
     <script>
-       
+        const BASE_URL = 'https://example.com/'; // Replace with your actual base URL
 
         function loadStatistics() {
             var xhr = new XMLHttpRequest();
@@ -83,18 +82,13 @@
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Authorization", window.localStorage.getItem('token'));
 
-               var data123 = JSON.stringify({});
-
-           xhr.send(data123);
-
             xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
                     console.log(xhr.status);
                     console.log(xhr.responseText);
 
-                    const response = JSON.parse(xhr.responseText);
-
-                    if(response.statusCode == 200){
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
                         const fileStatistics = response.data.fileStatistics;
                         const labels = fileStatistics.map(item => item[0]);
                         const values = fileStatistics.map(item => item[1]);
@@ -105,16 +99,26 @@
                                 datasets: [{
                                     label: 'File Types Distribution',
                                     data: values,
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    backgroundColor: [
+                                        'rgba(255, 99, 132, 0.8)',
+                                        'rgba(54, 162, 235, 0.8)',
+                                        'rgba(255, 206, 86, 0.8)',
+                                        'rgba(75, 192, 192, 0.8)',
+                                        'rgba(153, 102, 255, 0.8)',
+                                        'rgba(255, 159, 64, 0.8)'
+                                    ],
+                                    borderColor: '#fff',
+                                    borderWidth: 2,
                                 }]
                             },
                             scatter: {
                                 datasets: [{
                                     label: 'File Size Scatter',
                                     data: fileStatistics.map((item, index) => ({ x: index, y: item[1] })),
-                                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.8)',
                                     borderColor: 'rgba(75, 192, 192, 1)',
+                                    pointRadius: 5,
+                                    pointHoverRadius: 7
                                 }]
                             },
                             column: {
@@ -122,8 +126,9 @@
                                 datasets: [{
                                     label: 'File Size (Column Chart)',
                                     data: values,
-                                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                    backgroundColor: 'rgba(255, 99, 132, 0.8)',
                                     borderColor: 'rgba(255, 99, 132, 1)',
+                                    borderWidth: 1,
                                 }]
                             },
                             histogram: {
@@ -131,8 +136,9 @@
                                 datasets: [{
                                     label: 'File Size (Histogram)',
                                     data: values,
-                                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                    backgroundColor: 'rgba(153, 102, 255, 0.8)',
                                     borderColor: 'rgba(153, 102, 255, 1)',
+                                    borderWidth: 1,
                                 }]
                             },
                             bar: {
@@ -140,8 +146,9 @@
                                 datasets: [{
                                     label: 'File Size (Bar Chart)',
                                     data: values,
-                                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                                    backgroundColor: 'rgba(255, 159, 64, 0.8)',
                                     borderColor: 'rgba(255, 159, 64, 1)',
+                                    borderWidth: 1,
                                 }]
                             },
                             combo: {
@@ -152,14 +159,17 @@
                                         label: 'File Size Line',
                                         data: values,
                                         borderColor: 'rgba(54, 162, 235, 1)',
-                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        backgroundColor: 'rgba(54, 162, 235, 0.4)',
+                                        fill: false,
+                                        borderWidth: 2,
                                     },
                                     {
                                         type: 'bar',
                                         label: 'File Size Bar',
                                         data: values,
-                                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                        backgroundColor: 'rgba(255, 99, 132, 0.8)',
                                         borderColor: 'rgba(255, 99, 132, 1)',
+                                        borderWidth: 1,
                                     }
                                 ]
                             },
@@ -168,9 +178,10 @@
                                 datasets: [{
                                     label: 'File Size (Area Chart)',
                                     data: values,
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
                                     borderColor: 'rgba(75, 192, 192, 1)',
                                     fill: true,
+                                    borderWidth: 2,
                                 }]
                             },
                             steppedArea: {
@@ -178,10 +189,11 @@
                                 datasets: [{
                                     label: 'File Size (Stepped Area Chart)',
                                     data: values,
-                                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                                    backgroundColor: 'rgba(255, 206, 86, 0.6)',
                                     borderColor: 'rgba(255, 206, 86, 1)',
                                     stepped: true,
                                     fill: true,
+                                    borderWidth: 2,
                                 }]
                             },
                             line: {
@@ -190,8 +202,9 @@
                                     label: 'File Size (Line Chart)',
                                     data: values,
                                     borderColor: 'rgba(75, 192, 192, 1)',
-                                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
                                     fill: false,
+                                    borderWidth: 2,
                                 }]
                             }
                         };
@@ -206,6 +219,44 @@
                                     plugins: {
                                         legend: {
                                             display: true,
+                                            position: 'top',
+                                            labels: {
+                                                font: {
+                                                    size: 14,
+                                                    family: 'Arial',
+                                                },
+                                                color: '#333'
+                                            }
+                                        },
+                                        tooltip: {
+                                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                            titleColor: '#fff',
+                                            bodyColor: '#fff',
+                                            borderColor: '#fff',
+                                            borderWidth: 1,
+                                            padding: 10
+                                        },
+                                        animation: {
+                                            duration: 1000, // Animation duration in ms
+                                            easing: 'easeInOutQuad' // Easing function
+                                        }
+                                    },
+                                    scales: {
+                                        x: {
+                                            ticks: {
+                                                color: '#555',
+                                                font: {
+                                                    size: 12
+                                                }
+                                            }
+                                        },
+                                        y: {
+                                            ticks: {
+                                                color: '#555',
+                                                font: {
+                                                    size: 12
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -256,9 +307,11 @@
                     }
                 }
             };
+
+            xhr.send();
         }
-  loadStatistics();
-     
+
+        loadStatistics();
     </script>
 </body>
 </html>
