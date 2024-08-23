@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shares Investment Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #formContainer,
+        #chartContainer {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        #formContainer.fadeOut,
+        #chartContainer.fadeOut {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        #formContainer.fadeIn,
+        #chartContainer.fadeIn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        #chartContainer {
+            display: none;
+        }
+
+        .add-share-button,
+        .import-button,
+        .chart-export-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .add-share-button:hover,
+        .import-button:hover,
+        .chart-export-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .import-button {
+            background-color: #dc3545;
+        }
+
+        .import-button:hover {
+            background-color: #c82333;
+        }
+
+        .chart-export-button {
+            background-color: #007bff;
+        }
+
+        .chart-export-button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            #formContainer,
+            #chartContainer {
+                padding: 15px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .add-share-button,
+            .import-button,
+            .chart-export-button {
+                width: 100%;
+            }
+
+            table th,
+            table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+
+        .view-switcher {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .view-switcher i {
+            font-size: 24px;
+            margin: 0 15px;
+            cursor: pointer;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .view-switcher i.active {
+            color: #007bff;
+            transform: scale(1.1);
+        }
+
+        #investmentChart,
+        #barChart {
+            margin-bottom: 0;
+        }
+
+        #investmentDetailsTable {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="formContainer" class="fadeIn">
+        <h2>Shares Investment Form</h2>
+        <form id="investmentForm" onsubmit="return handleSubmit(event)">
+            <table id="sharesTable">
+                <thead>
+                    <tr>
+                        <th>Stock Name</th>
+                        <th>Total Investment (₹)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" name="stockName[]" placeholder="Enter stock name" required aria-label="Stock Name"></td>
+                        <td><input type="number" name="investment[]" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                        <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="add-share-button" onclick="addRow()">Add Share</div>
+            <input type="file" id="importFile" style="display:none;" onchange="importData(event)" />
+            <div class="import-button" onclick="document.getElementById('importFile').click()">Import Data</div>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div id="chartContainer">
+        <div class="view-switcher">
+            <i class="fas fa-chart-pie" onclick="showPieChart()" aria-label="Show Pie Chart"></i>
+            <i class="fas fa-chart-bar" onclick="showBarChart()" aria-label="Show Bar Chart"></i>
+            <i class="fas fa-table" onclick="showTableView()" aria-label="Show Table View"></i>
+        </div>
+        <h2>Investment Distribution</h2>
+        <canvas id="investmentChart" width="400" height="400"></canvas>
+        <canvas id="barChart" width="400" height="400" style="display: none;"></canvas>
+        <div id="chartDetails" style="margin-top: 20px;">
+            <h3>Investment Details</h3>
+            <table id="investmentDetailsTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Stock Name</th>
+                        <th onclick="sortTable(1)">Investment (₹)</th>
+                        <th onclick="sortTable(2)">Percentage (%)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <br>
+        <div class="chart-export-button" onclick="exportData()">Export Data</div>
+        <button onclick="goBack()">Back to Form</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let investmentData = [];
+        let pieChart = null;
+        let barChart = null;
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            investmentData = [];
+
+            const formData = new FormData(event.target);
+            const stockNames = formData.getAll('stockName[]');
+            const investments = formData.getAll('investment[]');
+
+            stockNames.forEach((name, index) => {
+                const investment = parseFloat(investments[index]);
+                if (name && !isNaN(investment) && investment > 0) {
+                    investmentData.push({ name, investment });
+                }
+            });
+
+            generateCharts();
+            generateTable();
+            document.getElementById('formContainer').classList.add('fadeOut');
+            setTimeout(() => {
+                document.getElementById('formContainer').style.display = 'none';
+                document.getElementById('chartContainer').style.display = 'block';
+                document.getElementById('chartContainer').classList.add('fadeIn');
+            }, 300);
+        }
+
+        function addRow() {
+            const tableBody = document.querySelector('#sharesTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" name="stockName[]" placeholder="Enter stock name" required aria-label="Stock Name"></td>
+                <td><input type="number" name="investment[]" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        function removeRow(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+
+        function generateCharts() {
+            const ctxPie = document.getElementById('investmentChart').getContext('2d');
+            const ctxBar = document.getElementById('barChart').getContext('2d');
+
+            const labels = investmentData.map(data => data.name);
+            const data = investmentData.map(data => data.investment);
+            const totalInvestment = data.reduce((acc, val) => acc + val, 0);
+            const percentages = data.map(value => (value / totalInvestment * 100).toFixed(2));
+
+            if (pieChart) pieChart.destroy();
+            if (barChart) barChart.destroy();
+
+            pieChart = new Chart(ctxPie, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#E7E9ED']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const label = tooltipItem.label || '';
+                                    const value = tooltipItem.raw;
+                                    const percentage = (value / totalInvestment * 100).toFixed(2);
+                                    return `${label}: ${value} ( ${percentage}% )`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Investment (₹)',
+                        data: data,
+                        backgroundColor: '#007bff',
+                        borderColor: '#0056b3',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return `${value} ₹`;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const value = tooltipItem.raw;
+                                    const percentage = percentages[tooltipItem.dataIndex];
+                                    return `Investment: ${value} ₹ (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateTable() {
+            const tableBody = document.querySelector('#investmentDetailsTable tbody');
+            tableBody.innerHTML = '';
+            investmentData.forEach(data => {
+                const row = document.createElement('tr');
+                const totalInvestment = investmentData.reduce((acc, val) => acc + val.investment, 0);
+                const percentage = ((data.investment / totalInvestment) * 100).toFixed(2);
+
+                row.innerHTML = `
+                    <td>${data.name}</td>
+                    <td>${data.investment}</td>
+                    <td>${percentage}%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function showPieChart() {
+            document.getElementById('investmentChart').style.display = 'block';
+            document.getElementById('barChart').style.display = 'none';
+            document.getElementById('investmentDetailsTable').style.display = 'none';
+        }
+
+        function showBarChart() {
+            document.getElementById('investmentChart').style.display = 'none';
+            document.getElementById('barChart').style.display = 'block';
+            document.getElementById('investmentDetailsTable').style.display = 'none';
+        }
+
+        function showTableView() {
+            document.getElementById('investmentChart').style.display = 'none';
+            document.getElementById('barChart').style.display = 'none';
+            document.getElementById('investmentDetailsTable').style.display = 'table';
+        }
+
+        function goBack() {
+            document.getElementById('chartContainer').classList.add('fadeOut');
+            setTimeout(() => {
+                document.getElementById('chartContainer').style.display = 'none';
+                document.getElementById('formContainer').style.display = 'block';
+                document.getElementById('formContainer').classList.add('fadeIn');
+            }, 300);
+        }
+
+        function sortTable(n) {
+            const table = document.querySelector("#investmentDetailsTable");
+            const rows = Array.from(table.querySelectorAll("tbody tr"));
+            const isAscending = table.querySelectorAll("thead th")[n].classList.toggle("asc", !table.querySelectorAll("thead th")[n].classList.contains("asc"));
+
+            rows.sort((rowA, rowB) => {
+                const cellA = rowA.cells[n].innerText.trim();
+                const cellB = rowB.cells[n].innerText.trim();
+
+                if (!isNaN(cellA) && !isNaN(cellB)) {
+                    return (parseFloat(cellA) - parseFloat(cellB)) * (isAscending ? 1 : -1);
+                }
+
+                return (cellA.localeCompare(cellB)) * (isAscending ? 1 : -1);
+            });
+
+            rows.forEach(row => table.querySelector("tbody").appendChild(row));
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(investmentData);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "investmentData.json";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    investmentData = JSON.parse(e.target.result);
+                    populateForm();
+                    generateCharts();
+                    generateTable();
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        function populateForm() {
+            const tableBody = document.querySelector('#sharesTable tbody');
+            tableBody.innerHTML = '';
+
+            investmentData.forEach(data => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><input type="text" name="stockName[]" value="${data.name}" placeholder="Enter stock name" required aria-label="Stock Name"></td>
+                    <td><input type="number" name="investment[]" value="${data.investment}" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                    <td><button type="button" onclick="removeRow(this)">Remove</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.getElementById('formContainer').style.display = 'block';
+        document.getElementById('chartContainer').style.display = 'none';
+    </script>
+</body>
+</html>
