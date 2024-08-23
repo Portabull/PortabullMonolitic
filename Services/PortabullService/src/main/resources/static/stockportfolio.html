@@ -203,6 +203,29 @@
         #investmentDetailsTable {
             margin-top: 20px;
         }
+
+        .total-amount {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .back-button {
+            background-color: #dc3545;
+            color: white;
+            font-size: 14px;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -220,7 +243,7 @@
                 <tbody>
                     <tr>
                         <td><input type="text" name="stockName[]" placeholder="Enter stock name" required aria-label="Stock Name"></td>
-                        <td><input type="number" name="investment[]" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                        <td><input type="number" name="investment[]" placeholder="Enter total investment" step="0.0001" min="0" required aria-label="Total Investment"></td>
                         <td><button type="button" onclick="removeRow(this)">Remove</button></td>
                     </tr>
                 </tbody>
@@ -234,6 +257,7 @@
     </div>
 
     <div id="chartContainer">
+        <button class="back-button" onclick="goBack()">Back</button>
         <div class="view-switcher">
             <i class="fas fa-chart-pie" onclick="showPieChart()" aria-label="Show Pie Chart"></i>
             <i class="fas fa-chart-bar" onclick="showBarChart()" aria-label="Show Bar Chart"></i>
@@ -242,6 +266,7 @@
         <h2>Investment Distribution</h2>
         <canvas id="investmentChart" width="400" height="400"></canvas>
         <canvas id="barChart" width="400" height="400" style="display: none;"></canvas>
+        <div class="total-amount" id="totalAmount">Total Investment: ₹0.00</div>
         <div id="chartDetails" style="margin-top: 20px;">
             <h3>Investment Details</h3>
             <table id="investmentDetailsTable">
@@ -257,7 +282,6 @@
         </div>
         <br>
         <div class="chart-export-button" onclick="exportData()">Export Data</div>
-        <button onclick="goBack()">Back to Form</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -268,13 +292,11 @@
 
         function handleSubmit(event) {
             event.preventDefault();
+            const names = Array.from(document.getElementsByName('stockName[]')).map(input => input.value.trim());
+            const investments = Array.from(document.getElementsByName('investment[]')).map(input => input.value.trim());
+
             investmentData = [];
-
-            const formData = new FormData(event.target);
-            const stockNames = formData.getAll('stockName[]');
-            const investments = formData.getAll('investment[]');
-
-            stockNames.forEach((name, index) => {
+            names.forEach((name, index) => {
                 const investment = parseFloat(investments[index]);
                 if (name && !isNaN(investment) && investment > 0) {
                     investmentData.push({ name, investment });
@@ -283,6 +305,7 @@
 
             generateCharts();
             generateTable();
+            updateTotalAmount();
             document.getElementById('formContainer').classList.add('fadeOut');
             setTimeout(() => {
                 document.getElementById('formContainer').style.display = 'none';
@@ -296,7 +319,7 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><input type="text" name="stockName[]" placeholder="Enter stock name" required aria-label="Stock Name"></td>
-                <td><input type="number" name="investment[]" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                <td><input type="number" name="investment[]" placeholder="Enter total investment" step="0.0001" min="0" required aria-label="Total Investment"></td>
                 <td><button type="button" onclick="removeRow(this)">Remove</button></td>
             `;
             tableBody.appendChild(row);
@@ -336,7 +359,7 @@
                                     const label = tooltipItem.label || '';
                                     const value = tooltipItem.raw;
                                     const percentage = (value / totalInvestment * 100).toFixed(2);
-                                    return `${label}: ${value} ( ${percentage}% )`;
+                                    return `${label}: ₹${formatNumber(value)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -362,7 +385,7 @@
                             beginAtZero: true,
                             ticks: {
                                 callback: function (value) {
-                                    return `${value} ₹`;
+                                    return `₹${formatNumber(value)}`;
                                 }
                             }
                         }
@@ -373,7 +396,7 @@
                                 label: function (tooltipItem) {
                                     const value = tooltipItem.raw;
                                     const percentage = percentages[tooltipItem.dataIndex];
-                                    return `Investment: ${value} ₹ (${percentage}%)`;
+                                    return `Investment: ₹${formatNumber(value)} (${percentage}%)`;
                                 }
                             }
                         }
@@ -392,7 +415,7 @@
 
                 row.innerHTML = `
                     <td>${data.name}</td>
-                    <td>${data.investment}</td>
+                    <td>₹${formatNumber(data.investment)}</td>
                     <td>${percentage}%</td>
                 `;
                 tableBody.appendChild(row);
@@ -435,8 +458,12 @@
                 const cellA = rowA.cells[n].innerText.trim();
                 const cellB = rowB.cells[n].innerText.trim();
 
-                if (!isNaN(cellA) && !isNaN(cellB)) {
+                if (n === 2) { // For percentage column
                     return (parseFloat(cellA) - parseFloat(cellB)) * (isAscending ? 1 : -1);
+                }
+
+                if (!isNaN(cellA.replace(/₹|,/g, '')) && !isNaN(cellB.replace(/₹|,/g, ''))) {
+                    return (parseFloat(cellA.replace(/₹|,/g, '')) - parseFloat(cellB.replace(/₹|,/g, ''))) * (isAscending ? 1 : -1);
                 }
 
                 return (cellA.localeCompare(cellB)) * (isAscending ? 1 : -1);
@@ -465,6 +492,8 @@
                     populateForm();
                     generateCharts();
                     generateTable();
+                    updateTotalAmount();
+                    document.getElementById('investmentForm').dispatchEvent(new Event('submit'));
                 };
                 reader.readAsText(file);
             }
@@ -478,11 +507,20 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td><input type="text" name="stockName[]" value="${data.name}" placeholder="Enter stock name" required aria-label="Stock Name"></td>
-                    <td><input type="number" name="investment[]" value="${data.investment}" placeholder="Enter total investment" required aria-label="Total Investment"></td>
+                    <td><input type="number" name="investment[]" value="${data.investment}" step="0.0001" min="0" placeholder="Enter total investment" required aria-label="Total Investment"></td>
                     <td><button type="button" onclick="removeRow(this)">Remove</button></td>
                 `;
                 tableBody.appendChild(row);
             });
+        }
+
+        function formatNumber(num) {
+            return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function updateTotalAmount() {
+            const totalInvestment = investmentData.reduce((acc, data) => acc + data.investment, 0);
+            document.getElementById('totalAmount').textContent = `Total Investment: ₹${formatNumber(totalInvestment)}`;
         }
 
         document.getElementById('formContainer').style.display = 'block';
