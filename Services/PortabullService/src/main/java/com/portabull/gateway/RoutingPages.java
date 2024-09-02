@@ -59,6 +59,14 @@ public class RoutingPages {
         return modelAndView;
     }
 
+  @RequestMapping("emicalculator")
+    public ModelAndView handleEMICalculator() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("emicalculator.html");
+        return modelAndView;
+    }
+    
+
     @RequestMapping("stockmarketdata")
     public ModelAndView handleStockmarketdata() {
         ModelAndView modelAndView = new ModelAndView();
