@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#ffffff">
+    
+    <!-- Title and Meta Descriptions for SEO -->
+    <title>EMI Calculator - Calculate Your Home Loan, Car Loan, Personal Loan EMI Instantly</title>
+    <meta name="description" content="Use our Interactive EMI Calculator to calculate your monthly EMI for Home Loan, Car Loan, or Personal Loan. Adjust loan amount, interest rate, and tenure with sliders for real-time results and chart updates.">
+    
+    <!-- Keywords for SEO -->
+    <meta name="keywords" content="EMI Calculator, Loan EMI Calculator, Home Loan EMI, Car Loan EMI, Personal Loan EMI, Interactive EMI Calculator, Loan Calculator, Calculate EMI">
+    
+    <!-- Open Graph and Twitter Card metadata for social media -->
+    <meta property="og:title" content="EMI Calculator - Calculate Your Loan EMI Instantly">
+    <meta property="og:description" content="Interactive EMI Calculator for Home Loan, Car Loan, and Personal Loan. Adjust parameters and see real-time updates.">
+    <meta property="og:image" content="https://portabull.in/APIGateway/img/logo.png">
+    <meta property="og:url" content="https://portabull.in/APIGateway/emicalculator">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EMI Calculator - Calculate Your Loan EMI Instantly">
+    <meta name="twitter:description" content="Use our EMI Calculator to calculate your monthly payments for various types of loans.">
+    <meta name="twitter:image" content="https://portabull.in/APIGateway/img/logo.png">
+
+    <!-- Structured Data Markup (JSON-LD) for rich snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "EMI Calculator",
+      "description": "Interactive EMI Calculator for calculating EMI for Home Loan, Car Loan, and Personal Loan with real-time updates.",
+      "url": "https://portabull.in/APIGateway/emicalculator",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Worktree"
+      }
+    }
+    </script>
+
+    <!-- Inline CSS for Performance and Initial Load -->
+    <style>
+        /* Your optimized CSS here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; animation: zoomIn 0.5s ease-in-out; }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .input-container { display: flex; flex-direction: column; margin-bottom: 20px; animation: slideIn 0.7s ease-in-out; }
+        @keyframes slideIn {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        label { margin: 10px 0 5px; font-weight: bold; }
+        .input-wrapper { display: flex; align-items: center; gap: 10px; }
+        .input-wrapper input[type="text"] {
+            width: 120px; padding: 5px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px; transition: border-color 0.3s ease, transform 0.3s ease; animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); }
+            50% { box-shadow: 0 0 15px rgba(0, 123, 255, 0.7); }
+            100% { box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); }
+        }
+        .input-wrapper input[type="text"]:focus {
+            border-color: #007bff; outline: none; transform: scale(1.05); box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+        }
+        .slider {
+            width: 100%; -webkit-appearance: none; background: #ddd; height: 8px; border-radius: 5px; outline: none; transition: background 0.3s ease;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; background: #007bff; height: 24px; width: 24px; border-radius: 50%; cursor: pointer; transition: background 0.3s ease, transform 0.3s ease;
+        }
+        .slider::-webkit-slider-thumb:hover { background: #0056b3; transform: scale(1.2); }
+        #results { margin-top: 20px; text-align: center; }
+        #results p { font-size: 18px; margin: 5px 0; animation: fadeIn 0.8s ease-in-out; }
+        #chart-container { position: relative; width: 100%; height: 300px; }
+        #chart { width: 100%; height: 100%; }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            #chart-container { height: 250px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Interactive EMI Calculator</h1>
+        <div class="input-container">
+            <label for="loanAmountInput">Loan Amount (₹):</label>
+            <div class="input-wrapper">
+                <input type="text" id="loanAmountInput" class="animated-input" value="500,000">
+                <input type="range" id="loanAmount" class="slider" min="10000" max="500000000" step="10000" value="500000">
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="interestRateInput">Annual Interest Rate (%):</label>
+            <div class="input-wrapper">
+                <input type="text" id="interestRateInput" class="animated-input" value="7">
+                <input type="range" id="interestRate" class="slider" min="1" max="50" step="0.01" value="7">
+            </div>
+        </div>
+        <div class="input-container">
+            <label for="tenureInput">Tenure (Months):</label>
+            <div class="input-wrapper">
+                <input type="text" id="tenureInput" class="animated-input" value="24">
+                <input type="range" id="tenure" class="slider" min="6" max="600" step="1" value="24">
+            </div>
+        </div>
+        <div id="results">
+            <p id="emiResult">EMI: ₹0.00</p>
+            <p id="totalPaymentResult">Total Payment: ₹0.00</p>
+        </div>
+        <div id="chart-container">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Load Chart.js library from CDN for performance -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const loanAmountSlider = document.getElementById('loanAmount');
+        const interestRateSlider = document.getElementById('interestRate');
+        const tenureSlider = document.getElementById('tenure');
+
+        const loanAmountInput = document.getElementById('loanAmountInput');
+        const interestRateInput = document.getElementById('interestRateInput');
+        const tenureInput = document.getElementById('tenureInput');
+
+        const emiResult = document.getElementById('emiResult');
+        const totalPaymentResult = document.getElementById('totalPaymentResult');
+        const chartCanvas = document.getElementById('chart');
+
+        let chart;
+
+        // Event Listeners for sliders and input fields
+        loanAmountSlider.addEventListener('input', updateLoanAmount);
+        interestRateSlider.addEventListener('input', updateInterestRate);
+        tenureSlider.addEventListener('input', updateTenure);
+        loanAmountInput.addEventListener('input', updateLoanAmountSlider);
+        interestRateInput.addEventListener('input', updateInterestRateSlider);
+        tenureInput.addEventListener('input', updateTenureSlider);
+
+        function updateLoanAmount() {
+            loanAmountInput.value = formatNumberWithCommas(loanAmountSlider.value);
+            calculateEMI();
+        }
+
+        function updateInterestRate() {
+            interestRateInput.value = interestRateSlider.value;
+            calculateEMI();
+        }
+
+        function updateTenure() {
+            tenureInput.value = tenureSlider.value;
+            calculateEMI();
+        }
+
+        function updateLoanAmountSlider() {
+            loanAmountSlider.value = loanAmountInput.value.replace(/,/g, '');
+            calculateEMI();
+        }
+
+        function updateInterestRateSlider() {
+            interestRateSlider.value = interestRateInput.value;
+            calculateEMI();
+        }
+
+        function updateTenureSlider() {
+            tenureSlider.value = tenureInput.value;
+            calculateEMI();
+        }
+
+        function formatNumberWithCommas(number) {
+            return parseInt(number).toLocaleString('en-IN');
+        }
+
+        function calculateEMI() {
+            const P = parseFloat(loanAmountSlider.value);
+            const r = parseFloat(interestRateSlider.value) / 12 / 100;
+            const n = parseInt(tenureSlider.value);
+
+            const emi = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            const totalPayment = emi * n;
+            const formattedEMI = formatNumberWithCommas(emi.toFixed(2));
+            const formattedTotalPayment = formatNumberWithCommas(totalPayment.toFixed(2));
+
+            emiResult.textContent = 'EMI: ₹' + formattedEMI;
+            totalPaymentResult.textContent = 'Total Payment: ₹' + formattedTotalPayment;
+
+            updateChart(P, totalPayment - P);
+        }
+
+        function updateChart(principal, totalInterest) {
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(chartCanvas, {
+                type: 'pie',
+                data: {
+                    labels: ['Principal', 'Interest'],
+                    datasets: [{
+                        label: 'EMI Breakdown',
+                        data: [principal, totalInterest],
+                        backgroundColor: ['#007bff', '#ffc107'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    },
+                },
+            });
+        }
+
+        // Initial calculation and chart rendering
+        calculateEMI();
+    </script>
+</body>
+
+</html>
