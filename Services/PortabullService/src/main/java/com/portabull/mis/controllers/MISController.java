@@ -194,7 +194,7 @@ public class MISController {
                         return new ResponseEntity<>(response, HttpStatus.OK);
                     }
 
-                } else if (query.toUpperCase().startsWith("SELECT")) {
+                } else if (query.toUpperCase().startsWith("SELECT") || query.toUpperCase().startsWith("SHOW")) {
                     // Handle SELECT queries and return result
                     List<String> columnNames = new ArrayList<>();
                     try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
