@@ -178,6 +178,45 @@ public class MISController {
                     query = payload.get("query");
                 }
 
+                  // Check if execute flag is true
+            boolean executeFlag = Boolean.parseBoolean(payload.get("execute"));
+
+            if (executeFlag) {
+                // Handle different query types dynamically
+                if (query.toUpperCase().startsWith("CREATE") || query.toUpperCase().startsWith("DROP") || 
+                    query.toUpperCase().startsWith("DELETE") || query.toUpperCase().startsWith("ALTER")) {
+
+                    // Execute DDL or DELETE operations
+                    try (PreparedStatement statement = connection.prepareStatement(query)) {
+                        statement.executeUpdate();
+                        response.add(Arrays.asList("result"));
+                        response.add(Arrays.asList("Query executed successfully."));
+                        return new ResponseEntity<>(response, HttpStatus.OK);
+                    }
+
+                } else if (query.toUpperCase().startsWith("SELECT")) {
+                    // Handle SELECT queries and return result
+                    List<String> columnNames = new ArrayList<>();
+                    try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                        ResultSet rs = preparedStatement.executeQuery();
+
+                        for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                            columnNames.add(rs.getMetaData().getColumnName(i));
+                        }
+
+                        response.add(columnNames);
+                        while (rs.next()) {
+                            List<Object> row = new ArrayList<>();
+                            for (String columnName : columnNames) {
+                                row.add(rs.getObject(columnName));
+                            }
+                            response.add(row);
+                        }
+                        return new ResponseEntity<>(response, HttpStatus.OK);
+                    }
+                }
+            }
+
                 if (query.trim().toUpperCase().startsWith("UPDATE") || query.trim().toUpperCase().startsWith("INSERT")) {
                     try (PreparedStatement statement = connection.prepareStatement(query)) {
                         statement.executeUpdate();
