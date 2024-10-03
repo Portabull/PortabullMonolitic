@@ -141,6 +141,13 @@ input[type=submit]:hover {
                 <textarea id="queryId" name="subject" placeholder="Write Query here.." style="height:200px"></textarea>
             </div>
         </div>
+
+<div class="row">
+    <label for="executeFlag">Execute Query as Is</label>
+    <input type="checkbox" id="executeFlag" name="executeFlag">
+</div>
+
+
         <div class="row">
             <input type="submit" value="Submit">
         </div>
@@ -224,6 +231,7 @@ limitVal = 5;
 }else{
 limitVal = 10000;
 }
+ var executeFlag = document.getElementById('executeFlag').checked ? true : false;
 
             var xhr = new XMLHttpRequest();
             xhr.open("POST" , BASE_URL + "MIS/query-it");
@@ -232,7 +240,7 @@ limitVal = 10000;
             xhr.setRequestHeader("Authorization", window.localStorage.getItem("token"));
             var data = JSON.stringify({"url": url,
             "userName":userName,"pass":pass,
-            "query":query,"queryLimit":limitVal,"page":pageNo,"displayDBDesign":displayDBDesign});
+            "query":query,"queryLimit":limitVal,"page":pageNo,"displayDBDesign":displayDBDesign,"execute": executeFlag });
 
 
             xhr.send(data);
