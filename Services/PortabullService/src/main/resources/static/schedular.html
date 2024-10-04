@@ -478,26 +478,34 @@ if (schedularId) {
         }
     }
 
-    function addTag(event, fieldId) {
+    
+function addTag(event, fieldId) {
     const input = event.target;
-    const email = input.value.trim();
+    let email = input.value.trim();
 
-    // On mobile, detect when a space, comma, or Enter is used to complete the email
-    if ((event.key === 'Enter' || event.key === ' ' || event.key === ',' || event.key === 'Tab') && email) {
+    // Handle different events to detect completion
+    if (event.type === 'blur' || event.key === 'Enter' || event.key === ' ' || event.key === ',' || event.key === 'Tab') {
         event.preventDefault();
+        if (email) {
+            // Clear the input field
+            input.value = '';
 
-        // Clear the input field
-        input.value = '';
+            // Create a tag element
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
 
-        // Create a tag element
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
-
-        // Insert the tag before the input field
-        document.getElementById(fieldId).insertBefore(tag, input);
+            // Insert the tag before the input field
+            document.getElementById(fieldId).insertBefore(tag, input);
+        }
     }
-    }
+}
+
+// Add event listeners for both 'keypress' and 'blur'
+document.querySelectorAll('.tag-input input').forEach(inputField => {
+    inputField.addEventListener('keypress', event => addTag(event, inputField.parentNode.id));
+    inputField.addEventListener('blur', event => addTag(event, inputField.parentNode.id));
+});
 
     function removeTag(element) {
         element.parentElement.remove();
