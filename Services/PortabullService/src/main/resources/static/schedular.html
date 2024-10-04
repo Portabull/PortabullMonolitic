@@ -395,7 +395,15 @@
                     document.getElementById('url').value = actionData.url;
                     document.getElementById('method').value = actionData.method;
                     document.getElementById('headers').value = JSON.stringify(actionData.headers);
-                    document.getElementById('rest-body').value = actionData.body;
+
+                    var finalBody;
+                    try {
+                     finalBody = JSON.stringify(JSON.parse(actionData.body), null, 2);
+} catch (error) {
+  // If parsing fails, display the response as-is
+  finalBody = actionData.body;
+}
+                    document.getElementById('rest-body').value = finalBody;
                 }else if(data.schedulerActions[0].actionType === 'M'){
 
  document.getElementById('action-type').value = 'mail';
