@@ -388,7 +388,7 @@
                 }
 
                 // Populate scheduler actions
-                const actionData = JSON.parse(data.schedulerActions[0].action);
+                const actionData = JSON.parse(data.schedulerActions[0].action)[0];
                 if (data.schedulerActions[0].actionType === 'R') {
                     document.getElementById('action-type').value = 'rest';
                     toggleActionFields();

@@ -52,7 +52,10 @@ public class GenericDaoImpl implements GenericDao {
         if (task == null)
             task = new SchedulerTask();
 
-        task.setActive(true);
+        if (payload.get("isActive") != null)
+            task.setActive(Boolean.valueOf(payload.get("isActive").toString()));
+        else
+            task.setActive(true);
 
         task.setDays(payload.get("days") != null ? payload.get("days").toString() : null);
 
@@ -139,6 +142,8 @@ public class GenericDaoImpl implements GenericDao {
             mapAction.put("actionType", action.getAction_type());
             schedulerActions.add(mapAction);
         });
+
+        response.put("isActive", task.isActive());
 
         response.put("schedulerActions", schedulerActions);
         return response;
