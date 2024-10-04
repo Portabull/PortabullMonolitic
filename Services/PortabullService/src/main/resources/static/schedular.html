@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduler Accordion</title>
+  <script src="js/portabullconfig.js"></script>
+    <style>
+        /* Reset and basic styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f9;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        /* Accordion styling */
+        .accordion-container {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .accordion {
+            background-color: #3f51b5;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            text-align: left;
+            outline: none;
+            font-size: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+        }
+
+        .accordion.active, .accordion:hover {
+            background-color: #303f9f;
+        }
+
+        .accordion-panel {
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background-color: white;
+            padding: 0 15px;
+            border-radius: 0 0 5px 5px;
+            max-height: 0;
+        }
+
+        .accordion-panel.expanded {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .panel-content {
+            padding: 20px 0;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], input[type="time"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            transition: box-shadow 0.3s;
+            appearance: none;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            box-shadow: 0px 0px 5px rgba(63, 81, 181, 0.5);
+        }
+
+        .dropdown-space {
+            margin-bottom: 15px;
+        }
+
+        /* Toggle button styling */
+        .toggle-button {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .toggle-button input {
+            margin-left: 10px;
+            width: 40px;
+            height: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            background-color: #ddd;
+            outline: none;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-button input:checked {
+            background-color: #3f51b5;
+        }
+
+        .toggle-button input:checked::after {
+            transform: translateX(20px);
+        }
+
+        .toggle-button input::after {
+            content: "";
+            width: 18px;
+            height: 18px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Day buttons styling */
+        .day-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .day-buttons button {
+            flex: 1 1 calc(33.333% - 10px);
+            padding: 10px;
+            cursor: pointer;
+            background-color: #eee;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 14px;
+        }
+
+        .day-buttons button.selected {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        .day-buttons button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Tag input styling */
+        .tag-input {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .tag {
+            display: flex;
+            align-items: center;
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        .tag span {
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .tag-input input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 5px;
+            font-size: 14px;
+        }
+
+        .tag-input input::placeholder {
+            color: #aaa;
+        }
+
+        /* Hidden elements */
+        .hidden {
+            display: none;
+        }
+
+        /* Submit Button Styling */
+        .submit-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #3f51b5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background-color: #303f9f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="accordion-container">
+    <button class="accordion">Scheduler Settings</button>
+    <div class="accordion-panel">
+        <div class="panel-content">
+            <!-- Scheduler Name -->
+            <label for="scheduler-name">Scheduler Name:</label>
+            <input type="text" id="scheduler-name" placeholder="Enter scheduler name">
+
+            <!-- Is Active Toggle -->
+            <div class="toggle-button">
+                <label for="is-active">Is Active:</label>
+                <input type="checkbox" id="is-active">
+            </div>
+
+            <!-- Frequency Dropdown -->
+            <label for="frequency">Frequency:</label>
+            <select id="frequency" onchange="toggleFields()" class="dropdown-space">
+                <option value="" disabled selected>Select frequency</option>
+                <option value="daily">Daily</option>
+                <option value="time-to-time">Time to Time</option>
+                <option value="specific-day">Specific Day</option>
+            </select>
+
+            <!-- Days of the Week Buttons (Daily only) -->
+            <div id="weekdays" class="day-buttons hidden">
+                <button onclick="toggleDay(this)" data-day="mo">Monday</button>
+                <button onclick="toggleDay(this)" data-day="tu">Tuesday</button>
+                <button onclick="toggleDay(this)" data-day="we">Wednesday</button>
+                <button onclick="toggleDay(this)" data-day="th">Thursday</button>
+                <button onclick="toggleDay(this)" data-day="fr">Friday</button>
+                <button onclick="toggleDay(this)" data-day="sa">Saturday</button>
+                <button onclick="toggleDay(this)" data-day="su">Sunday</button>
+            </div>
+
+            <!-- Time to Time Input (Minutes only) -->
+            <div id="time-to-time" class="hidden">
+                <label for="minutes">Minutes:</label>
+                <input type="number" id="minutes" min="1" placeholder="Enter interval in minutes">
+            </div>
+
+            <!-- Specific Day (Calendar Input with Date and Time) -->
+            <div id="specific-day" class="hidden">
+                <label for="specific-datetime">Select Date & Time:</label>
+                <input type="datetime-local" id="specific-datetime">
+            </div>
+
+            <!-- Daily Time Input (for Daily frequency) -->
+            <div id="daily-time" class="hidden">
+                <label for="daily-time-input">Select Time:</label>
+                <input type="time" id="daily-time-input" step="1">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="accordion-container">
+    <button class="accordion">Scheduler Actions</button>
+    <div class="accordion-panel">
+        <div class="panel-content">
+            <!-- Action Type Dropdown -->
+            <label for="action-type">Action Type:</label>
+            <select id="action-type" onchange="toggleActionFields()" class="dropdown-space">
+                <option value="" disabled selected>Select Action</option>
+                <option value="rest">Rest</option>
+                <option value="mail">Mail</option>
+                <option value="code">Code</option>
+            </select>
+
+            <!-- Rest Action Fields -->
+            <div id="rest-fields" class="hidden">
+                <label for="url">URL:</label>
+                <input type="text" id="url" placeholder="Enter URL">
+
+                <label for="method">Method:</label>
+                <select id="method">
+                    <option>POST</option>
+                    <option>GET</option>
+                    <option>PUT</option>
+                    <option>DELETE</option>
+                    <option>PATCH</option>
+                    <option>HEAD</option>
+                    <option>OPTIONS</option>
+                </select>
+
+                <label for="headers">Headers:</label>
+                <input type="text" id="headers" placeholder='{"Content-Type":"application/json","Accept":"application/json"}'>
+
+                <label for="rest-body">Body:</label>
+                <textarea id="rest-body" rows="5" placeholder="Enter body content"></textarea>
+            </div>
+
+            <!-- Mail Action Fields -->
+            <div id="mail-fields" class="hidden">
+                <!-- To Field -->
+                <label for="to-field">To:</label>
+                <div class="tag-input" id="to-field">
+                    <input type="text" placeholder="Add email" onkeydown="addTag(event, 'to')">
+                </div>
+
+                <!-- CC Field -->
+                <label for="cc-field">Cc:</label>
+                <div class="tag-input" id="cc-field">
+                    <input type="text" placeholder="Add email" onkeydown="addTag(event, 'cc')">
+                </div>
+
+                <!-- Subject Field -->
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" placeholder="Enter subject">
+
+                <!-- Body Field -->
+                <label for="body">Body:</label>
+                <textarea id="body" rows="5" placeholder="Enter your message"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Submit Button -->
+<button class="submit-button" onclick="submitData()">Submit</button>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const schedularId = urlParams.get('schedular_id');
+
+    if (schedularId) {
+
+
+
+        fetch(BASE_URL  + `gs/get-schedular-details?schedular_id=${schedularId}`,{
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' ,'Authorization':window.localStorage.getItem('token')}
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Populate scheduler settings
+                document.getElementById('scheduler-name').value = data.schedulerName;
+                document.getElementById('frequency').value = data.triggerType === 'D' ? 'daily' : data.triggerType === 'T' ? 'time-to-time' : 'specific-day';
+                toggleFields();
+
+                // Select days based on the response
+                data.days.split(',').forEach(day => {
+                    const dayButton = document.querySelector(`button[data-day="${day}"]`);
+                    if (dayButton) dayButton.classList.add('selected');
+                });
+
+                document.getElementById('specific-datetime').value = data.specificDailyTime;
+                document.getElementById('minutes').value = data.timeGap || '';
+                
+                // Populate daily time if frequency is Daily
+                if (data.triggerType === 'D' && data.dailyTime) {
+                    document.getElementById('daily-time-input').value = data.dailyTime;
+                }
+
+  if (data.triggerType === 'D') {
+                    document.getElementById('daily-time-input').value = data.specificDailyTime;
+                } else if (data.triggerType === 'S') {
+                    document.getElementById('specific-datetime').value = data.specificDailyTime;
+                }
+
+                // Populate scheduler actions
+                const actionData = JSON.parse(data.schedulerActions[0].action);
+                if (data.schedulerActions[0].actionType === 'R') {
+                    document.getElementById('action-type').value = 'rest';
+                    toggleActionFields();
+                    document.getElementById('url').value = actionData.url;
+                    document.getElementById('method').value = actionData.method;
+                    document.getElementById('headers').value = JSON.stringify(actionData.headers);
+                    document.getElementById('rest-body').value = actionData.body;
+                }else if(data.schedulerActions[0].actionType === 'M'){
+
+ document.getElementById('action-type').value = 'mail';
+    toggleActionFields();
+    
+    const actionData = JSON.parse(data.schedulerActions[0].action); // Parse the JSON action string
+    
+    // Populate the "To" field with tags
+    actionData.to.forEach(email => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+        document.getElementById('to-field').insertBefore(tag, document.getElementById('to-field').lastElementChild);
+    });
+    
+    // Populate the "CC" field with tags
+    actionData.cc.forEach(email => {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+        document.getElementById('cc-field').insertBefore(tag, document.getElementById('cc-field').lastElementChild);
+    });
+
+    document.getElementById('subject').value = actionData.subject;
+    document.getElementById('body').value = actionData.body;
+
+
+}
+            })
+            .catch(error => console.error('Error fetching scheduler data:', error));
+    }
+
+    // Accordion toggle functionality
+    document.querySelectorAll('.accordion').forEach(accordion => {
+        accordion.addEventListener('click', function () {
+            this.classList.toggle('active');
+            const panel = this.nextElementSibling;
+            panel.classList.toggle('expanded');
+        });
+    });
+
+    // Toggle Scheduler Settings based on Frequency
+    function toggleFields() {
+        const frequency = document.getElementById('frequency').value;
+        
+        document.getElementById('weekdays').classList.add('hidden');
+        document.getElementById('time-to-time').classList.add('hidden');
+        document.getElementById('specific-day').classList.add('hidden');
+        document.getElementById('daily-time').classList.add('hidden');
+
+        if (frequency === 'daily') {
+            document.getElementById('weekdays').classList.remove('hidden');
+            document.getElementById('daily-time').classList.remove('hidden');
+        } else if (frequency === 'time-to-time') {
+            document.getElementById('time-to-time').classList.remove('hidden');
+        } else if (frequency === 'specific-day') {
+            document.getElementById('specific-day').classList.remove('hidden');
+        }
+    }
+
+    // Toggle Action Fields based on Action Type
+    function toggleActionFields() {
+        const actionType = document.getElementById('action-type').value;
+        
+        document.getElementById('mail-fields').classList.add('hidden');
+        document.getElementById('rest-fields').classList.add('hidden');
+
+        if (actionType === 'mail') {
+            document.getElementById('mail-fields').classList.remove('hidden');
+        } else if (actionType === 'rest') {
+            document.getElementById('rest-fields').classList.remove('hidden');
+        }
+    }
+
+    function addTag(event, fieldId) {
+        if (event.key === 'Enter' && event.target.value) {
+            event.preventDefault();
+            const input = event.target;
+            const email = input.value.trim();
+            const field = document.getElementById(`${fieldId}-field`);
+
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+            field.insertBefore(tag, input);
+            input.value = ''; 
+        }
+    }
+
+    function removeTag(element) {
+        element.parentElement.remove();
+    }
+
+    function toggleDay(button) {
+        button.classList.toggle('selected');
+    }
+
+    function submitData() {
+const frequency = document.getElementById('frequency').value;
+        
+        const selectedDays = Array.from(document.querySelectorAll('.day-buttons button.selected')).map(btn => btn.getAttribute('data-day')).join(',');
+        const schedulerName = document.getElementById('scheduler-name').value;
+
+        
+        const triggerType = document.getElementById('frequency').value === 'daily' ? 'D' : document.getElementById('frequency').value === 'time-to-time' ? 'T' : 'S';
+        const timeGap = document.getElementById('minutes').value || null;
+          const specificDailyTime = frequency === 'daily' ? document.getElementById('daily-time-input').value : document.getElementById('specific-datetime').value;
+        const actionType = document.getElementById('action-type').value;
+        let schedulerActions = {};
+        if (actionType === 'mail') {
+            const to = Array.from(document.querySelectorAll('#to-field .tag')).map(tag => tag.textContent.slice(0, -2));
+            const cc = Array.from(document.querySelectorAll('#cc-field .tag')).map(tag => tag.textContent.slice(0, -2));
+            const subject = document.getElementById('subject').value;
+            const body = document.getElementById('body').value;
+            schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M' };
+        } else if (actionType === 'rest') {
+            const url = document.getElementById('url').value;
+            const method = document.getElementById('method').value;
+            const headers = document.getElementById('headers').value ? JSON.parse(document.getElementById('headers').value) : {};
+            const body = document.getElementById('rest-body').value;
+            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R' };
+        } else if (actionType === 'code') {
+            const codeContent = document.getElementById('code').value;
+            schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C' };
+        }
+
+        const requestBody = {
+            days: selectedDays,
+specificDailyTime,
+            schedulerName,
+            specificDailyTime,
+
+            triggerType,
+            timeGap,
+            schedulerActions: [schedulerActions]
+        };
+
+        fetch(BASE_URL + 'gs/save-schedular-details', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' ,'Authorization':window.localStorage.getItem('token')},
+            body: JSON.stringify(requestBody)
+        }).then(response => response.json())
+        .then(data => console.log('Success:', data))
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>
