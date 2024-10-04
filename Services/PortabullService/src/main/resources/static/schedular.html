@@ -479,18 +479,24 @@ if (schedularId) {
     }
 
     function addTag(event, fieldId) {
-        if (event.key === 'Enter' && event.target.value) {
-            event.preventDefault();
-            const input = event.target;
-            const email = input.value.trim();
-            const field = document.getElementById(`${fieldId}-field`);
+    const input = event.target;
+    const email = input.value.trim();
 
-            const tag = document.createElement('span');
-            tag.className = 'tag';
-            tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
-            field.insertBefore(tag, input);
-            input.value = ''; 
-        }
+    // On mobile, detect when a space, comma, or Enter is used to complete the email
+    if ((event.key === 'Enter' || event.key === ' ' || event.key === ',' || event.key === 'Tab') && email) {
+        event.preventDefault();
+
+        // Clear the input field
+        input.value = '';
+
+        // Create a tag element
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+
+        // Insert the tag before the input field
+        document.getElementById(fieldId).insertBefore(tag, input);
+    }
     }
 
     function removeTag(element) {
