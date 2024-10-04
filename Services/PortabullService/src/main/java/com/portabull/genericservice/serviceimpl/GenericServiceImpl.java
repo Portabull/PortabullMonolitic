@@ -215,6 +215,11 @@ public class GenericServiceImpl implements GenericService {
         return genericDao.changeSchedulerStatus(schedulerId, status);
     }
 
+    @Override
+    public     Map<String, Object> getSchedularDetails(String schedular_id){
+            return genericDao.getSchedularDetails(schedulerId, status);
+    }
+
     public HttpMethod getHttpMethod(String method) {
         switch (method) {
             case "POST":
