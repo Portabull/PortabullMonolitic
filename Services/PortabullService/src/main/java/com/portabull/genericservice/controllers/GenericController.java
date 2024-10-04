@@ -192,4 +192,12 @@ public class GenericController {
         return new ResponseEntity<>(genericService.changeSchedulerStatus(schedulerId, activeStatus), HttpStatus.OK);
     }
 
+    
+    @GetMapping("get-schedular-details")
+    public ResponseEntity<Map<String, Object>> getSchedularDetails(@RequestParam String schedular_id) {
+
+        return new ResponseEntity<>(genericService.getSchedularDetails(schedular_id), HttpStatus.OK);
+
+    }
+
 }
