@@ -6,6 +6,7 @@
   <title>Schedulers</title>
   <script src="js/portabullconfig.js"></script>
   <style>
+    <style>
     body {
         font-family: Arial, sans-serif;
         margin: 20px;
@@ -98,6 +99,18 @@
         right: 10px;
         left: auto;
     }
+
+    /* Add highlight and pointer cursor for clickable rows */
+    tr.clickable-row {
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    tr.clickable-row:hover {
+        background-color: #e0f7fa; /* Light blue highlight */
+    }
+</style>
+
   </style>
 </head>
 <body>
@@ -140,12 +153,19 @@ function populateTable(schedulers) {
 
     schedulers.forEach(scheduler => {
         const row = document.createElement('tr');
+        row.classList.add('clickable-row'); // Add the clickable-row class
+        
+        // Add click event listener for each row
+        row.addEventListener('click', () => {
+            redirectToSchedulerPage(scheduler.schedulerId); // Call alert with schedulerId
+        });
+
         row.innerHTML = `
             <td>${scheduler.schedulerName}</td>
             <td>${new Date(scheduler.lastTriggeredDate).toLocaleDateString()}</td>
             <td>
                 <label class="toggle-switch">
-                    <input type="checkbox" ${scheduler.isActive ? 'checked' : ''} onchange="toggleActive(${scheduler.schedulerId}, this)">
+                    <input type="checkbox" ${scheduler.isActive ? 'checked' : ''} onchange="toggleActive(${scheduler.schedulerId}, this)" onclick="event.stopPropagation()">
                     <span class="slider"></span>
                 </label>
             </td>
@@ -154,6 +174,11 @@ function populateTable(schedulers) {
         tbody.appendChild(row);
     });
 }
+
+  function redirectToSchedulerPage(schedulerId){
+          window.location.href = "schedular.html?schedular_id="+schedulerId;
+  }
+
 
 // Function to handle activation/deactivation
 async function toggleActive(schedulerId, checkbox) {
