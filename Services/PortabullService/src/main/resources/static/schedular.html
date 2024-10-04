@@ -361,7 +361,7 @@ if (schedularId) {
     })
     .then(response => response.json())
     .then(data => {
-    data = data;
+    cacheData = data;
         // Populate scheduler settings
         document.getElementById('scheduler-name').value = data.schedulerName;
         document.getElementById('frequency').value = data.triggerType === 'D' ? 'daily' : data.triggerType === 'T' ? 'time-to-time' : 'specific-day';
