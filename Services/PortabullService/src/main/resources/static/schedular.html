@@ -349,92 +349,91 @@
 <button class="submit-button" onclick="submitData()">Submit</button>
 
 <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const schedularId = urlParams.get('schedular_id');
-
-    if (schedularId) {
 
 
+   const urlParams = new URLSearchParams(window.location.search);
+const schedularId = urlParams.get('schedular_id');
 
-        fetch(BASE_URL  + `gs/get-schedular-details?schedular_id=${schedularId}`,{
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' ,'Authorization':window.localStorage.getItem('token')}
-        })
-            .then(response => response.json())
-            .then(data => {
-                // Populate scheduler settings
-                document.getElementById('scheduler-name').value = data.schedulerName;
-                document.getElementById('frequency').value = data.triggerType === 'D' ? 'daily' : data.triggerType === 'T' ? 'time-to-time' : 'specific-day';
-                toggleFields();
+if (schedularId) {
+    fetch(BASE_URL + `gs/get-schedular-details?schedular_id=${schedularId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'Authorization': window.localStorage.getItem('token') }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Populate scheduler settings
+        document.getElementById('scheduler-name').value = data.schedulerName;
+        document.getElementById('frequency').value = data.triggerType === 'D' ? 'daily' : data.triggerType === 'T' ? 'time-to-time' : 'specific-day';
+        toggleFields();
 
-                // Select days based on the response
-                data.days.split(',').forEach(day => {
-                    const dayButton = document.querySelector(`button[data-day="${day}"]`);
-                    if (dayButton) dayButton.classList.add('selected');
-                });
+        // Set the isActive toggle
+        document.getElementById('is-active').checked = data.isActive;
 
-                document.getElementById('specific-datetime').value = data.specificDailyTime;
-                document.getElementById('minutes').value = data.timeGap || '';
-                
-                // Populate daily time if frequency is Daily
-                if (data.triggerType === 'D' && data.dailyTime) {
-                    document.getElementById('daily-time-input').value = data.dailyTime;
-                }
+        // Select days based on the response
+        data.days.split(',').forEach(day => {
+            const dayButton = document.querySelector(`button[data-day="${day}"]`);
+            if (dayButton) dayButton.classList.add('selected');
+        });
 
-  if (data.triggerType === 'D') {
-                    document.getElementById('daily-time-input').value = data.specificDailyTime;
-                } else if (data.triggerType === 'S') {
-                    document.getElementById('specific-datetime').value = data.specificDailyTime;
-                }
+        document.getElementById('specific-datetime').value = data.specificDailyTime;
+        document.getElementById('minutes').value = data.timeGap || '';
 
-                // Populate scheduler actions
-                const actionData = JSON.parse(data.schedulerActions[0].action)[0];
-                if (data.schedulerActions[0].actionType === 'R') {
-                    document.getElementById('action-type').value = 'rest';
-                    toggleActionFields();
-                    document.getElementById('url').value = actionData.url;
-                    document.getElementById('method').value = actionData.method;
-                    document.getElementById('headers').value = JSON.stringify(actionData.headers);
+        // Populate daily time if frequency is Daily
+        if (data.triggerType === 'D' && data.dailyTime) {
+            document.getElementById('daily-time-input').value = data.dailyTime;
+        }
 
-                    var finalBody;
-                    try {
-                     finalBody = JSON.stringify(actionData.body, null, 2);
-} catch (error) {
-  // If parsing fails, display the response as-is
-  finalBody = actionData.body;
+        if (data.triggerType === 'D') {
+            document.getElementById('daily-time-input').value = data.specificDailyTime;
+        } else if (data.triggerType === 'S') {
+            document.getElementById('specific-datetime').value = data.specificDailyTime;
+        }
+
+        // Populate scheduler actions
+        const actionData = JSON.parse(data.schedulerActions[0].action)[0];
+        if (data.schedulerActions[0].actionType === 'R') {
+            document.getElementById('action-type').value = 'rest';
+            toggleActionFields();
+            document.getElementById('url').value = actionData.url;
+            document.getElementById('method').value = actionData.method;
+            document.getElementById('headers').value = JSON.stringify(actionData.headers);
+
+            let finalBody;
+            try {
+                finalBody = JSON.stringify(actionData.body, null, 2);
+            } catch (error) {
+                // If parsing fails, display the response as-is
+                finalBody = actionData.body;
+            }
+            document.getElementById('rest-body').value = finalBody;
+        } else if (data.schedulerActions[0].actionType === 'M') {
+            document.getElementById('action-type').value = 'mail';
+            toggleActionFields();
+
+            const actionData = JSON.parse(data.schedulerActions[0].action);
+
+            // Populate the "To" field with tags
+            actionData.to.forEach(email => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+                document.getElementById('to-field').insertBefore(tag, document.getElementById('to-field').lastElementChild);
+            });
+
+            // Populate the "CC" field with tags
+            actionData.cc.forEach(email => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
+                document.getElementById('cc-field').insertBefore(tag, document.getElementById('cc-field').lastElementChild);
+            });
+
+            document.getElementById('subject').value = actionData.subject;
+            document.getElementById('body').value = actionData.body;
+        }
+    })
+    .catch(error => console.error('Error fetching scheduler data:', error));
 }
-                    document.getElementById('rest-body').value = finalBody;
-                }else if(data.schedulerActions[0].actionType === 'M'){
-
- document.getElementById('action-type').value = 'mail';
-    toggleActionFields();
-    
-    const actionData = JSON.parse(data.schedulerActions[0].action); // Parse the JSON action string
-    
-    // Populate the "To" field with tags
-    actionData.to.forEach(email => {
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
-        document.getElementById('to-field').insertBefore(tag, document.getElementById('to-field').lastElementChild);
-    });
-    
-    // Populate the "CC" field with tags
-    actionData.cc.forEach(email => {
-        const tag = document.createElement('span');
-        tag.className = 'tag';
-        tag.innerHTML = `${email} <span onclick="removeTag(this)">×</span>`;
-        document.getElementById('cc-field').insertBefore(tag, document.getElementById('cc-field').lastElementChild);
-    });
-
-    document.getElementById('subject').value = actionData.subject;
-    document.getElementById('body').value = actionData.body;
-
-
-}
-            })
-            .catch(error => console.error('Error fetching scheduler data:', error));
-    }
 
     // Accordion toggle functionality
     document.querySelectorAll('.accordion').forEach(accordion => {
@@ -501,54 +500,54 @@
         button.classList.toggle('selected');
     }
 
-    function submitData() {
-const frequency = document.getElementById('frequency').value;
-        
-        const selectedDays = Array.from(document.querySelectorAll('.day-buttons button.selected')).map(btn => btn.getAttribute('data-day')).join(',');
-        const schedulerName = document.getElementById('scheduler-name').value;
+function submitData() {
+    const frequency = document.getElementById('frequency').value;
+    const selectedDays = Array.from(document.querySelectorAll('.day-buttons button.selected')).map(btn => btn.getAttribute('data-day')).join(',');
+    const schedulerName = document.getElementById('scheduler-name').value;
+    const triggerType = document.getElementById('frequency').value === 'daily' ? 'D' : document.getElementById('frequency').value === 'time-to-time' ? 'T' : 'S';
+    const timeGap = document.getElementById('minutes').value || null;
+    const specificDailyTime = frequency === 'daily' ? document.getElementById('daily-time-input').value : document.getElementById('specific-datetime').value;
+    const actionType = document.getElementById('action-type').value;
+    const isActive = document.getElementById('is-active').checked;
 
-        
-        const triggerType = document.getElementById('frequency').value === 'daily' ? 'D' : document.getElementById('frequency').value === 'time-to-time' ? 'T' : 'S';
-        const timeGap = document.getElementById('minutes').value || null;
-          const specificDailyTime = frequency === 'daily' ? document.getElementById('daily-time-input').value : document.getElementById('specific-datetime').value;
-        const actionType = document.getElementById('action-type').value;
-        let schedulerActions = {};
-        if (actionType === 'mail') {
-            const to = Array.from(document.querySelectorAll('#to-field .tag')).map(tag => tag.textContent.slice(0, -2));
-            const cc = Array.from(document.querySelectorAll('#cc-field .tag')).map(tag => tag.textContent.slice(0, -2));
-            const subject = document.getElementById('subject').value;
-            const body = document.getElementById('body').value;
-            schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M' };
-        } else if (actionType === 'rest') {
-            const url = document.getElementById('url').value;
-            const method = document.getElementById('method').value;
-            const headers = document.getElementById('headers').value ? JSON.parse(document.getElementById('headers').value) : {};
-            const body = document.getElementById('rest-body').value;
-            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R' };
-        } else if (actionType === 'code') {
-            const codeContent = document.getElementById('code').value;
-            schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C' };
-        }
-
-        const requestBody = {
-            days: selectedDays,
-specificDailyTime,
-            schedulerName,
-            specificDailyTime,
-
-            triggerType,
-            timeGap,
-            schedulerActions: [schedulerActions]
-        };
-
-        fetch(BASE_URL + 'gs/save-schedular-details', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' ,'Authorization':window.localStorage.getItem('token')},
-            body: JSON.stringify(requestBody)
-        }).then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch(error => console.error('Error:', error));
+    let schedulerActions = {};
+    if (actionType === 'mail') {
+        const to = Array.from(document.querySelectorAll('#to-field .tag')).map(tag => tag.textContent.slice(0, -2));
+        const cc = Array.from(document.querySelectorAll('#cc-field .tag')).map(tag => tag.textContent.slice(0, -2));
+        const subject = document.getElementById('subject').value;
+        const body = document.getElementById('body').value;
+        schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M', action_id: data.schedulerActions[0].action_id || null };
+    } else if (actionType === 'rest') {
+        const url = document.getElementById('url').value;
+        const method = document.getElementById('method').value;
+        const headers = document.getElementById('headers').value ? JSON.parse(document.getElementById('headers').value) : {};
+        const body = document.getElementById('rest-body').value;
+        schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: data.schedulerActions[0].action_id || null };
+    } else if (actionType === 'code') {
+        const codeContent = document.getElementById('code').value;
+        schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C', action_id: data.schedulerActions[0].action_id || null };
     }
+
+    const requestBody = {
+        schedular_id: schedularId || null,
+        days: selectedDays,
+        specificDailyTime,
+        schedulerName,
+        triggerType,
+        timeGap,
+        isActive,
+        schedulerActions: [schedulerActions]
+    };
+
+    fetch(BASE_URL + 'gs/save-schedular-details', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': window.localStorage.getItem('token') },
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => response.json())
+    .then(data => console.log('Success:', data))
+    .catch(error => console.error('Error:', error));
+}
 </script>
 
 </body>
