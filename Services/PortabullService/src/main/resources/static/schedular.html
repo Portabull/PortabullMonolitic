@@ -353,7 +353,7 @@
 
    const urlParams = new URLSearchParams(window.location.search);
 const schedularId = urlParams.get('schedular_id');
-const cacheData;
+var cacheData;
 if (schedularId) {
     fetch(BASE_URL + `gs/get-schedular-details?schedular_id=${schedularId}`, {
         method: 'GET',
