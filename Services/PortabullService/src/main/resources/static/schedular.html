@@ -398,7 +398,7 @@
 
                     var finalBody;
                     try {
-                     finalBody = JSON.stringify(JSON.parse(actionData.body), null, 2);
+                     finalBody = JSON.stringify(actionData.body, null, 2);
 } catch (error) {
   // If parsing fails, display the response as-is
   finalBody = actionData.body;
