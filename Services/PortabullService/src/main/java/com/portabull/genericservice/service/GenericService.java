@@ -1,5 +1,5 @@
 package com.portabull.genericservice.service;
-
+import java.util.Map;
 import com.portabull.response.PortableResponse;
 
 import java.util.Map;
@@ -19,4 +19,6 @@ public interface GenericService {
     PortableResponse getSchedulers();
 
     public PortableResponse changeSchedulerStatus(Long schedulerId, Boolean status);
+
+    Map<String, Object> getSchedularDetails(String schedular_id);
 }
