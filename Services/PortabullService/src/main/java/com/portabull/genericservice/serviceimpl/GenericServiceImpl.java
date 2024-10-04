@@ -216,8 +216,8 @@ public class GenericServiceImpl implements GenericService {
     }
 
     @Override
-    public     Map<String, Object> getSchedularDetails(String schedular_id){
-            return genericDao.getSchedularDetails(schedulerId, status);
+    public Map<String, Object> getSchedularDetails(String schedular_id){
+        return genericDao.getSchedularDetails(schedular_id);
     }
 
     public HttpMethod getHttpMethod(String method) {

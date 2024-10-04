@@ -44,7 +44,13 @@ public class GenericDaoImpl implements GenericDao {
     @Override
     public PortableResponse saveSchedularDetails(Map<String, Object> payload) {
 
-        SchedulerTask task = new SchedulerTask();
+        SchedulerTask task = null;
+
+        if (payload.get("schedular_id") != null)
+            task = hibernateUtils.findEntity(SchedulerTask.class, Long.valueOf(payload.get("schedular_id").toString()));
+
+        if (task == null)
+            task = new SchedulerTask();
 
         task.setActive(true);
 
@@ -64,13 +70,18 @@ public class GenericDaoImpl implements GenericDao {
 
         List<Map<String, Object>> schedulerActions = (List<Map<String, Object>>) payload.get("schedulerActions");
 
-        schedulerActions.forEach(action -> {
-            SchedulerActions actions = new SchedulerActions();
+        for (Map<String, Object> action : schedulerActions) {
+            SchedulerActions actions = null;
+            if (action.get("action_id") != null)
+                actions = hibernateUtils.findEntity(SchedulerActions.class, Long.valueOf(action.get("action_id").toString()));
+
+            if (actions == null)
+                actions = new SchedulerActions();
             actions.setSchedulerId(task.getSchedulerId());
             actions.setAction(action.get("action").toString());
             actions.setAction_type(action.get("actionType").toString());
             hibernateUtils.saveOrUpdateEntity(actions);
-        });
+        }
 
         return new PortableResponse();
     }
@@ -102,6 +113,35 @@ public class GenericDaoImpl implements GenericDao {
             hibernateUtils.saveOrUpdateEntity(task);
         }
         return new PortableResponse("", StatusCodes.C_200, PortableConstants.SUCCESS, null);
+    }
+
+    @Override
+    public Map<String, Object> getSchedularDetails(String schedulerId) {
+        List<Map<String, Object>> schedulerActions = new ArrayList<>();
+
+        SchedulerTask task = hibernateUtils.findEntity(SchedulerTask.class, Long.valueOf(schedulerId));
+        Map<String, Object> response = new HashMap<>();
+        response.put("days", task.getDays());
+        response.put("schedulerName", task.getSchedulerName());
+        response.put("schedular_id", task.getSchedulerId());
+        response.put("specificDailyTime", task.getSpecificDailyTime());
+        response.put("triggerType", task.getTriggerType());
+
+        response.put("timeGap", task.getTimeGap());
+
+        List<SchedulerActions> actions = hibernateUtils.findEntitiesByCriteria(
+                SchedulerActions.class, "schedulerId", Long.valueOf(schedulerId));
+
+        actions.forEach(action -> {
+            Map<String, Object> mapAction = new HashMap<>();
+            mapAction.put("action_id", action.getActionId());
+            mapAction.put("action", action.getAction());
+            mapAction.put("actionType", action.getAction_type());
+            schedulerActions.add(mapAction);
+        });
+
+        response.put("schedulerActions", schedulerActions);
+        return response;
     }
 
 }

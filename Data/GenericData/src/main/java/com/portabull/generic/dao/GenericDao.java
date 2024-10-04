@@ -14,4 +14,6 @@ public interface GenericDao {
     PortableResponse getSchedulers();
 
     public PortableResponse changeSchedulerStatus(Long schedulerId, Boolean status);
+
+    Map<String,Object> getSchedularDetails(String schedulerId);
 }
