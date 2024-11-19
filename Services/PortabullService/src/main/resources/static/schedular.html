@@ -531,16 +531,30 @@ function submitData() {
         const cc = Array.from(document.querySelectorAll('#cc-field .tag')).map(tag => tag.textContent.slice(0, -2));
         const subject = document.getElementById('subject').value;
         const body = document.getElementById('body').value;
-        schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M', action_id: cacheData.schedulerActions[0].action_id || null };
+        if(cacheData==undefined){
+            schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M', action_id: null };
+        }else{
+        schedulerActions = { action: JSON.stringify({ to, cc, subject, body }), actionType: 'M', action_id: cacheData.schedulerActions[0].action_id || null };    
+        }
+        
     } else if (actionType === 'rest') {
         const url = document.getElementById('url').value;
         const method = document.getElementById('method').value;
         const headers = document.getElementById('headers').value ? JSON.parse(document.getElementById('headers').value) : {};
         const body = document.getElementById('rest-body').value;
-        schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: cacheData.schedulerActions[0].action_id || null };
+        if(cacheData==undefined){
+            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: null };
+        }else{
+            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: cacheData.schedulerActions[0].action_id || null };
+        }
+        
     } else if (actionType === 'code') {
         const codeContent = document.getElementById('code').value;
-        schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C', action_id: cacheData.schedulerActions[0].action_id || null };
+          if(cacheData==undefined){
+        schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C', action_id:  null };
+          }else{
+              schedulerActions = { action: JSON.stringify(codeContent), actionType: 'C', action_id: cacheData.schedulerActions[0].action_id || null };
+          }
     }
 
     const requestBody = {
