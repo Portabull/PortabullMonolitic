@@ -14,6 +14,7 @@ import com.portabull.genericservice.service.JavaSourceFromString;
 import com.portabull.payloads.EmailPayload;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.emailutils.EmailUtils;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -75,10 +76,13 @@ public class ExternalJobServiceImpl implements ExternalJobService {
                     .loadTrustMaterial(new TrustSelfSignedStrategy())
                     .build();
 
+            // Create a HttpClient that ignores hostname verification
             CloseableHttpClient httpClient = HttpClients.custom()
                     .setSSLContext(sslContext)
+                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)  // Disable hostname verification
                     .build();
 
+            // Set the HttpClient into RestTemplate
             HttpComponentsClientHttpRequestFactory requestFactory =
                     new HttpComponentsClientHttpRequestFactory(httpClient);
 
