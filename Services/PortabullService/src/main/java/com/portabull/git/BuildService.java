@@ -3,6 +3,8 @@ package com.portabull.git;
 import com.portabull.git.models.GitConfigDTO;
 import com.portabull.git.models.GitDiffResponse;
 import com.portabull.git.models.GitDownloadResponse;
+import com.portabull.utils.commonutils.CommonUtils;
+import com.portabull.utils.encoder.EncoderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -35,15 +37,11 @@ public class BuildService {
 
     @Scheduled(cron = "1 * * * * *")
     public void cronJobSch() throws IOException {
-
-        byte[] decodedBytes = Base64.getDecoder().decode("Z2l0aHViX3BhdF8xMUFVUUYzRFkwa3R3VWRPWk5kd2c0XzZzdTBZMlVqeVpGd0dwNFQ1WXRtQ1QzR1VuT2dNVVhoWDRsSFY4YUszNHIzUUdOTllRT1lmNVpzbDlr");
-        String decodedString = new String(decodedBytes);
-
         log.info("BuildController :: started");
         GitConfigDTO dto = new GitConfigDTO();
         dto.setBranch("master");
         dto.setProvider(GitConfigDTO.GitProviderType.GITHUB);
-        dto.setAccessToken(decodedString);
+        dto.setAccessToken(EncoderUtils.decode("yqmadi_bom_55EGCD4KI6TZmkcMIDWwuQ_9qcBkUzW1LFkjL36fD6UkrwxIcgiZ7pwNOFKkC2mhmC24F4MY7HPPAkt6ZK"));
         dto.setOwner("Portabull");
         dto.setRepository("worktree-hrms-admin");
         dto.setProviderURL("https://api.github.com");
