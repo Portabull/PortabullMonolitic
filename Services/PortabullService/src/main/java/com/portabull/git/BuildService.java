@@ -83,20 +83,21 @@ public class BuildService {
     }
 
     private void downloadAndBuild(GitConfigDTO dto, String deployementFilePath, String deployementFileName, int port, String command, String targetDir) throws IOException {
+        log.info("downloading project zip file");
         GitDownloadResponse response = gitService.downloadRepository(dto);
 
         setCommitSha(dto, response.getLatestCommitSha());
-
+        log.info("downloaded successfully");
         try (InputStream stream = new FileInputStream(response.getFile())) {
             Files.copy(stream, Paths.get(deployementFileName),
                     StandardCopyOption.REPLACE_EXISTING);
         }
 
-        FileSystemUtils.deleteRecursively(response.getFile());
+        log.info("File Deleted : {} , path : {}", FileSystemUtils.deleteRecursively(response.getFile()), response.getFile().getAbsolutePath());
 
         extractAndBuild(deployementFilePath, deployementFileName, port, command, targetDir);
 
-        FileSystemUtils.deleteRecursively(Paths.get(deployementFileName));
+        log.info("File Deleted : {} , path : {}", FileSystemUtils.deleteRecursively(Paths.get(deployementFileName)), deployementFileName);
     }
 
     private void extractAndBuild(String deployementFilePath, String deployementFileName, int port, String command, String targetDir) throws IOException {
@@ -104,8 +105,10 @@ public class BuildService {
         File fileDir = new File(dir);
         fileDir.mkdirs();
 
+        log.info("unzipping the project...");
         unzip(deployementFileName, dir);
 
+        log.info("unzip donw");
 
         dir = new File(dir).listFiles()[0].getAbsolutePath() + File.separator;
 
@@ -115,6 +118,8 @@ public class BuildService {
         Runtime rt = Runtime.getRuntime();
         Process proc = rt.exec(commands);
 
+
+        log.info("installing maven");
 
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(proc.getInputStream()));
@@ -132,8 +137,13 @@ public class BuildService {
             buildOutput.append("<p>").append(s).append("</p>");
         }
 
-        killPort(port);
+        log.info(buildOutput.toString());
 
+        log.info("maven installed");
+
+        log.info("shutdown the current application");
+        killPort(port);
+        log.info("shutdown done");
 
         String jarLocation = dir + targetDir;
         String finalExeJar = deployementFilePath + File.separator + new File(jarLocation).getName();
@@ -157,16 +167,14 @@ public class BuildService {
 
         }
 
-        FileSystemUtils.deleteRecursively(fileDir);
-
+        log.info("File Deleted : {} , path : {}", FileSystemUtils.deleteRecursively(fileDir), fileDir);
 
         String jarRunnableCommand = "start javaw -Xmx4000m -Dserver.port=" + port + " -jar " + finalExeJar;
 
-
         String batFilePath = generateBatFile(jarRunnableCommand);
 
-
         try {
+            log.info("Application Starting...");
             Process process = Runtime.getRuntime().exec(batFilePath);
 
             process.waitFor(1, TimeUnit.MINUTES);
