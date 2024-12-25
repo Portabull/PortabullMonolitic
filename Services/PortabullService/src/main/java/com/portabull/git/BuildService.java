@@ -179,24 +179,24 @@ public class BuildService {
             process.waitFor(1, TimeUnit.MINUTES);
 
 
-            BufferedReader stdInput1 = new BufferedReader(new
-                    InputStreamReader(process.getInputStream()));
-
-            BufferedReader error = new BufferedReader(new
-                    InputStreamReader(process.getErrorStream()));
-
-            String s1;
-            StringBuilder appRunOutput = new StringBuilder();
-            while ((s1 = stdInput1.readLine()) != null) {
-                appRunOutput.append("<p>").append(s1).append("</p>");
-            }
-
-
-            String s2;
-            StringBuilder appRunError = new StringBuilder();
-            while ((s2 = error.readLine()) != null) {
-                appRunError.append("<p>").append(s2).append("</p>");
-            }
+//            BufferedReader stdInput1 = new BufferedReader(new
+//                    InputStreamReader(process.getInputStream()));
+//
+//            BufferedReader error = new BufferedReader(new
+//                    InputStreamReader(process.getErrorStream()));
+//
+//            String s1;
+//            StringBuilder appRunOutput = new StringBuilder();
+//            while ((s1 = stdInput1.readLine()) != null) {
+//                appRunOutput.append("<p>").append(s1).append("</p>");
+//            }
+//
+//
+//            String s2;
+//            StringBuilder appRunError = new StringBuilder();
+//            while ((s2 = error.readLine()) != null) {
+//                appRunError.append("<p>").append(s2).append("</p>");
+//            }
 
             new File(batFilePath).delete();
         } catch (Exception e) {
