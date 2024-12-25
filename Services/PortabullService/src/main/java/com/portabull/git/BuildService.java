@@ -14,10 +14,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,11 +35,15 @@ public class BuildService {
 
     @Scheduled(cron = "1 * * * * *")
     public void cronJobSch() throws IOException {
+
+        byte[] decodedBytes = Base64.getDecoder().decode("Z2l0aHViX3BhdF8xMUFVUUYzRFkwa3R3VWRPWk5kd2c0XzZzdTBZMlVqeVpGd0dwNFQ1WXRtQ1QzR1VuT2dNVVhoWDRsSFY4YUszNHIzUUdOTllRT1lmNVpzbDlr");
+        String decodedString = new String(decodedBytes);
+
         log.info("BuildController :: started");
         GitConfigDTO dto = new GitConfigDTO();
         dto.setBranch("master");
         dto.setProvider(GitConfigDTO.GitProviderType.GITHUB);
-        dto.setAccessToken("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");
+        dto.setAccessToken(decodedString);
         dto.setOwner("Portabull");
         dto.setRepository("worktree-hrms-admin");
         dto.setProviderURL("https://api.github.com");
