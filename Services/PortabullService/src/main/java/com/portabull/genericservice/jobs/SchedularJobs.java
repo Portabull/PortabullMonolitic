@@ -51,10 +51,16 @@ public class SchedularJobs {
 
     static String BASE_URL;
 
-    @Value("${portabull.home.page.url}")
-    public synchronized void setEmailFrom(String baseUrl) {
+//    @Value("${portabull.home.page.url}")
+//    public synchronized void setEmailFrom(String baseUrl) {
+////        SchedularJobs.BASE_URL = baseUrl;
+//        SchedularJobs.BASE_URL = "https://localhost:443/APIGateway/";
+//    }
+
+    @Value("${server.port}")
+    public synchronized void setEmailFrom(String serverPort) {
 //        SchedularJobs.BASE_URL = baseUrl;
-        SchedularJobs.BASE_URL = "https://localhost:443/APIGateway/";
+        SchedularJobs.BASE_URL = "https://localhost:" + serverPort + "/APIGateway/";
     }
 
     static Logger logger = LoggerFactory.getLogger(SchedularJobs.class);
