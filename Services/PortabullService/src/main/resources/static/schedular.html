@@ -227,10 +227,23 @@
     </style>
 </head>
 <body>
-
+<div style="width: 100%; max-width: 700px; margin-bottom: 20px; display: flex; align-items: center;">
+    <button onclick="history.back()" style="
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  " onmouseover="this.style.backgroundColor='#303f9f'" onmouseout="this.style.backgroundColor='#3f51b5'">
+        ← Back
+    </button>
+</div>
 <div class="accordion-container">
     <button class="accordion">Scheduler Settings</button>
-    <div class="accordion-panel">
+    <div class="accordion-panel expanded">
         <div class="panel-content">
             <!-- Scheduler Name -->
             <label for="scheduler-name">Scheduler Name:</label>
@@ -543,9 +556,9 @@ function submitData() {
         const headers = document.getElementById('headers').value ? JSON.parse(document.getElementById('headers').value) : {};
         const body = document.getElementById('rest-body').value;
         if(cacheData==undefined){
-            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: null };
+            schedulerActions = { action: JSON.stringify([{ url, method, headers, body }]), actionType: 'R', action_id: null };
         }else{
-            schedulerActions = { action: JSON.stringify({ url, method, headers, body }), actionType: 'R', action_id: cacheData.schedulerActions[0].action_id || null };
+            schedulerActions = { action: JSON.stringify([{ url, method, headers, body }]), actionType: 'R', action_id: cacheData.schedulerActions[0].action_id || null };
         }
         
     } else if (actionType === 'code') {

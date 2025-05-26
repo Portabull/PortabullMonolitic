@@ -114,8 +114,27 @@
   </style>
 </head>
 <body>
+
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
 <div class="search-container">
   <input type="text" id="searchInput" placeholder="Search by Scheduler Name" onkeyup="searchTable()">
+</div>
+
+  <button onclick="redirectToAddScheduler()" style="
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      "
+          onmouseover="this.style.backgroundColor='#45a049'"
+          onmouseout="this.style.backgroundColor='#4caf50'">
+    + Add Scheduler
+  </button>
 </div>
 
 <table id="schedulerTable">
@@ -219,6 +238,12 @@ function searchTable() {
         }
     }
 }
+
+
+function redirectToAddScheduler() {
+    window.location.href = "schedular.html"; // Replace with your actual add scheduler page
+}
+
 
 // Initial fetch of scheduler data
 fetchSchedulers();

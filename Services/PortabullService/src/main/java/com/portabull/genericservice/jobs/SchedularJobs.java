@@ -9,26 +9,29 @@ import com.portabull.generic.models.SchedulerTask;
 import com.portabull.response.PortableResponse;
 import com.portabull.utils.commonutils.CommonUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
 import java.nio.charset.StandardCharsets;
+import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -50,38 +53,34 @@ public class SchedularJobs {
 
     @Value("${portabull.home.page.url}")
     public synchronized void setEmailFrom(String baseUrl) {
-        SchedularJobs.BASE_URL = baseUrl;
+//        SchedularJobs.BASE_URL = baseUrl;
+        SchedularJobs.BASE_URL = "https://localhost:443/APIGateway/";
     }
 
     static Logger logger = LoggerFactory.getLogger(SchedularJobs.class);
 
     static {
         try {
-
             objectMapper = new ObjectMapper();
+            TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
 
-            SSLContext sslContext = SSLContexts.custom()
-                    .loadTrustMaterial(new TrustSelfSignedStrategy())
+            SSLContext sslContext = SSLContextBuilder
+                    .create()
+                    .loadTrustMaterial(null, acceptingTrustStrategy)
                     .build();
 
-            // Create a HttpClient that ignores hostname verification
-            CloseableHttpClient httpClient = HttpClients.custom()
+            CloseableHttpClient httpClient = HttpClients
+                    .custom()
                     .setSSLContext(sslContext)
-                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)  // Disable hostname verification
+                    .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
                     .build();
 
-            // Set the HttpClient into RestTemplate
-            HttpComponentsClientHttpRequestFactory requestFactory =
+            HttpComponentsClientHttpRequestFactory factory =
                     new HttpComponentsClientHttpRequestFactory(httpClient);
 
-            template = new RestTemplate(requestFactory);
+            template = new RestTemplate(factory);
 
-            template.setErrorHandler(new DefaultResponseErrorHandler() {
-                @Override
-                protected boolean hasError(HttpStatus statusCode) {
-                    return false;
-                }
-            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
