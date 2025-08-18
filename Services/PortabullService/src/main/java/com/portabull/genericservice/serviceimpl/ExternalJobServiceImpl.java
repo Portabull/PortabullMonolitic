@@ -236,25 +236,25 @@ public class ExternalJobServiceImpl implements ExternalJobService {
 
             Map<String, Object> locationAddress = new HashMap<>();
             ResponseEntity<String> stringResponseEntity;
-            locationAddress.put("longitude", 78.3722332);
-            locationAddress.put("latitude", 17.540904);
-            locationAddress.put("zip", "500090");
+            locationAddress.put("longitude", 80.6890233);
+            locationAddress.put("latitude", 16.7395171);
+            locationAddress.put("zip", "521230");
             locationAddress.put("countryCode", "IN");
-            locationAddress.put("state", "Telangana");
-            locationAddress.put("city", "Hyderabad");
-            locationAddress.put("addressLine1", "Bachupally, Bachupalli Road, Bachupally, Hyderabad 500090, Telangana");
-            locationAddress.put("addressLine2", "Hyderabad");
+            locationAddress.put("state", "Andhra Pradesh");
+            locationAddress.put("city", "Mylavaram");
+            locationAddress.put("addressLine1", "Adavinekkalam - Velvadam Road, Ganapavaram, Mylavaram, NTR, Andhra Pradesh, 521230, India");
+            locationAddress.put("addressLine2", "Mylavaram");
 
             Map<String, Object> locationAddressLogout = new HashMap<>();
 
-            locationAddressLogout.put("longitude", 78.3856336);
-            locationAddressLogout.put("latitude", 17.5504239);
-            locationAddressLogout.put("zip", "500090");
+            locationAddressLogout.put("longitude", 80.6890233);
+            locationAddressLogout.put("latitude", 16.7395171);
+            locationAddressLogout.put("zip", "521230");
             locationAddressLogout.put("countryCode", "IN");
-            locationAddressLogout.put("state", "Telangana");
-            locationAddressLogout.put("city", "Hyderabad");
-            locationAddressLogout.put("addressLine1", "Bachupally, Lahari Green Park Road, Bachupally, Hyderabad 500090, Telangana");
-            locationAddressLogout.put("addressLine2", "Hyderabad");
+            locationAddressLogout.put("state", "Andhra Pradesh");
+            locationAddressLogout.put("city", "Mylavaram");
+            locationAddressLogout.put("addressLine1", "Adavinekkalam - Velvadam Road, Ganapavaram, Mylavaram, NTR, Andhra Pradesh, 521230, India");
+            locationAddressLogout.put("addressLine2", "Mylavaram");
 
 
             String tempRefreshToken = "";
