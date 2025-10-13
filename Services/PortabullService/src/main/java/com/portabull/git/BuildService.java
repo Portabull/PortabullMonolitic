@@ -35,7 +35,7 @@ public class BuildService {
 
     Map<String, String> branchWithCommitSha = new HashMap<>();
 
-    @Scheduled(cron = "1 * * * * *")
+    //@Scheduled(cron = "1 * * * * *")
     public void cronJobSch() throws IOException {
         log.info("BuildController :: started");
         GitConfigDTO dto = new GitConfigDTO();
