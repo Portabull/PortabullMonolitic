@@ -45,9 +45,9 @@ public class ExternalJobController {
     }
 
     @PostMapping("temp-endpoint-keka")
-    public ResponseEntity<Object> tempEndpointKeka(@RequestParam String refreshToken, @RequestParam String flag) throws IOException {
+    public ResponseEntity<Object> tempEndpointKeka(@RequestParam String refreshToken, @RequestParam String flag, @RequestParam(required = false) Optional<String> l) throws IOException {
 
-        return new ResponseEntity<>(jobService.tempEndpointKeka(refreshToken, flag), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.tempEndpointKeka(refreshToken, flag,l), HttpStatus.OK);
 
     }
 
